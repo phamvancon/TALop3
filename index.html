@@ -132,60 +132,96 @@
                 </div>
             </div>
 
+            <!-- Double Tabs inside Left Panel for flexible AI operations -->
+            <div class="px-4 pt-3 flex border-b border-slate-800/60 text-[11px] font-bold select-none bg-[#0b0b10]">
+                <button id="left-tab-prompt" onclick="switchLeftTab('prompt')" class="flex-1 pb-2.5 text-center text-violet-400 border-b-2 border-violet-500 transition-all">
+                    Yêu Cầu Chung
+                </button>
+                <button id="left-tab-insert" onclick="switchLeftTab('insert')" class="flex-1 pb-2.5 text-center text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition-all flex items-center justify-center gap-1">
+                    <i data-lucide="file-input" class="w-3.5 h-3.5"></i>
+                    Trộn & Chèn Code
+                </button>
+            </div>
+
             <!-- AI Core Controller Form -->
             <div class="p-4 space-y-4">
                 
-                <!-- Quick AI Instructions Presets -->
-                <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block mb-2">Tác vụ sửa lỗi nhanh:</label>
-                    <div class="grid grid-cols-1 gap-2">
-                        <button onclick="applyPromptPreset('Tìm và phân tích chi tiết mọi lỗi cú pháp, logic hoặc thẻ lồng sai cấu trúc và khắc phục ngay lập tức.')" class="preset-btn flex items-center space-x-2 p-2 bg-[#141420] hover:bg-[#1e1e2f] border border-slate-800 rounded-lg text-left transition text-xs">
-                            <span class="text-rose-400"><i data-lucide="bug" class="w-4 h-4"></i></span>
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-slate-200">Tìm & Sửa lỗi đỏ triệt để</h4>
-                                <p class="text-[10px] text-slate-400">Quét lỗi logic, đóng thẻ, ngoặc kép và vá nhanh</p>
-                            </div>
-                        </button>
+                <!-- PANE 1: General prompt preset systems -->
+                <div id="left-pane-prompt" class="space-y-4">
+                    <!-- Quick AI Instructions Presets -->
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block mb-2">Tác vụ sửa lỗi nhanh:</label>
+                        <div class="grid grid-cols-1 gap-2">
+                            <button onclick="applyPromptPreset('Tìm và phân tích chi tiết mọi lỗi cú pháp, logic hoặc thẻ lồng sai cấu trúc và khắc phục ngay lập tức.')" class="preset-btn flex items-center space-x-2 p-2 bg-[#141420] hover:bg-[#1e1e2f] border border-slate-800 rounded-lg text-left transition text-xs">
+                                <span class="text-rose-400"><i data-lucide="bug" class="w-4 h-4"></i></span>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-slate-200">Tìm & Sửa lỗi đỏ triệt để</h4>
+                                    <p class="text-[10px] text-slate-400">Quét lỗi logic, đóng thẻ, ngoặc kép và vá nhanh</p>
+                                </div>
+                            </button>
 
-                        <button onclick="applyPromptPreset('Thực hiện tái cấu trúc (refactor), tối ưu hóa cấu trúc vòng lặp/biến và cải thiện hiệu năng của mã nguồn này.')" class="preset-btn flex items-center space-x-2 p-2 bg-[#141420] hover:bg-[#1e1e2f] border border-slate-800 rounded-lg text-left transition text-xs">
-                            <span class="text-amber-400"><i data-lucide="zap" class="w-4 h-4"></i></span>
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-slate-200">Tối ưu hoá hiệu năng</h4>
-                                <p class="text-[10px] text-slate-400">Rút gọn cấu trúc code, tăng độ phản hồi</p>
-                            </div>
-                        </button>
+                            <button onclick="applyPromptPreset('Thực hiện tái cấu trúc (refactor), tối ưu hóa cấu trúc vòng lặp/biến và cải thiện hiệu năng của mã nguồn này.')" class="preset-btn flex items-center space-x-2 p-2 bg-[#141420] hover:bg-[#1e1e2f] border border-slate-800 rounded-lg text-left transition text-xs">
+                                <span class="text-amber-400"><i data-lucide="zap" class="w-4 h-4"></i></span>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-slate-200">Tối ưu hoá hiệu năng</h4>
+                                    <p class="text-[10px] text-slate-400">Rút gọn cấu trúc code, tăng độ phản hồi</p>
+                                </div>
+                            </button>
 
-                        <button onclick="applyPromptPreset('Cải tiến giao diện này bằng Tailwind CSS, làm cho bố cục đẹp mắt, hiện đại với hiệu ứng động bắt mắt.')" class="preset-btn flex items-center space-x-2 p-2 bg-[#141420] hover:bg-[#1e1e2f] border border-slate-800 rounded-lg text-left transition text-xs">
-                            <span class="text-sky-400"><i data-lucide="palette" class="w-4 h-4"></i></span>
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-slate-200">Cải tạo mỹ thuật & UI</h4>
-                                <p class="text-[10px] text-slate-400">Thay đổi màu sắc, bo góc, căn lề chuẩn</p>
-                            </div>
-                        </button>
+                            <button onclick="applyPromptPreset('Cải tiến giao diện này bằng Tailwind CSS, làm cho bố cục đẹp mắt, hiện đại với hiệu ứng động bắt mắt.')" class="preset-btn flex items-center space-x-2 p-2 bg-[#141420] hover:bg-[#1e1e2f] border border-slate-800 rounded-lg text-left transition text-xs">
+                                <span class="text-sky-400"><i data-lucide="palette" class="w-4 h-4"></i></span>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-slate-200">Cải tạo mỹ thuật & UI</h4>
+                                    <p class="text-[10px] text-slate-400">Thay đổi màu sắc, bo góc, căn lề chuẩn</p>
+                                </div>
+                            </button>
 
-                        <button onclick="applyPromptPreset('Hãy thêm chú thích (comments) tiếng Việt chi tiết cho từng khối hàm và dòng code phức tạp để dễ theo dõi.')" class="preset-btn flex items-center space-x-2 p-2 bg-[#141420] hover:bg-[#1e1e2f] border border-slate-800 rounded-lg text-left transition text-xs">
-                            <span class="text-emerald-400"><i data-lucide="message-square" class="w-4 h-4"></i></span>
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-slate-200">Bổ sung chú thích Việt</h4>
-                                <p class="text-[10px] text-slate-400">Giúp lập trình viên dễ đọc hiểu cấu trúc</p>
-                            </div>
-                        </button>
+                            <button onclick="applyPromptPreset('Hãy thêm chú thích (comments) tiếng Việt chi tiết cho từng khối hàm và dòng code phức tạp để dễ theo dõi.')" class="preset-btn flex items-center space-x-2 p-2 bg-[#141420] hover:bg-[#1e1e2f] border border-slate-800 rounded-lg text-left transition text-xs">
+                                <span class="text-emerald-400"><i data-lucide="message-square" class="w-4 h-4"></i></span>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-slate-200">Bổ sung chú thích Việt</h4>
+                                    <p class="text-[10px] text-slate-400">Giúp lập trình viên dễ đọc hiểu cấu trúc</p>
+                                </div>
+                            </button>
+                        </div>
                     </div>
+
+                    <!-- Custom Prompt Instructions Box -->
+                    <div class="pt-2 border-t border-slate-800/50">
+                        <label for="ai-instruction-input" class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block mb-1.5">Gửi yêu cầu thông minh tùy chọn:</label>
+                        <textarea id="ai-instruction-input" 
+                                  placeholder="Ví dụ: Thiết kế thêm một form liên hệ có kiểm tra email hợp lệ, hoặc thêm hiệu ứng chuyển trang mượt mà..." 
+                                  class="w-full h-24 bg-[#0a0a0f] border border-slate-800 rounded-xl p-3 text-xs outline-none focus:border-violet-600 transition resize-none text-slate-100 placeholder-slate-500 focus:ring-1 focus:ring-violet-600 leading-relaxed"></textarea>
+                    </div>
+
+                    <!-- Submit Trigger Button -->
+                    <button id="ai-submit-btn" onclick="requestSmartAiService()" class="w-full py-3 rounded-xl font-bold text-xs bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-xl shadow-violet-600/10 flex items-center justify-center space-x-2 transition active:scale-95">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        <span>Kích Hoạt AI Xử Lý Code</span>
+                    </button>
                 </div>
 
-                <!-- Custom Prompt Instructions Box -->
-                <div class="pt-2 border-t border-slate-800/50">
-                    <label for="ai-instruction-input" class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block mb-1.5">Gửi yêu cầu thông minh tùy chọn:</label>
-                    <textarea id="ai-instruction-input" 
-                              placeholder="Ví dụ: Thiết kế thêm một form liên hệ có kiểm tra email hợp lệ, hoặc thêm hiệu ứng chuyển trang mượt mà..." 
-                              class="w-full h-24 bg-[#0a0a0f] border border-slate-800 rounded-xl p-3 text-xs outline-none focus:border-violet-600 transition resize-none text-slate-100 placeholder-slate-500 focus:ring-1 focus:ring-violet-600 leading-relaxed"></textarea>
-                </div>
+                <!-- PANE 2: Smart Code Insertion & Paste request -->
+                <div id="left-pane-insert" class="hidden space-y-3.5">
+                    <div>
+                        <label for="ai-insert-snippet-input" class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block mb-1.5">1. Dán đoạn Code muốn chèn/ghép vào:</label>
+                        <textarea id="ai-insert-snippet-input" 
+                                  placeholder="Dán mã HTML, CSS hoặc hàm JS bạn copy ở ngoài vào đây..." 
+                                  class="w-full h-32 bg-[#0a0a0f] border border-slate-800 rounded-xl p-3 text-xs font-mono outline-none focus:border-indigo-600 transition resize-none text-emerald-400 placeholder-slate-600 leading-relaxed"></textarea>
+                    </div>
 
-                <!-- Submit Trigger Button -->
-                <button id="ai-submit-btn" onclick="requestSmartAiService()" class="w-full py-3 rounded-xl font-bold text-xs bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-xl shadow-violet-600/10 flex items-center justify-center space-x-2 transition active:scale-95">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i>
-                    <span>Kích Hoạt AI Xử Lý Code</span>
-                </button>
+                    <div>
+                        <label for="ai-insert-instruction-input" class="text-[11px] font-bold text-slate-400 uppercase tracking-wide block mb-1.5">2. Vị trí hoặc cách thức chèn ghép:</label>
+                        <textarea id="ai-insert-instruction-input" 
+                                  placeholder="Ví dụ: Chèn vào sau thẻ mở body, thay thế hàm fetch cũ bằng đoạn này, hoặc gộp CSS này vào thẻ style hiện có..." 
+                                  class="w-full h-20 bg-[#0a0a0f] border border-slate-800 rounded-xl p-3 text-xs outline-none focus:border-indigo-600 transition resize-none text-slate-100 placeholder-slate-500 focus:ring-1 focus:ring-indigo-600 leading-relaxed"></textarea>
+                    </div>
+
+                    <button id="ai-insert-submit-btn" onclick="requestSmartMergeService()" class="w-full py-3 rounded-xl font-bold text-xs bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-xl shadow-indigo-600/10 flex items-center justify-center space-x-2 transition active:scale-95">
+                        <i data-lucide="file-input" class="w-4 h-4"></i>
+                        <span>Yêu Cầu AI Trộn & Chèn Ngay</span>
+                    </button>
+                </div>
 
             </div>
 
@@ -1186,6 +1222,117 @@
 
         function closeModalDialog() {
             document.getElementById('modal-container').classList.add('hidden');
+        }
+
+        // Left tab switcher system
+        function switchLeftTab(tabId) {
+            const tabPrompt = document.getElementById('left-tab-prompt');
+            const tabInsert = document.getElementById('left-tab-insert');
+            const panePrompt = document.getElementById('left-pane-prompt');
+            const paneInsert = document.getElementById('left-pane-insert');
+
+            if (tabId === 'prompt') {
+                tabPrompt.className = "flex-1 pb-2.5 text-center text-violet-400 border-b-2 border-violet-500 transition-all font-bold";
+                tabInsert.className = "flex-1 pb-2.5 text-center text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition-all flex items-center justify-center gap-1 font-bold";
+                panePrompt.classList.remove('hidden');
+                paneInsert.classList.add('hidden');
+            } else {
+                tabInsert.className = "flex-1 pb-2.5 text-center text-violet-400 border-b-2 border-violet-500 transition-all flex items-center justify-center gap-1 font-bold";
+                tabPrompt.className = "flex-1 pb-2.5 text-center text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition-all font-bold";
+                paneInsert.classList.remove('hidden');
+                panePrompt.classList.add('hidden');
+            }
+        }
+
+        // Smart Merge and Insertion AI Gateway
+        async function requestSmartMergeService() {
+            const textarea = document.getElementById('editor-textarea');
+            const snippetInput = document.getElementById('ai-insert-snippet-input');
+            const instructionInput = document.getElementById('ai-insert-instruction-input');
+
+            const currentCode = textarea.value.trim();
+            const snippetToInsert = snippetInput.value.trim();
+            const instruction = instructionInput.value.trim();
+
+            if (!savedApiKey) {
+                showModalDialog("Cần API Key", "Vui lòng nhập cấu hình API Key của bạn bằng nút 'Cấu hình API' ở góc trên để mở khóa Trí tuệ Nhân tạo!");
+                return;
+            }
+
+            if (!snippetToInsert) {
+                showModalDialog("Thiếu mã nguồn cần chèn", "Vui lòng dán đoạn code con bạn muốn chèn/ghép vào ô số 1!");
+                return;
+            }
+
+            // Trigger loading overlay
+            const overlay = document.getElementById('ai-waiting-overlay');
+            overlay.classList.remove('hidden');
+            document.getElementById('retry-timeout-status').textContent = '';
+
+            // System rules optimized for merging
+            const systemRule = "Bạn là chuyên gia lập trình tối cao hỗ trợ ghép, trộn và chèn mã nguồn mới vào mã nguồn gốc hiện tại của người dùng một cách chính xác nhất mà không làm hỏng cấu trúc hiện tại của tệp.\n" +
+                "Hãy phân tích mã nguồn gốc, tìm điểm thích hợp theo chỉ dẫn và lồng mã nguồn mới vào.\n" +
+                "Yêu cầu phản hồi của bạn bắt buộc phải là một chuỗi JSON chuẩn có dạng thức sau:\n" +
+                "{\n" +
+                "  \"explanation\": \"Giải thích ngắn gọn tiếng Việt các thay đổi, điểm lồng ghép và các điều chỉnh kỹ thuật bạn đã hoàn thành.\",\n" +
+                "  \"updatedCode\": \"Toàn bộ mã nguồn hoàn chỉnh đã được lồng ghép đoạn mã mới vào một cách hoàn hảo và chính xác nhất.\"\n" +
+                "}\n" +
+                "Không chứa bất kỳ ký tự nào dư thừa ngoài chuỗi JSON này.";
+
+            const combinedQuery = `Mã nguồn gốc hiện tại:\n\`\`\`\n${currentCode}\n\`\`\`\n\nĐoạn mã mới cần chèn/ghép vào:\n\`\`\`\n${snippetToInsert}\n\`\`\`\n\nYêu cầu vị trí/cách ghép: ${instruction || "Tự động tìm vị trí thích hợp nhất và tích hợp nó vào"}`;
+
+            const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${savedApiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: combinedQuery }] }],
+                systemInstruction: { parts: [{ text: systemRule }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            explanation: { type: "STRING" },
+                            updatedCode: { type: "STRING" }
+                        },
+                        required: ["explanation", "updatedCode"]
+                    }
+                }
+            };
+
+            try {
+                const responseData = await fetchWithRetryLogic(apiEndpoint, payload);
+                const rawJsonText = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (!rawJsonText) {
+                    throw new Error("Không nhận được cấu trúc phản hồi hợp lệ từ Gemini API.");
+                }
+
+                const data = JSON.parse(rawJsonText);
+
+                // Update right hand panel UI
+                document.getElementById('ai-empty-state').classList.add('hidden');
+                document.getElementById('ai-active-state').classList.remove('hidden');
+                document.getElementById('btn-apply-back').classList.remove('hidden'); 
+
+                document.getElementById('ai-explanation-text').textContent = data.explanation;
+                document.getElementById('ai-code-output').textContent = data.updatedCode;
+
+                lastAiCodeResult = data.updatedCode;
+
+                // Reset insertion fields on success
+                snippetInput.value = '';
+                instructionInput.value = '';
+
+                // Trigger green alert dot on Live Preview tab
+                document.getElementById('preview-update-dot').classList.remove('hidden');
+
+                // Switch to AI feedback tab view
+                switchVisualTab('ai');
+
+            } catch (err) {
+                showModalDialog("Gặp sự cố khi ghép mã", err.message || "Không thể kết nối đến máy chủ API Gemini.");
+            } finally {
+                overlay.classList.add('hidden');
+            }
         }
     </script>
 </body>
