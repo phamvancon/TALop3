@@ -1,806 +1,802 @@
 <!DOCTYPE html>
-<html lang="vi" class="h-full">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Code Companion - Trình Trợ Lý Chỉnh Sửa & Live Preview</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#f5f3ff',
-              100: '#ede9fe',
-              500: '#8b5cf6',
-              600: '#7c3aed',
-              700: '#6d28d9',
-            }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Diagnostic Studio - Trình Phát Hiện Lỗi Cấu Trúc</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
-      }
-    }
-  </script>
-  <style>
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 3px;
-    }
-    .dark ::-webkit-scrollbar-thumb {
-      background: #475569;
-    }
-    /* Tab transition & states */
-    .tab-btn.active {
-      border-color: #8b5cf6;
-      color: #8b5cf6;
-    }
-    .dark .tab-btn.active {
-      border-color: #a78bfa;
-      color: #a78bfa;
-    }
-  </style>
+        
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1e2e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #44475a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6272a4;
+        }
+
+        /* Line highlight and pulse effects */
+        @keyframes pulse-red {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.15); }
+            50% { background-color: rgba(239, 68, 68, 0.3); }
+        }
+        .error-line-highlight {
+            animation: pulse-red 2s infinite;
+        }
+    </style>
 </head>
-<body class="h-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-200 flex flex-col overflow-hidden">
+<body class="bg-[#0f0f16] text-slate-100 min-h-screen flex flex-col overflow-hidden">
 
-  <!-- Header -->
-  <header class="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-6 py-3.5 flex items-center justify-between shadow-sm shrink-0">
-    <div class="flex items-center space-x-3">
-      <div class="p-2 bg-brand-500 rounded-lg text-white">
-        <i data-lucide="cpu" class="w-6 h-6"></i>
-      </div>
-      <div>
-        <div class="flex items-center space-x-2">
-          <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-500 bg-clip-text text-transparent">AI Code Editor & Live Play</h1>
-          <span class="text-[10px] bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-300 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">v2.0 Sandbox</span>
+    <!-- Header Navigation -->
+    <header class="bg-[#161622] border-b border-slate-800 px-6 py-4 flex items-center justify-between z-10">
+        <div class="flex items-center space-x-3">
+            <div class="bg-red-500 text-white p-2 rounded-lg shadow-lg shadow-red-500/20">
+                <i data-lucide="shield-alert" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                    Code Diagnostic Studio 
+                    <span class="text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded-full font-medium">Hệ Thống Đỏ Cảnh Báo</span>
+                </h1>
+                <p class="text-xs text-slate-400">Tự động phát hiện, đánh dấu đỏ và sửa lỗi cấu trúc code thời gian thực</p>
+            </div>
         </div>
-        <p class="text-[11px] text-slate-500 dark:text-slate-400">Dán code, sửa liên tục với AI, xem trước trực quan tức thì</p>
-      </div>
-    </div>
 
-    <div class="flex items-center space-x-3">
-      <!-- Dark mode toggle -->
-      <button id="theme-toggle" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 transition" title="Chuyển chế độ Sáng/Tối">
-        <i data-lucide="sun" id="theme-sun" class="w-5 h-5 hidden"></i>
-        <i data-lucide="moon" id="theme-moon" class="w-5 h-5"></i>
-      </button>
-      
-      <!-- API Info Status -->
-      <div class="flex items-center space-x-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-medium border border-emerald-200/50 dark:border-emerald-800/30">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>Gemini 2.5 Active</span>
-      </div>
-    </div>
-  </header>
+        <!-- Quick actions & Stats -->
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2 bg-[#1e1e2f] border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                <span>Chế độ kiểm soát: </span>
+                <strong class="text-slate-100">HTML / Bracket / JSON</strong>
+            </div>
 
-  <!-- Main Workspace -->
-  <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
-    
-    <!-- Left panel: Code input & Prompt controls -->
-    <section class="w-full lg:w-1/2 flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/50">
-      
-      <!-- Input Code Header -->
-      <div class="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-950/80">
-        <div class="flex items-center space-x-2">
-          <i data-lucide="code-2" class="w-4 h-4 text-brand-500"></i>
-          <span class="font-semibold text-xs">Mã nguồn soạn thảo</span>
+            <div id="status-badge" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-300 bg-emerald-500/10 border-emerald-500/30 text-emerald-400">
+                <i id="status-icon" data-lucide="check-circle" class="w-4 h-4"></i>
+                <span id="status-text">Mã nguồn Sạch Sẽ</span>
+            </div>
         </div>
-        <div class="flex items-center space-x-2">
-          <!-- Auto-run toggle -->
-          <label class="inline-flex items-center cursor-pointer mr-2">
-            <input type="checkbox" id="auto-run-preview" class="sr-only peer" checked>
-            <div class="relative w-7 h-4 bg-slate-300 peer-focus:outline-none dark:bg-slate-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-slate-600 peer-checked:bg-brand-600"></div>
-            <span class="ms-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400 select-none">Auto-run</span>
-          </label>
+    </header>
 
-          <select id="lang-select" class="text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-brand-500">
-            <option value="html">HTML Sandbox</option>
-            <option value="javascript">JavaScript</option>
-            <option value="python">Python Simulator</option>
-            <option value="css">CSS Sandbox</option>
-            <option value="cpp">C++ Compiler Sim</option>
-            <option value="java">Java Compiler Sim</option>
-            <option value="other">Khác</option>
-          </select>
-          <button id="clear-input" class="text-xs text-rose-500 hover:text-rose-600 flex items-center space-x-1 px-2 py-1 rounded hover:bg-rose-50 dark:hover:bg-rose-950/20 transition">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-            <span>Dọn sạch</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Input Code Editor -->
-      <div class="flex-1 relative min-h-[220px] flex overflow-hidden">
-        <!-- Line numbers column -->
-        <div id="line-numbers" class="w-10 bg-slate-50 dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 py-3 text-right pr-2 text-xs text-slate-400 select-none font-mono">
-          1
-        </div>
-        <!-- Actual Text Area -->
-        <textarea id="code-input" 
-          placeholder="<!-- Hãy dán mã nguồn của bạn vào đây... -->&#10;<div class='p-6 text-center'>&#10;  <h2 class='text-2xl font-bold text-indigo-600 animate-bounce'>Xin chào AI!</h2>&#10;  <p class='text-gray-500 mt-2'>Hãy chỉnh sửa code này để xem thay đổi ngay lập tức.</p>&#10;  <button onclick='alert(\&quot;Xin chào!\&quot;)' class='mt-4 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600'>Bấm tôi</button>&#10;</div>" 
-          class="flex-1 p-3 bg-transparent resize-none font-mono text-sm leading-relaxed focus:outline-none overflow-y-auto"
-          spellcheck="false"
-        ></textarea>
-      </div>
-
-      <!-- Prompts & AI Control Section -->
-      <div class="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 shrink-0">
+    <!-- Main Workspace -->
+    <main class="flex-1 flex overflow-hidden">
         
-        <!-- Prompt Presets / Templates -->
-        <div class="mb-3">
-          <span class="text-[11px] font-semibold text-slate-400 dark:text-slate-500 block mb-1.5 uppercase tracking-wider">Hành động nhanh cho Code hiện tại:</span>
-          <div class="flex flex-wrap gap-1.5">
-            <button onclick="setPreset('Tìm lỗi logic, bug tiềm ẩn và sửa lại toàn diện cho đoạn code này.')" class="preset-btn text-[11px] px-2.5 py-1.5 rounded-md bg-white dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 transition">
-              🔍 Sửa Lỗi & Bug
-            </button>
-            <button onclick="setPreset('Tối ưu hóa mã nguồn trên để tăng tốc độ chạy, làm sạch bố cục và tối giản hoá.')" class="preset-btn text-[11px] px-2.5 py-1.5 rounded-md bg-white dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 transition">
-              ⚡ Tối ưu hiệu năng
-            </button>
-            <button onclick="setPreset('Thêm chú thích giải thích chi tiết từng phần bằng tiếng Việt ngay trong code.')" class="preset-btn text-[11px] px-2.5 py-1.5 rounded-md bg-white dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 transition">
-              📝 Viết Chú thích Việt
-            </button>
-            <button onclick="setPreset('Làm cho giao diện này đẹp hơn, thêm phong cách hiện đại với Tailwind CSS và hoạt ảnh thu hút.')" class="preset-btn text-[11px] px-2.5 py-1.5 rounded-md bg-white dark:bg-slate-800 hover:border-brand-500 border border-slate-200 dark:border-slate-700 transition">
-              ✨ Cải tiến giao diện (UI)
-            </button>
-          </div>
-        </div>
-
-        <!-- Custom User Prompt -->
-        <div class="relative">
-          <label for="prompt-input" class="text-[11px] font-semibold text-slate-400 dark:text-slate-500 block mb-1 uppercase tracking-wider">Yêu cầu AI tùy biến đoạn code:</label>
-          <div class="flex space-x-2">
-            <textarea id="prompt-input" 
-              placeholder="Yêu cầu AI bất kỳ thứ gì... Ví dụ: tạo thêm nút bấm, đổi màu giao diện thành Dark Mode, thêm tính năng tính toán..." 
-              class="flex-1 px-3 py-1.5 text-xs border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none h-14"
-            ></textarea>
+        <!-- Left Panel: Editor & Diagnostics (60% width) -->
+        <section class="w-3/5 flex flex-col border-r border-slate-800 bg-[#12121e]">
             
-            <button id="send-btn" class="bg-brand-600 hover:bg-brand-700 text-white font-medium px-4 rounded-lg flex flex-col justify-center items-center transition shrink-0 active:scale-95 shadow-md shadow-brand-500/25">
-              <i data-lucide="sparkles" class="w-4 h-4 mb-0.5"></i>
-              <span class="text-[11px]">Gửi AI</span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Right panel: Interactive Tabs & Output Sandbox -->
-    <section class="w-full lg:w-1/2 flex flex-col bg-slate-900 text-slate-100 relative min-h-[350px]">
-      
-      <!-- Panel Header with Interactive Tabs -->
-      <div class="px-4 border-b border-slate-800 flex items-center justify-between bg-slate-950 shrink-0">
-        <div class="flex space-x-1">
-          <!-- Tab AI Result -->
-          <button id="tab-ai-btn" class="tab-btn active px-4 py-3 text-xs font-semibold border-b-2 border-transparent hover:text-brand-400 flex items-center space-x-1.5 transition">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-            <span>Kết quả AI</span>
-          </button>
-          <!-- Tab Live Preview -->
-          <button id="tab-preview-btn" class="tab-btn px-4 py-3 text-xs font-semibold border-b-2 border-transparent hover:text-brand-400 flex items-center space-x-1.5 transition relative">
-            <i data-lucide="play" class="w-3.5 h-3.5"></i>
-            <span>Trình Xem Trước (Live)</span>
-            <span class="absolute top-1 right-2 w-2 h-2 rounded-full bg-emerald-500 hidden" id="preview-notify"></span>
-          </button>
-        </div>
-
-        <!-- Quick actions -->
-        <div class="flex items-center space-x-2 py-2">
-          <!-- Apply result to editor (Continuous workflow) -->
-          <button id="apply-btn" class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white px-2.5 py-1.5 rounded flex items-center space-x-1 transition hidden" title="Nạp code này vào khung soạn thảo để chỉnh sửa tiếp">
-            <i data-lucide="arrow-left-right" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">Dùng code này sửa tiếp</span>
-          </button>
-          <!-- Run now button -->
-          <button id="run-btn" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1.5 rounded flex items-center space-x-1 transition" title="Biên dịch và chạy trực tiếp code">
-            <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
-            <span>Chạy Ngay</span>
-          </button>
-          <!-- Copy code -->
-          <button id="copy-btn" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded flex items-center space-x-1 transition">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">Sao chép</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Loader Overlay -->
-      <div id="loader" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center hidden z-20">
-        <div class="relative w-16 h-16 mb-4">
-          <div class="absolute inset-0 border-4 border-brand-500/30 rounded-full"></div>
-          <div class="absolute inset-0 border-4 border-t-brand-500 rounded-full animate-spin"></div>
-        </div>
-        <p class="text-brand-300 font-medium animate-pulse text-xs">Trợ lý AI đang tái cấu trúc và sửa đổi mã nguồn...</p>
-        <p class="text-[10px] text-slate-500 mt-1" id="retry-status"></p>
-      </div>
-
-      <!-- TAB CONTENT 1: AI Result and Explanations -->
-      <div id="tab-content-ai" class="flex-1 flex flex-col overflow-y-auto">
-        <!-- AI Placeholder if empty -->
-        <div id="output-placeholder" class="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-500">
-          <div class="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mb-4">
-            <i data-lucide="brain-circuit" class="w-8 h-8 text-slate-600"></i>
-          </div>
-          <h3 class="text-slate-300 font-medium text-sm">Chưa có kết quả phân tích</h3>
-          <p class="text-xs max-w-sm mt-1">Dán code của bạn bên trái, viết yêu cầu sửa đổi rồi nhấn nút "Gửi AI" để bắt đầu nhận phản hồi.</p>
-        </div>
-
-        <!-- AI Real Content -->
-        <div id="ai-real-layout" class="flex-1 flex flex-col hidden">
-          <!-- AI Response Explanation Section -->
-          <div class="p-4 border-b border-slate-800 bg-slate-950/40">
-            <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-1.5 mb-2">
-              <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-yellow-500"></i>
-              <span>Giải thích & Chú thích nâng cấp:</span>
-            </h4>
-            <div id="ai-explanation" class="text-xs text-slate-300 leading-relaxed whitespace-pre-line bg-slate-950/30 p-3 rounded-lg border border-slate-800/50">
-              <!-- Dynamic explanation text -->
+            <!-- Editor Controls Tab -->
+            <div class="bg-[#161624] border-b border-slate-800 px-4 py-2 flex items-center justify-between text-xs">
+                <div class="flex items-center space-x-2">
+                    <span class="text-slate-400 font-medium">Chọn bộ mẫu thử lỗi:</span>
+                    <button onclick="loadTemplate('html')" class="px-2.5 py-1 bg-[#1e1e2f] hover:bg-slate-800 border border-slate-700 text-slate-300 rounded transition">
+                        Lỗi Thẻ HTML
+                    </button>
+                    <button onclick="loadTemplate('bracket')" class="px-2.5 py-1 bg-[#1e1e2f] hover:bg-slate-800 border border-slate-700 text-slate-300 rounded transition">
+                        Lỗi Ngoặc Trùng Lặp
+                    </button>
+                    <button onclick="loadTemplate('json')" class="px-2.5 py-1 bg-[#1e1e2f] hover:bg-slate-800 border border-slate-700 text-slate-300 rounded transition">
+                        Lỗi Cú Pháp JSON
+                    </button>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <button onclick="clearEditor()" class="text-slate-400 hover:text-red-400 transition flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Xóa hết
+                    </button>
+                    <button onclick="formatCode()" class="text-slate-400 hover:text-emerald-400 transition flex items-center gap-1">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Định dạng
+                    </button>
+                </div>
             </div>
-          </div>
-          
-          <!-- Code Result -->
-          <div class="p-4 flex-1 flex flex-col min-h-[220px]">
-            <h4 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-1.5 mb-2">
-              <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand-400"></i>
-              <span>Mã nguồn hoàn chỉnh đã cập nhật:</span>
-            </h4>
-            <pre id="output-code" class="flex-1 p-3 bg-slate-950 border border-slate-800 rounded-lg font-mono text-xs leading-relaxed overflow-x-auto text-emerald-400 whitespace-pre-wrap select-all"></pre>
-          </div>
-        </div>
-      </div>
 
-      <!-- TAB CONTENT 2: Sandbox / Live Preview Display -->
-      <div id="tab-content-preview" class="flex-1 flex flex-col hidden overflow-hidden">
+            <!-- Double-layered Editor Container -->
+            <div class="flex-1 flex overflow-hidden relative">
+                <!-- Line Numbers Gutter -->
+                <div id="line-numbers" class="w-12 bg-[#12121e] text-slate-500 font-mono text-sm py-4 pr-2 text-right select-none border-r border-slate-800/60 code-font flex flex-col space-y-[2px]">
+                    <!-- Generated via JS -->
+                </div>
+                
+                <!-- Editor Space -->
+                <div class="flex-1 h-full relative overflow-hidden bg-[#141421]">
+                    <!-- Textarea Inputs -->
+                    <textarea id="code-editor" 
+                              class="w-full h-full bg-transparent text-slate-100 font-mono text-sm p-4 outline-none resize-none code-font whitespace-pre overflow-auto absolute inset-0 z-10 leading-6"
+                              spellcheck="false"
+                              placeholder="Hãy dán hoặc viết mã HTML/CSS/JS/JSON tại đây... Hệ thống sẽ tự kiểm tra lỗi!"
+                              oninput="processCodeInput()"></textarea>
+                </div>
+            </div>
+
+            <!-- Diagnostics Console Panel (Bottom 35%) -->
+            <div class="h-1/3 bg-[#161622] border-t border-slate-800 flex flex-col overflow-hidden">
+                <div class="bg-[#12121a] border-b border-slate-800 px-4 py-2 flex items-center justify-between text-xs">
+                    <span class="font-bold text-slate-300 flex items-center gap-1.5">
+                        <i data-lucide="terminal" class="w-4 h-4 text-red-400"></i>
+                        BẢNG CHẨN ĐOÁN LỖI CẤU TRÚC (DIAGNOSTICS)
+                    </span>
+                    <span id="error-count-pill" class="bg-red-500/20 text-red-400 border border-red-500/30 px-2.5 py-0.5 rounded-full font-semibold">
+                        0 Lỗi Được Phát Hiện
+                    </span>
+                </div>
+                
+                <div id="diagnostics-list" class="flex-1 p-4 overflow-y-auto space-y-3">
+                    <!-- Error items injected here -->
+                    <div class="h-full flex flex-col items-center justify-center text-slate-500 space-y-2">
+                        <i data-lucide="sparkles" class="w-8 h-8 text-emerald-500/50"></i>
+                        <p class="text-sm">Tuyệt vời! Không phát hiện lỗi cấu trúc nào trong mã nguồn của bạn.</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Right Panel: Live Preview & URL Web (40% width) -->
+        <section class="w-2/5 flex flex-col bg-[#11111a]">
+            
+            <!-- Address Bar / Preview Switcher -->
+            <div class="bg-[#161624] border-b border-slate-800 p-3 flex items-center space-x-2 text-xs">
+                <div class="flex items-center space-x-1.5 bg-[#12121e] border border-slate-700/60 rounded-lg px-2 py-1 w-full">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <input id="browser-url" 
+                           type="text" 
+                           value="https://vi.wikipedia.org" 
+                           class="bg-transparent text-slate-200 outline-none w-full text-xs" 
+                           placeholder="Nhập địa chỉ Web trực tuyến..."
+                           onkeydown="handleUrlKeydown(event)">
+                    <button onclick="loadExternalUrl()" class="text-slate-400 hover:text-emerald-400 transition" title="Truy cập">
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                
+                <div class="flex bg-[#1e1e2f] border border-slate-700 rounded-lg p-0.5 shrink-0">
+                    <button id="tab-preview" onclick="switchPreviewMode('preview')" class="px-2.5 py-1 rounded bg-slate-700 text-white font-medium transition">
+                        Live Preview
+                    </button>
+                    <button id="tab-web" onclick="switchPreviewMode('web')" class="px-2.5 py-1 rounded text-slate-400 font-medium hover:text-slate-200 transition">
+                        Web Online
+                    </button>
+                </div>
+            </div>
+
+            <!-- Preview Execution Sandbox Panel -->
+            <div class="flex-1 bg-white relative overflow-hidden flex flex-col">
+                <!-- Sandbox Status Bar -->
+                <div class="bg-slate-100 border-b border-slate-200 px-3 py-1 flex items-center justify-between text-[10px] text-slate-500 font-medium">
+                    <span class="flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                        Sandbox Chạy Thử Nghiệm Bảo Mật (allow-same-origin)
+                    </span>
+                    <button onclick="refreshPreview()" class="hover:text-slate-800 flex items-center gap-1">
+                        <i data-lucide="rotate-cw" class="w-2.5 h-2.5"></i> Tải lại
+                    </button>
+                </div>
+                
+                <!-- Preview Iframe -->
+                <iframe id="preview-frame" 
+                        class="w-full flex-1 bg-white"
+                        sandbox="allow-scripts allow-modals allow-same-origin allow-popups allow-forms"></iframe>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer Information -->
+    <footer class="bg-[#12121a] border-t border-slate-800/80 px-6 py-2.5 flex items-center justify-between text-xs text-slate-400 z-10">
+        <div>Hỗ trợ gỡ lỗi: <strong class="text-red-400">Thiếu thẻ đóng, Thẻ lồng sai thứ tự, Dấu ngoặc vô chủ, Lỗi chuỗi JSON hỏng</strong></div>
+        <div class="flex items-center space-x-3">
+            <span>Dòng: <span id="caret-line" class="text-slate-200 font-semibold">1</span></span>
+            <span>Cột: <span id="caret-col" class="text-slate-200 font-semibold">1</span></span>
+        </div>
+    </footer>
+
+    <!-- Custom Modal Notification -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/65 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div class="bg-[#1c1c2e] border border-slate-700 rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="flex items-center space-x-3 text-red-400 mb-4">
+                <i data-lucide="alert-octagon" class="w-8 h-8"></i>
+                <h3 class="text-lg font-bold text-white">Cảnh Báo Cú Pháp</h3>
+            </div>
+            <p id="modal-text" class="text-sm text-slate-300 mb-6 leading-relaxed">Nội dung thông báo lỗi chi tiết sẽ được ghi ở đây.</p>
+            <div class="flex justify-end">
+                <button onclick="closeModal()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-semibold transition">
+                    Đã hiểu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Logic Script -->
+    <script>
+        // Init Lucide
+        lucide.createIcons();
+
+        // Target Global Variables
+        const editor = document.getElementById('code-editor');
+        const lineNumbersContainer = document.getElementById('line-numbers');
+        const diagnosticsList = document.getElementById('diagnostics-list');
+        const errorCountPill = document.getElementById('error-count-pill');
+        const statusBadge = document.getElementById('status-badge');
+        const statusIcon = document.getElementById('status-icon');
+        const statusText = document.getElementById('status-text');
+        const previewFrame = document.getElementById('preview-frame');
+        const browserUrlInput = document.getElementById('browser-url');
+        const tabPreviewBtn = document.getElementById('tab-preview');
+        const tabWebBtn = document.getElementById('tab-web');
+
+        let previewMode = 'preview'; // 'preview' | 'web'
+        let currentErrors = [];
+
+        // Preloaded Code Templates for Testing
+        const templates = {
+            html: `<!DOCTYPE html>
+<html>
+<head>
+    <title>Kiểm Thử Sai Cấu Trúc HTML</title>
+</head>
+<body class="p-6 bg-slate-100">
+    <div class="card">
+        <h1 class="text-red-500">Lỗi nghiêm trọng: Có thẻ div bị bỏ quên đóng!
+        <p>Thẻ p này lồng ghép bên trong nhưng thẻ h1 ở trên chưa đóng.</p>
         
-        <!-- Live Sandbox Browser Header inside UI -->
-        <div class="bg-slate-950 border-b border-slate-800 px-3 py-2 flex items-center space-x-2 text-xs">
-          <div class="flex space-x-1.5 shrink-0">
-            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-          </div>
-          <div class="flex-1 bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-slate-400 flex items-center space-x-2 font-mono text-[10px]">
-            <i data-lucide="globe" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i>
-            <input id="sandbox-url-bar" type="text" value="sandbox://app-environment/live-running.html" class="flex-1 bg-transparent border-none text-slate-300 focus:outline-none w-full" placeholder="Nhập url (ví dụ: https://example.com) hoặc chạy code..." />
-            <button onclick="handleUrlReload()" class="hover:text-white shrink-0" title="Tải lại trình duyệt">
-              <i data-lucide="rotate-cw" class="w-3 h-3"></i>
-            </button>
-          </div>
+        <div class="content">
+            <p>Trình phân tích sẽ khoanh vùng màu đỏ toàn bộ các khu vực lỗi.</p>
+            <span>Hãy xem bảng chuẩn đoán bên dưới để thấy gợi ý sửa nhanh!
         </div>
-
-        <!-- Render Sandbox iframe if web technology, or simulated CLI console if backend lang -->
-        <div class="flex-1 bg-white relative" id="sandbox-wrapper">
-          <!-- Upgraded sandbox with allow-same-origin for online API access, forms and popups -->
-          <iframe id="sandbox-iframe" class="w-full h-full border-none bg-white" sandbox="allow-scripts allow-modals allow-same-origin allow-popups allow-forms allow-downloads"></iframe>
-          
-          <!-- Mock Terminal Console (hidden by default, shown for python/c++/java) -->
-          <div id="mock-terminal" class="absolute inset-0 bg-slate-950 font-mono text-xs p-4 overflow-y-auto text-slate-300 hidden">
-            <div class="text-slate-500 mb-2">// Trình giả lập chạy dòng lệnh ảo (Simulated Terminal)</div>
-            <div id="terminal-stdout" class="space-y-1">
-              <!-- Logs from execution simulation -->
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- Error Toast Alert -->
-  <div id="error-toast" class="fixed bottom-4 right-4 bg-rose-600 text-white px-4 py-3 rounded-xl shadow-lg flex items-center space-x-3 transition-all transform translate-y-20 opacity-0 z-50 max-w-md">
-    <div class="bg-rose-700 p-1.5 rounded-lg">
-      <i data-lucide="alert-triangle" class="w-5 h-5"></i>
     </div>
-    <div class="flex-1">
-      <h4 class="font-bold text-xs">Lỗi hệ thống</h4>
-      <p class="text-xs text-rose-100" id="error-message">Không thể kết nối với dịch vụ Gemini.</p>
-    </div>
-    <button onclick="dismissToast()" class="text-rose-200 hover:text-white">
-      <i data-lucide="x" class="w-4 h-4"></i>
-    </button>
-  </div>
-
-  <script>
-    // System Constants & Keys (Gemini API runtime fallback)
-    const apiKey = ""; 
-
-    // Active state variable to store current displayable code
-    let activeRunningCode = "";
-
-    // Initial setups
-    document.addEventListener("DOMContentLoaded", () => {
-      lucide.createIcons();
-      initTheme();
-      setupEditorLineNumbers();
-      initTabs();
-      setupAutoRunListener();
-      setupUrlBarListener();
-      
-      // Load initial placeholder into preview on startup
-      activeRunningCode = document.getElementById('code-input').placeholder;
-      runCodeSandbox();
+</body>
+</html>`,
+            bracket: `function processData(items) {
+    if (!items) {
+        return [];
+    
+    // Quên dấu đóng hàm if ở trên, và lạm dụng dư thừa dấu ngoặc nhọn
+    items.forEach(item => {
+        console.log(item.name);
     });
+}}`,
+            json: `{
+    "project": "Code Diagnostics",
+    "version": 1.2,
+    "features": [
+        "Real-time Scanning",
+        "Red-alert highlights",
+        "Quick Auto-fix"
+    ],
+    "unclosed_object": {
+        "status": "Hỏng định dạng",
+        "missing_comma": "Thiếu phẩy"
+        "broken_bracket": "Cú pháp này sẽ báo lỗi đỏ trực tiếp"
+}`
+        };
 
-    // Theme Switcher Logic
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const sunIcon = document.getElementById('theme-sun');
-    const moonIcon = document.getElementById('theme-moon');
+        // Initialize with default Template
+        window.onload = function() {
+            loadTemplate('html');
+            // Track cursor coordinates
+            editor.addEventListener('keyup', updateCaretPosition);
+            editor.addEventListener('click', updateCaretPosition);
+            // Synchronize Scroll of Textarea and Line numbers
+            editor.addEventListener('scroll', () => {
+                lineNumbersContainer.scrollTop = editor.scrollTop;
+            });
+        };
 
-    function initTheme() {
-      if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-        sunIcon.classList.remove('hidden');
-        moonIcon.classList.add('hidden');
-      } else {
-        document.documentElement.classList.remove('dark');
-        sunIcon.classList.add('hidden');
-        moonIcon.classList.remove('hidden');
-      }
-    }
-
-    themeToggleBtn.addEventListener('click', () => {
-      if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('color-theme', 'light');
-        sunIcon.classList.add('hidden');
-        moonIcon.classList.remove('hidden');
-      } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('color-theme', 'dark');
-        sunIcon.classList.remove('hidden');
-        moonIcon.classList.add('hidden');
-      }
-    });
-
-    // Editor Line Numbers helper
-    const codeInput = document.getElementById('code-input');
-    const lineNumbers = document.getElementById('line-numbers');
-
-    function setupEditorLineNumbers() {
-      codeInput.addEventListener('input', () => {
-        updateLineNumbers();
-        // If auto run is active and user is changing code manually, hot-reload Sandbox!
-        if (document.getElementById('auto-run-preview').checked) {
-          activeRunningCode = codeInput.value;
-          runCodeSandbox();
+        function loadTemplate(type) {
+            editor.value = templates[type];
+            processCodeInput();
         }
-      });
-      codeInput.addEventListener('scroll', () => {
-        lineNumbers.scrollTop = codeInput.scrollTop;
-      });
-    }
 
-    function updateLineNumbers() {
-      const lines = codeInput.value.split('\n');
-      const lineCount = Math.max(lines.length, 1);
-      let numbersHtml = '';
-      for (let i = 1; i <= lineCount; i++) {
-        numbersHtml += `<div>${i}</div>`;
-      }
-      lineNumbers.innerHTML = numbersHtml;
-    }
-
-    // Tab System Control
-    const tabAI = document.getElementById('tab-ai-btn');
-    const tabPreview = document.getElementById('tab-preview-btn');
-    const tabContentAI = document.getElementById('tab-content-ai');
-    const tabContentPreview = document.getElementById('tab-content-preview');
-    const previewNotify = document.getElementById('preview-notify');
-
-    function initTabs() {
-      tabAI.addEventListener('click', () => {
-        switchTab('ai');
-      });
-      tabPreview.addEventListener('click', () => {
-        switchTab('preview');
-      });
-    }
-
-    function switchTab(target) {
-      if (target === 'ai') {
-        tabAI.classList.add('active', 'border-brand-500');
-        tabPreview.classList.remove('active', 'border-brand-500');
-        tabContentAI.classList.remove('hidden');
-        tabContentPreview.classList.add('hidden');
-      } else {
-        tabPreview.classList.add('active', 'border-brand-500');
-        tabAI.classList.remove('active', 'border-brand-500');
-        tabContentPreview.classList.remove('hidden');
-        tabContentAI.classList.add('hidden');
-        previewNotify.classList.add('hidden'); // Clear dot alert
-      }
-    }
-
-    // Auto Run Watcher setup
-    function setupAutoRunListener() {
-      document.getElementById('lang-select').addEventListener('change', () => {
-        if (document.getElementById('auto-run-preview').checked) {
-          runCodeSandbox();
+        function clearEditor() {
+            editor.value = '';
+            processCodeInput();
         }
-      });
-    }
 
-    function setupUrlBarListener() {
-      const urlBar = document.getElementById('sandbox-url-bar');
-      urlBar.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          handleUrlReload();
+        // Main processing pipeline
+        function processCodeInput() {
+            const code = editor.value;
+            
+            // 1. Diagnostics execution
+            currentErrors = runDiagnostics(code);
+            
+            // 2. Render UI alerts based on errors
+            renderLineNumbers(code, currentErrors);
+            renderDiagnosticsList(currentErrors);
+            updateStatusHeader(currentErrors);
+
+            // 3. Render Preview if no errors exist or fallback smoothly
+            updatePreview();
         }
-      });
-    }
 
-    function handleUrlReload() {
-      const urlBar = document.getElementById('sandbox-url-bar');
-      const iframe = document.getElementById('sandbox-iframe');
-      const terminal = document.getElementById('mock-terminal');
-      let url = urlBar.value.trim();
+        // Parser & Logic Diagnostic Engines
+        function runDiagnostics(code) {
+            let errors = [];
+            if (!code.trim()) return errors;
 
-      if (!url) return;
+            // Engine A: HTML Tag Balancer
+            errors = errors.concat(analyzeHTMLStructure(code));
 
-      // If it is our internal pseudo-protocols, just rerun sandbox code
-      if (url.startsWith('sandbox://') || url.startsWith('cli://')) {
-        runCodeSandbox();
-        return;
-      }
+            // Engine B: Bracket Balancer (Parentheses, Square, Curly)
+            errors = errors.concat(analyzeBracketStructure(code));
 
-      // Ensure HTTP/HTTPS protocol is present for internet browsing
-      if (!/^https?:\/\//i.test(url)) {
-        url = 'https://' + url;
-        urlBar.value = url;
-      }
+            // Engine C: JSON Parser (only if looks like JSON)
+            if (code.trim().startsWith('{') || code.trim().startsWith('[')) {
+                errors = errors.concat(analyzeJSONSyntax(code));
+            }
 
-      // Show iframe and hide CLI terminal simulation
-      iframe.classList.remove('hidden');
-      terminal.classList.add('hidden');
-      
-      // Load the web page directly
-      iframe.removeAttribute('srcdoc');
-      iframe.src = url;
-      
-      // Navigate to the preview tab automatically
-      switchTab('preview');
-    }
-
-    // Sandbox Core Engine (Executing Code dynamically)
-    function runCodeSandbox() {
-      const language = document.getElementById('lang-select').value;
-      const iframe = document.getElementById('sandbox-iframe');
-      const terminal = document.getElementById('mock-terminal');
-      const urlBar = document.getElementById('sandbox-url-bar');
-
-      const codeToRun = activeRunningCode || codeInput.value || codeInput.placeholder;
-
-      // Reset components
-      iframe.classList.add('hidden');
-      terminal.classList.add('hidden');
-
-      if (language === 'html' || language === 'css' || language === 'javascript' || language === 'other') {
-        // Render Web environment in inside-sandbox
-        iframe.classList.remove('hidden');
-        urlBar.value = `sandbox://local-browser/live-page.html`;
-
-        let formattedDoc = "";
-        if (language === 'html') {
-          // Check if Tailwind is needed/requested inside raw HTML, inject auto-import for convenience
-          if (!codeToRun.includes('tailwindcss') && !codeToRun.includes('cdn.tailwindcss.com')) {
-            formattedDoc = `
-              <!DOCTYPE html>
-              <html>
-              <head>
-                <script src="https://cdn.tailwindcss.com"><\/script>
-                <script src="https://unpkg.com/lucide@latest"><\/script>
-                <style>body { font-family: system-ui, sans-serif; padding: 15px; }</style>
-              </head>
-              <body>
-                ${codeToRun}
-                <script>
-                  // Refresh icons inside sandbox
-                  if (typeof lucide !== 'undefined') { lucide.createIcons(); }
-                <\/script>
-              </body>
-              </html>
-            `;
-          } else {
-            formattedDoc = codeToRun;
-          }
-        } else if (language === 'css') {
-          formattedDoc = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <style>${codeToRun}</style>
-            </head>
-            <body>
-              <div class="styled-box">
-                <h1>CSS Preview Mode</h1>
-                <p>Mã CSS của bạn đang được áp dụng trực tiếp lên Sandbox.</p>
-              </div>
-            </body>
-            </html>
-          `;
-        } else if (language === 'javascript') {
-          formattedDoc = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <script src="https://cdn.tailwindcss.com"><\/script>
-              <style>body { font-family: monospace; background: #0f172a; color: #38bdf8; padding: 20px; }</style>
-            </head>
-            <body>
-              <div class="text-xs text-slate-500 mb-3 border-b border-slate-800 pb-2">▶ Javascript Virtual Console</div>
-              <pre id="console-logs" class="whitespace-pre-wrap"></pre>
-              <script>
-                const logEl = document.getElementById('console-logs');
-                console.log = (...args) => {
-                  logEl.textContent += args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : a).join(' ') + '\\n';
-                };
-                console.error = (...args) => {
-                  logEl.textContent += '❌ Error: ' + args.join(' ') + '\\n';
-                };
-                try {
-                  ${codeToRun}
-                } catch(e) {
-                  console.error(e.message);
+            // Remove duplicated errors on the same line to avoid spamming
+            const uniqueErrors = [];
+            const seenLines = new Set();
+            for (const err of errors) {
+                const uniqueKey = `${err.line}-${err.message}`;
+                if (!seenLines.has(uniqueKey)) {
+                    seenLines.add(uniqueKey);
+                    uniqueErrors.push(err);
                 }
-              <\/script>
-            </body>
-            </html>
-          `;
-        } else {
-          formattedDoc = codeToRun;
+            }
+
+            return uniqueErrors;
         }
 
-        // Write safely to iframe
-        iframe.removeAttribute('src');
-        iframe.srcdoc = formattedDoc;
+        // HTML Structural Analyzer
+        function analyzeHTMLStructure(code) {
+            const errors = [];
+            const tagRegex = /<\/?([a-zA-Z0-9:-]+)(?:\s+[^>]*?)?(\/?)>/g;
+            const stack = [];
+            let match;
 
-      } else {
-        // Backend Compiler Simulation (Python, C++, Java, etc.)
-        terminal.classList.remove('hidden');
-        urlBar.value = `cli://simulation-terminal/${language}-runtime`;
-        
-        const terminalStdout = document.getElementById('terminal-stdout');
-        terminalStdout.innerHTML = `
-          <div class="text-indigo-400">⚡ Initializing virtual ${language} sandbox environment...</div>
-          <div class="text-emerald-500">✔ Ready! Running compiled structure...</div>
-          <div class="text-slate-400 mt-2">$ ${language} main_execution_file</div>
-        `;
+            const selfClosingTags = ['img', 'br', 'input', 'hr', 'meta', 'link', 'source', 'embed', '!doctype'];
 
-        // We run a mock console execution sequence for visual confirmation
-        setTimeout(() => {
-          let outputMock = "";
-          if (language === 'python') {
-            outputMock = `<div class="text-slate-100">[stdout] Running main simulation...\nSuccess: Environment loaded. (Mô phỏng chạy mã Python hoàn tất)</div>`;
-          } else if (language === 'cpp') {
-            outputMock = `<div class="text-slate-100">[stdout] G++ compiling main.cpp...\nBuild success. Executing virtual bin...\nExit code: 0</div>`;
-          } else if (language === 'java') {
-            outputMock = `<div class="text-slate-100">[stdout] JVM executing compiled bytecode...\nProcess terminated with success code.</div>`;
-          }
-          terminalStdout.innerHTML += `<div class="mt-2 text-xs">${outputMock}</div>`;
-        }, 600);
-      }
-    }
+            function getLineNumber(index) {
+                return code.substring(0, index).split('\n').length;
+            }
 
-    // Manual run trigger
-    document.getElementById('run-btn').addEventListener('click', () => {
-      // Force preview active code
-      runCodeSandbox();
-      switchTab('preview');
-      // Button effect feedback
-      const runBtn = document.getElementById('run-btn');
-      runBtn.classList.add('scale-95');
-      setTimeout(() => runBtn.classList.remove('scale-95'), 150);
-    });
+            while ((match = tagRegex.exec(code)) !== null) {
+                const fullTag = match[0];
+                const tagName = match[1].toLowerCase();
+                const isSelfClosing = match[2] === '/';
+                const index = match.index;
+                const line = getLineNumber(index);
 
-    // Set presets helper
-    function setPreset(promptText) {
-      document.getElementById('prompt-input').value = promptText;
-      const btn = event.currentTarget;
-      btn.classList.add('ring-2', 'ring-brand-500');
-      setTimeout(() => {
-        btn.classList.remove('ring-2', 'ring-brand-500');
-      }, 500);
-    }
+                if (selfClosingTags.includes(tagName) || isSelfClosing) {
+                    continue; // Skip valid self-closing
+                }
 
-    // Clear input code
-    document.getElementById('clear-input').addEventListener('click', () => {
-      codeInput.value = '';
-      updateLineNumbers();
-    });
+                if (fullTag.startsWith('</')) {
+                    // Closing Tag
+                    if (stack.length === 0) {
+                        errors.push({
+                            line,
+                            type: 'error',
+                            message: `Dư thừa thẻ đóng </${tagName}>. Không tìm thấy thẻ mở tương ứng trước đó.`,
+                            fixType: 'remove-tag',
+                            tagName,
+                            pos: index,
+                            len: fullTag.length
+                        });
+                    } else {
+                        const last = stack.pop();
+                        if (last.name !== tagName) {
+                            errors.push({
+                                line,
+                                type: 'error',
+                                message: `Sai cấu trúc: Thẻ </${tagName}> đóng sai vị trí. Đang chờ đóng thẻ </${last.name}> (mở ở dòng ${last.line}).`,
+                                fixType: 'correct-tag',
+                                tagName: last.name,
+                                incorrectTag: tagName,
+                                pos: index,
+                                len: fullTag.length
+                            });
+                        }
+                    }
+                } else if (!fullTag.startsWith('<!--')) {
+                    // Opening Tag (excluding comments)
+                    stack.push({ name: tagName, line, pos: index, len: fullTag.length });
+                }
+            }
 
-    // Toast control
-    function showToast(msg) {
-      const toast = document.getElementById('error-toast');
-      document.getElementById('error-message').textContent = msg;
-      toast.classList.remove('translate-y-20', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-      setTimeout(dismissToast, 6000);
-    }
+            // Unclosed remaining tags
+            while (stack.length > 0) {
+                const unclosed = stack.pop();
+                errors.push({
+                    line: unclosed.line,
+                    type: 'error',
+                    message: `Thẻ <${unclosed.name}> chưa được đóng. Cần thẻ đóng </${unclosed.name}>.`,
+                    fixType: 'close-tag',
+                    tagName: unclosed.name,
+                    pos: unclosed.pos,
+                    len: unclosed.len
+                });
+            }
 
-    function dismissToast() {
-      const toast = document.getElementById('error-toast');
-      toast.classList.add('translate-y-20', 'opacity-0');
-      toast.classList.remove('translate-y-0', 'opacity-100');
-    }
-
-    // Copy to Clipboard
-    const copyBtn = document.getElementById('copy-btn');
-    copyBtn.addEventListener('click', () => {
-      const outputText = document.getElementById('output-code').textContent || activeRunningCode;
-      if (!outputText) return;
-
-      const textarea = document.createElement('textarea');
-      textarea.value = outputText;
-      textarea.style.position = 'fixed';
-      document.body.appendChild(textarea);
-      textarea.select();
-      try {
-        document.execCommand('copy');
-        const originalText = copyBtn.innerHTML;
-        copyBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span class="text-emerald-400">Ok!</span>`;
-        lucide.createIcons();
-        setTimeout(() => {
-          copyBtn.innerHTML = originalText;
-          lucide.createIcons();
-        }, 2000);
-      } catch (err) {
-        showToast("Không thể sao chép code vào clipboard.");
-      }
-      document.body.removeChild(textarea);
-    });
-
-    // Exponential Backoff API Fetcher
-    async function fetchWithRetry(url, payload, maxRetries = 5) {
-      let delay = 1000;
-      const retryStatus = document.getElementById('retry-status');
-
-      for (let i = 0; i < maxRetries; i++) {
-        try {
-          const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-          });
-          if (response.ok) {
-            return await response.json();
-          }
-        } catch (error) {}
-        if (i < maxRetries - 1) {
-          retryStatus.textContent = `Thử kết nối lại lần ${i + 1} sau ${delay / 1000}s...`;
-          await new Promise(resolve => setTimeout(resolve, delay));
-          delay *= 2;
-        }
-      }
-      throw new Error("Không thể kết nối với máy chủ AI Gemini.");
-    }
-
-    // Apply Output back to Input editor (Continuity Loop)
-    const applyBtn = document.getElementById('apply-btn');
-    applyBtn.addEventListener('click', () => {
-      const outputCodeText = document.getElementById('output-code').textContent;
-      if (outputCodeText) {
-        codeInput.value = outputCodeText;
-        updateLineNumbers();
-        
-        // Dynamic success alert on button
-        const originalText = applyBtn.innerHTML;
-        applyBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5"></i><span>Đã đưa về khung soạn thảo!</span>`;
-        applyBtn.classList.remove('bg-indigo-600');
-        applyBtn.classList.add('bg-emerald-600');
-        lucide.createIcons();
-
-        setTimeout(() => {
-          applyBtn.innerHTML = originalText;
-          applyBtn.classList.add('bg-indigo-600');
-          applyBtn.classList.remove('bg-emerald-600');
-          lucide.createIcons();
-        }, 2000);
-      }
-    });
-
-    // AI Request Handler
-    const sendBtn = document.getElementById('send-btn');
-    const loader = document.getElementById('loader');
-    const placeholder = document.getElementById('output-placeholder');
-    const aiRealLayout = document.getElementById('ai-real-layout');
-    const explanationEl = document.getElementById('ai-explanation');
-    const codeEl = document.getElementById('output-code');
-
-    sendBtn.addEventListener('click', async () => {
-      const code = codeInput.value.trim() || codeInput.placeholder;
-      const prompt = document.getElementById('prompt-input').value.trim();
-      const language = document.getElementById('lang-select').value;
-
-      if (!prompt) {
-        showToast("Vui lòng nhập chi tiết yêu cầu sửa đổi mã nguồn.");
-        return;
-      }
-
-      // Show loader
-      loader.classList.remove('hidden');
-      document.getElementById('retry-status').textContent = '';
-
-      // Prepare robust prompt guidelines
-      const systemInstruction = "Bạn là một chuyên gia lập trình tối cao hỗ trợ người dùng viết, sửa và tối ưu hóa code. " +
-        "Hãy xử lý yêu cầu sửa code được cung cấp của họ. Phản hồi của bạn BẮT BUỘC phải là cấu trúc JSON hợp lệ có dạng: " +
-        "{\n" +
-        "  \"explanation\": \"Phân tích các thay đổi, sửa lỗi, nâng cấp đã thực hiện bằng tiếng Việt tinh gọn, ngắn gọn.\",\n" +
-        "  \"updatedCode\": \"Mã nguồn đầy đủ sau khi đã sửa, thêm chú thích và tối ưu hóa. Hãy viết toàn bộ code chạy được để tránh bị lỗi thiếu hụt.\"\n" +
-        "}. Không bao gồm bất cứ ký tự hay nhãn markdown nào bên ngoài chuỗi JSON này.";
-
-      const userQuery = `Mã nguồn hiện tại viết bằng ngôn ngữ ${language}:\n\`\`\`\n${code}\n\`\`\`\n\nYêu cầu sửa code: ${prompt}`;
-
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-      const payload = {
-        contents: [{ parts: [{ text: userQuery }] }],
-        systemInstruction: { parts: [{ text: systemInstruction }] },
-        generationConfig: { 
-          responseMimeType: "application/json", 
-          responseSchema: { 
-            type: "OBJECT", 
-            properties: {
-              explanation: { type: "STRING" },
-              updatedCode: { type: "STRING" }
-            },
-            required: ["explanation", "updatedCode"]
-          } 
-        }
-      };
-
-      try {
-        const result = await fetchWithRetry(url, payload);
-        const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-        
-        if (!rawText) {
-          throw new Error("Không nhận được phản hồi hợp lý từ Gemini.");
+            return errors;
         }
 
-        const data = JSON.parse(rawText);
+        // Bracket Matcher Structural Analyzer
+        function analyzeBracketStructure(code) {
+            const errors = [];
+            const stack = [];
+            const pairs = { ')': '(', ']': '[', '}': '{' };
+            const openers = ['(', '[', '{'];
 
-        // Update UI panels
-        placeholder.classList.add('hidden');
-        aiRealLayout.classList.remove('hidden');
-        applyBtn.classList.remove('hidden'); // Enable continuous edit workflow
+            function getLineNumber(index) {
+                return code.substring(0, index).split('\n').length;
+            }
 
-        explanationEl.textContent = data.explanation;
-        codeEl.textContent = data.updatedCode;
+            for (let i = 0; i < code.length; i++) {
+                const char = code[i];
+                if (openers.includes(char)) {
+                    stack.push({ char, line: getLineNumber(i), pos: i });
+                } else if (pairs[char]) {
+                    if (stack.length === 0) {
+                        errors.push({
+                            line: getLineNumber(i),
+                            type: 'error',
+                            message: `Ký tự đóng '${char}' vô chủ. Không tìm thấy ký tự mở '${pairs[char]}' tương ứng.`,
+                            fixType: 'remove-char',
+                            char,
+                            pos: i
+                        });
+                    } else {
+                        const last = stack.pop();
+                        if (last.char !== pairs[char]) {
+                            errors.push({
+                                line: getLineNumber(i),
+                                type: 'error',
+                                message: `Đóng sai ngoặc: Gặp '${char}' nhưng cấu trúc đang mở gần nhất là '${last.char}' (dòng ${last.line}).`,
+                                fixType: 'correct-bracket',
+                                expected: Object.keys(pairs).find(key => pairs[key] === last.char),
+                                actual: char,
+                                pos: i
+                            });
+                        }
+                    }
+                }
+            }
 
-        // Store to active code for compiler runtime
-        activeRunningCode = data.updatedCode;
+            while (stack.length > 0) {
+                const unclosed = stack.pop();
+                const expectedClosing = Object.keys(pairs).find(key => pairs[key] === unclosed.char);
+                errors.push({
+                    line: unclosed.line,
+                    type: 'error',
+                    message: `Ký tự '${unclosed.char}' chưa được kết thúc bằng '${expectedClosing}'.`,
+                    fixType: 'close-bracket',
+                    expected: expectedClosing,
+                    pos: unclosed.pos
+                });
+            }
 
-        // Trigger Sandbox refresh immediately (Auto-run)
-        if (document.getElementById('auto-run-preview').checked) {
-          runCodeSandbox();
-        } else {
-          // Show green notify dot on preview tab if not auto-running
-          previewNotify.classList.remove('hidden');
+            return errors;
         }
 
-        // Always bring the user to the Code Analysis first so they can inspect changes
-        switchTab('ai');
+        // JSON Format Analyzer
+        function analyzeJSONSyntax(code) {
+            const errors = [];
+            try {
+                JSON.parse(code);
+            } catch (e) {
+                // Parse standard message "Unexpected token ... in JSON at position 123"
+                const message = e.message;
+                let line = 1;
+                let match = message.match(/at position (\d+)/);
+                if (match) {
+                    const pos = parseInt(match[1]);
+                    line = code.substring(0, pos).split('\n').length;
+                } else {
+                    // Try parsing line numbers from alternate JS engines
+                    match = message.match(/line (\d+)/);
+                    if (match) line = parseInt(match[1]);
+                }
 
-      } catch (err) {
-        showToast(err.message || "Đã xảy ra sự cố ngoài ý muốn. Vui lòng thử lại.");
-      } finally {
-        loader.classList.add('hidden');
-      }
-    });
+                errors.push({
+                    line,
+                    type: 'error',
+                    message: `Lỗi định dạng JSON: ${message}. Hãy kiểm tra các dấu phẩy dư hoặc thiếu dấu nháy kép.`,
+                    fixType: 'manual'
+                });
+            }
+            return errors;
+        }
 
-  </script>
+        // GUI Rendering: Line Gutter Numbers with Red Warning
+        function renderLineNumbers(code, errors) {
+            const lines = code.split('\n');
+            const totalLines = Math.max(lines.length, 1);
+            let html = '';
+
+            // Map errors to line numbers
+            const errorLines = {};
+            errors.forEach(err => {
+                errorLines[err.line] = err;
+            });
+
+            for (let i = 1; i <= totalLines; i++) {
+                const hasError = errorLines[i];
+                if (hasError) {
+                    html += `
+                    <div class="flex items-center justify-end pr-2 bg-red-900/40 border-r-2 border-red-500 text-red-400 font-bold group relative cursor-pointer h-6" onclick="focusLine(${i})">
+                        <i data-lucide="alert-triangle" class="w-3 h-3 text-red-500 mr-1 animate-pulse"></i>
+                        <span>${i}</span>
+                        <!-- Custom Tooltip -->
+                        <div class="absolute left-14 bg-red-600 text-white font-sans text-xs py-1 px-2.5 rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-30 whitespace-nowrap">
+                            Lỗi dòng ${i}: ${errorLines[i].message}
+                        </div>
+                    </div>`;
+                } else {
+                    html += `<div class="pr-2 text-slate-600 hover:text-slate-300 transition h-6" onclick="focusLine(${i})">${i}</div>`;
+                }
+            }
+            lineNumbersContainer.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        // GUI Rendering: Diagnostics Console list
+        function renderDiagnosticsList(errors) {
+            if (errors.length === 0) {
+                diagnosticsList.innerHTML = `
+                <div class="h-full flex flex-col items-center justify-center text-slate-500 space-y-2 py-6">
+                    <div class="p-3 bg-emerald-500/10 rounded-full border border-emerald-500/20 text-emerald-400">
+                        <i data-lucide="check" class="w-6 h-6"></i>
+                    </div>
+                    <p class="text-sm font-medium text-slate-300">Hoàn hảo! Không tìm thấy lỗi cú pháp hoặc cấu trúc nào.</p>
+                </div>`;
+                errorCountPill.className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-semibold";
+                errorCountPill.textContent = "0 Lỗi được phát hiện";
+                return;
+            }
+
+            errorCountPill.className = "bg-red-500/20 text-red-400 border border-red-500/30 px-2.5 py-0.5 rounded-full font-semibold";
+            errorCountPill.textContent = `${errors.length} Lỗi được phát hiện`;
+
+            let html = '';
+            errors.forEach((err, idx) => {
+                html += `
+                <div class="bg-red-950/25 border-l-4 border-red-500 p-3.5 rounded-r-lg flex items-start justify-between space-x-4 hover:bg-red-950/40 transition">
+                    <div class="flex items-start space-x-3">
+                        <div class="bg-red-500 text-white p-1 rounded mt-0.5">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-bold">Dòng ${err.line}</span>
+                                <span class="text-xs text-slate-400">Hạng mục cấu trúc code</span>
+                            </div>
+                            <p class="text-sm text-slate-200 mt-1.5 font-medium leading-relaxed">${err.message}</p>
+                        </div>
+                    </div>
+                    
+                    ${err.fixType && err.fixType !== 'manual' ? `
+                    <button onclick="applyAutoFix(${idx})" class="flex items-center space-x-1 px-3 py-1 bg-red-600/30 hover:bg-red-600 border border-red-500/40 hover:border-red-500 text-red-200 hover:text-white rounded-lg text-xs font-semibold transition shrink-0">
+                        <i data-lucide="wrench" class="w-3 h-3"></i>
+                        <span>Sửa nhanh</span>
+                    </button>
+                    ` : ''}
+                </div>`;
+            });
+
+            diagnosticsList.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        // Header Status Upgrade
+        function updateStatusHeader(errors) {
+            if (errors.length === 0) {
+                statusBadge.className = "flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-300 bg-emerald-500/10 border-emerald-500/30 text-emerald-400";
+                statusText.textContent = "Mã nguồn Sạch Sẽ";
+                statusIcon.setAttribute('data-lucide', 'check-circle');
+            } else {
+                statusBadge.className = "flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all duration-300 bg-red-500/10 border-red-500/30 text-red-400";
+                statusText.textContent = `${errors.length} Lỗi Nghiêm Trọng`;
+                statusIcon.setAttribute('data-lucide', 'alert-triangle');
+            }
+            lucide.createIcons();
+        }
+
+        // Live Editor Interactions
+        function focusLine(lineNumber) {
+            const text = editor.value;
+            const lines = text.split('\n');
+            let charIndex = 0;
+            
+            for (let i = 0; i < lineNumber - 1; i++) {
+                charIndex += lines[i].length + 1; // +1 to account for newline character
+            }
+
+            editor.focus();
+            editor.setSelectionRange(charIndex, charIndex + (lines[lineNumber - 1] || '').length);
+            
+            // Scroll calculation helper
+            const lineHeight = 24; // from leading-6 CSS
+            editor.scrollTop = (lineNumber - 3) * lineHeight;
+        }
+
+        // Automatic Smart Fixing engine
+        function applyAutoFix(index) {
+            const err = currentErrors[index];
+            if (!err) return;
+
+            let code = editor.value;
+
+            if (err.fixType === 'close-tag') {
+                // Insert corresponding closing tag directly after the affected content
+                const closeTagStr = `</${err.tagName}>`;
+                code = code.substring(0, err.pos + err.len) + closeTagStr + code.substring(err.pos + err.len);
+                showCustomModal(`Hệ thống đã tự động bổ sung thẻ đóng <code>${closeTagStr}</code> khớp với thẻ <code>&lt;${err.tagName}&gt;</code>.`);
+            } 
+            else if (err.fixType === 'correct-tag') {
+                // Correct mismatched closing tag
+                const newTag = `</${err.tagName}>`;
+                code = code.substring(0, err.pos) + newTag + code.substring(err.pos + err.len);
+                showCustomModal(`Đã thay thế thẻ đóng sai <code>&lt;/${err.incorrectTag}&gt;</code> bằng <code>&lt;/${err.tagName}&gt;</code> để đồng bộ cấu trúc.`);
+            } 
+            else if (err.fixType === 'close-bracket') {
+                // Add missing closing bracket
+                code = code.substring(0, err.pos + 1) + err.expected + code.substring(err.pos + 1);
+                showCustomModal(`Đã tự động bù đắp ký tự ngoặc kết thúc <code>${err.expected}</code> thích hợp.`);
+            } 
+            else if (err.fixType === 'remove-char') {
+                // Remove rogue character
+                code = code.substring(0, err.pos) + code.substring(err.pos + 1);
+                showCustomModal(`Đã xóa bỏ ký tự thừa không có nguồn <code>${err.char}</code>.`);
+            }
+
+            editor.value = code;
+            processCodeInput();
+        }
+
+        // Formatter (Beautifier Simulation)
+        function formatCode() {
+            const code = editor.value.trim();
+            if (!code) return;
+
+            // Simple line-level bracket/tag formatting
+            let formatted = '';
+            let indentLevel = 0;
+            const lines = code.split('\n');
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                
+                // Decrement indentation for closing items
+                if (trimmed.startsWith('}') || trimmed.startsWith(']') || trimmed.startsWith('</')) {
+                    indentLevel = Math.max(0, indentLevel - 1);
+                }
+
+                formatted += '    '.repeat(indentLevel) + trimmed + '\n';
+
+                // Increment indentation for opening items
+                if (trimmed.endsWith('{') || trimmed.endsWith('[') || (trimmed.startsWith('<') && !trimmed.startsWith('</') && !trimmed.endsWith('/>') && !trimmed.includes('</') && !['img','br','hr','input','meta'].some(t => trimmed.toLowerCase().includes(t)))) {
+                    indentLevel++;
+                }
+            });
+
+            editor.value = formatted.trim();
+            processCodeInput();
+            showCustomModal("Mã nguồn đã được sắp xếp lùi dòng (Indentation) chuẩn mực dễ nhìn!");
+        }
+
+        // Tracking Row & Column coordinates on editor
+        function updateCaretPosition() {
+            const pos = editor.selectionStart;
+            const textBeforeCaret = editor.value.substring(0, pos);
+            const lines = textBeforeCaret.split('\n');
+            
+            document.getElementById('caret-line').textContent = lines.length;
+            document.getElementById('caret-col').textContent = lines[lines.length - 1].length + 1;
+        }
+
+        // Preview & Sandbox Renderer Logic
+        function updatePreview() {
+            if (previewMode !== 'preview') return;
+
+            const code = editor.value;
+            
+            // Build sandbox container
+            const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            doc.open();
+            
+            if (currentErrors.length > 0) {
+                // Display visually striking Red Dashboard in preview frame when errors exist
+                const errorAlertHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #fef2f2; color: #991b1b; padding: 24px; text-align: center; }
+                        .container { border: 2px dashed #f87171; background: #fff; border-radius: 12px; padding: 32px; max-width: 500px; margin: 40px auto; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+                        h2 { margin-top: 0; color: #dc2626; display: flex; align-items: center; justify-content: center; gap: 8px; }
+                        p { font-size: 14px; color: #4b5563; }
+                        .badge { display: inline-block; background-color: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-top: 8px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h2>⚠️ Cấu Trúc Bị Gián Đoạn</h2>
+                        <p>Trình xem trước đã tạm dừng tải trang vì đang phát hiện thấy các lỗi cấu trúc mã nguồn nghiêm trọng được đánh dấu đỏ.</p>
+                        <div class="badge">Phát hiện: ${currentErrors.length} Lỗi</div>
+                        <p style="font-size: 12px; margin-top: 16px; color: #9ca3af;">Hãy khắc phục các dòng đánh số màu đỏ ở bên cạnh để mở khóa màn hình xem trực tiếp.</p>
+                    </div>
+                </body>
+                </html>`;
+                doc.write(errorAlertHTML);
+            } else {
+                // Execute standard rendering
+                doc.write(code);
+            }
+            doc.close();
+        }
+
+        // URL Web Online Access Panel
+        function switchPreviewMode(mode) {
+            previewMode = mode;
+            if (mode === 'preview') {
+                tabPreviewBtn.className = "px-2.5 py-1 rounded bg-slate-700 text-white font-medium transition";
+                tabWebBtn.className = "px-2.5 py-1 rounded text-slate-400 font-medium hover:text-slate-200 transition";
+                updatePreview();
+            } else {
+                tabWebBtn.className = "px-2.5 py-1 rounded bg-slate-700 text-white font-medium transition";
+                tabPreviewBtn.className = "px-2.5 py-1 rounded text-slate-400 font-medium hover:text-slate-200 transition";
+                loadExternalUrl();
+            }
+        }
+
+        function loadExternalUrl() {
+            let url = browserUrlInput.value.trim();
+            if (!url) return;
+
+            // Ensure protocols exist
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+                browserUrlInput.value = url;
+            }
+
+            previewFrame.src = url;
+        }
+
+        function handleUrlKeydown(event) {
+            if (event.key === 'Enter') {
+                switchPreviewMode('web');
+            }
+        }
+
+        function refreshPreview() {
+            if (previewMode === 'preview') {
+                updatePreview();
+            } else {
+                previewFrame.src = previewFrame.src;
+            }
+        }
+
+        // Custom Safe Modals
+        function showCustomModal(text) {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-text').innerHTML = text;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+    </script>
 </body>
 </html>
