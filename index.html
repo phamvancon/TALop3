@@ -15,156 +15,343 @@ import {
   Copy, 
   Check, 
   Wifi, 
-  WifiOff, 
   ShieldAlert, 
   ChevronRight,
   Maximize2,
-  ListFilter
+  Trash2,
+  Wrench,
+  Download,
+  Info,
+  Globe,
+  Upload
 } from 'lucide-react';
 
-// Khởi tạo các mẫu code mặc định cho người dùng trải nghiệm
-const defaultCode = `<!DOCTYPE html>
+const defaultTemplates = {
+  html: `<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Web Thử Nghiệm API</title>
+    <title>Mẫu Lỗi Thẻ HTML</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center">
-    <div class="p-8 max-w-md bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 text-center">
-        <h1 class="text-3xl font-extrabold text-blue-400 mb-4">Xin Chào Việt Nam! 🇻🇳</h1>
-        <p class="text-slate-300 mb-6">Trình biên soạn tích hợp sẵn Sandbox hiển thị thay đổi thời gian thực.</p>
-        <button id="btnAction" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-medium transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-blue-500/20">
-            Bấm Vào Tôi
-        </button>
-        <p id="msg" class="mt-4 text-emerald-400 font-semibold hidden">Nút bấm hoạt động hoàn hảo!</p>
+<body class="bg-slate-900 text-white p-6">
+    <div class="max-w-md mx-auto bg-slate-800 rounded-xl p-6 shadow-xl">
+        <h1 class="text-xl font-bold text-red-400">Quên đóng thẻ h1 này!
+        <p class="text-sm text-slate-300 mt-2">Dòng văn bản này lồng sai cấu trúc do h1 phía trên chưa kết thúc.</p>
+        
+        <div class="mt-4 p-4 bg-slate-950 rounded">
+            <span>Thẻ span này chưa đóng và div chứa cũng bị lỗi lồng ghép!
+        </div>
     </div>
-
-    <script>
-        document.getElementById('btnAction').addEventListener('click', () => {
-            const msg = document.getElementById('msg');
-            msg.classList.toggle('hidden');
-        });
-    </script>
 </body>
-</html>`;
+</html>`,
 
-export default function App() {
-  // --- Quản lý Trạng thái ---
-  const [activeTab, setActiveTab] = useState('diagnose'); // diagnose, merge, editor
-  const [apiKey, setApiKey] = useState('');
-  const [codeContent, setCodeContent] = useState(defaultCode);
+  bracket: `function evaluateMath(items) {
+    if (!items) {
+        return 0;
+    
+    // Quên đóng dấu ngoặc nhọn ở cấu trúc điều kiện if phía trên
+    items.forEach(x => {
+        console.log(x.val);
+    });
+}}`,
+
+  json: `{
+    "name": "Smart Assistant",
+    "version": 2.5,
+    "modules": [
+        "Diagnostics",
+        "API Test"
+    ],
+    "broken_syntax": {
+        "status": "active"
+        "missing_comma": "Dòng này thiếu dấu phẩy ngăn cách"
+    }
+}`
+};
+
+// Khởi tạo các mã lỗi phổ biến để người dùng tham khảo nhanh
+const commonApiErrors = [
+  {
+    code: '403 Forbidden / API_KEY_INVALID',
+    cause: 'Mã API Key không đúng định dạng, hết hạn hoặc chưa kích hoạt dịch vụ Google AI Studio.',
+    fix: 'Tạo khóa mới tại Google AI Studio. Chắc chắn khóa bắt đầu bằng cụm ký tự "AIzaSy".'
+  },
+  {
+    code: 'CORS Blocked (Trình duyệt chặn mạng)',
+    cause: 'Trình duyệt từ chối tiếp nhận tài nguyên trực tiếp từ client-side để bảo vệ an toàn bảo mật.',
+    fix: 'Kích hoạt tính năng "Sử dụng Proxy CORS" hoặc chạy mã nguồn qua server Backend (NodeJS/Python proxy).'
+  },
+  {
+    code: '429 Too Many Requests (Rate Limit)',
+    cause: 'Vượt quá số lượng yêu cầu tối đa cho phép trên mỗi phút (RPM) của tài khoản miễn phí.',
+    fix: 'Hệ thống đã tự động tích hợp thuật toán Exponential Backoff để chờ đợi và gọi lại tự động.'
+  },
+  {
+    code: '400 Bad Request / Regional Block',
+    cause: 'Mô hình không được hỗ trợ ở khu vực quốc gia hiện tại của địa chỉ IP.',
+    fix: 'Sử dụng công cụ VPN để chuyển đổi địa chỉ IP sang khu vực được hỗ trợ rộng rãi như Mỹ (USA) hoặc Singapore.'
+  }
+];
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div class="p-8 bg-rose-950 text-rose-200 min-h-screen flex flex-col items-center justify-center text-center">
+          <AlertTriangle size={48} className="text-rose-500 mb-4 animate-bounce" />
+          <h2 class="text-xl font-bold">Đã xảy ra lỗi khởi chạy giao diện!</h2>
+          <p class="text-xs text-rose-300 max-w-lg mt-2 font-mono">{this.state.error?.toString()}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-6 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-sm font-semibold transition"
+          >
+            Tải Lại Ứng Dụng
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function DiagnosticStudio() {
+  const [activeTab, setActiveTab] = useState('diagnose'); // diagnose, merge, chat
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('gemini_api_key_v2') || '');
+  const [codeContent, setCodeContent] = useState(defaultTemplates.html);
   const [inputSnippet, setInputSnippet] = useState('');
-  const [mergeInstruction, setMergeInstruction] = useState('Chèn đoạn mã này ngay phía trên thẻ kết thúc </body>');
-  const [assistantLogs, setAssistantLogs] = useState([
-    { id: 1, type: 'system', message: 'Hệ thống chẩn đoán lỗi API và hỗ trợ trộn mã đã sẵn sàng.', time: new Date().toLocaleTimeString() }
-  ]);
-  const [isTesting, setIsTesting] = useState(false);
-  const [diagnosticResult, setDiagnosticResult] = useState(null);
+  const [mergeInstruction, setMergeInstruction] = useState('Hãy tìm vị trí thích hợp nhất và chèn đoạn code con này vào tệp gốc.');
+  const [corsProxyActive, setCorsProxyActive] = useState(false);
+  const [fileName, setFileName] = useState('file_cua_ban.html');
+  const [localErrors, setLocalErrors] = useState([]);
   
-  // Trạng thái cho Trình trò chuyện AI
+  // Trạng thái AI
+  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [aiResult, setAiResult] = useState(null);
+  
+  // Chat console
   const [chatInput, setChatInput] = useState('');
   const [chatHistory, setChatHistory] = useState([
-    { role: 'assistant', text: 'Chào bạn! Tôi phát hiện hệ thống vừa gặp sự cố kết nối API. Hãy kiểm tra tab "Chẩn Đoán API" để quét lỗi tự động, hoặc gửi câu hỏi về mã lỗi bạn gặp phải tại đây nhé.' }
+    { role: 'assistant', text: 'Xin chào! Tôi là Trợ lý Sửa lỗi Cấu trúc. Hãy nạp file hoặc dán mã nguồn vào đây, tôi sẽ dò tìm các lỗi cú pháp đỏ ngay lập tức và hướng dẫn bạn tự động sửa!' }
   ]);
 
-  // Trạng thái mô phỏng hoạt động và xem trước
-  const [copiedIndex, setCopiedIndex] = useState(false);
-  const [corsProxyActive, setCorsProxyActive] = useState(false);
-  const iframeRef = useRef(null);
+  // Trạng thái hệ thống phụ trợ
+  const [systemLogs, setSystemLogs] = useState([
+    { id: 1, type: 'info', text: 'Hệ thống chuẩn đoán cú pháp thông minh khởi chạy thành công.', time: new Date().toLocaleTimeString() }
+  ]);
+  const [copiedStatus, setCopiedStatus] = useState(false);
+  const [isTestingApi, setIsTestingApi] = useState(false);
+  const [apiTestResult, setApiTestResult] = useState(null);
+  const [cursorPosition, setCursorPosition] = useState({ line: 1, col: 1 });
+  const [activePreviewTab, setActivePreviewTab] = useState('live'); // live, web
+  const [externalUrl, setExternalUrl] = useState('https://vi.wikipedia.org');
 
-  // --- Các lỗi API thường gặp & giải pháp ---
-  const commonErrors = [
-    {
-      code: 'API_KEY_INVALID (403)',
-      cause: 'API Key không chính xác, đã hết hạn, hoặc chưa được kích hoạt dịch vụ Google AI Studio.',
-      fix: 'Truy cập Google AI Studio để tạo lại khóa API mới và đảm bảo khóa bắt đầu bằng cụm ký tự "AIzaSy".'
-    },
-    {
-      code: 'CORS Blocked (Access-Control-Allow-Origin)',
-      cause: 'Trình duyệt từ chối truy vấn API trực tiếp từ giao diện máy khách (Client-side) do chính sách bảo mật chia sẻ tài nguyên.',
-      fix: 'Kích hoạt công tắc "Sử dụng Proxy CORS" ở dưới hoặc chạy mã qua một server phụ trợ (Backend proxy).'
-    },
-    {
-      code: 'REGIONAL_RESTRICTION (400/403)',
-      cause: 'Quốc gia hiện tại của địa chỉ IP của bạn chưa nằm trong danh sách hỗ trợ đầy đủ của Gemini API.',
-      fix: 'Sử dụng dịch vụ VPN hoặc proxy chuyển hướng IP sang các quốc gia được hỗ trợ (Mỹ, Singapore, Nhật Bản, v.v.).'
-    },
-    {
-      code: 'RESOURCE_EXHAUSTED (429 Rate Limit)',
-      cause: 'Yêu cầu vượt quá giới hạn định mức của tài khoản (Request per minute - RPM).',
-      fix: 'Triển khai thuật toán Exponential Backoff tự động trì hoãn và gọi lại (đã tích hợp trong bộ test này).'
-    }
-  ];
+  const editorRef = useRef(null);
+  const fileInputRef = useRef(null);
 
-  // Cập nhật kết quả hiển thị Sandbox
-  useEffect(() => {
-    updateSandbox();
-  }, [codeContent]);
-
-  const updateSandbox = () => {
-    if (iframeRef.current) {
-      const document = iframeRef.current.contentDocument;
-      if (document) {
-        document.open();
-        document.write(codeContent);
-        document.close();
-      }
-    }
+  // Đồng bộ lưu khóa API Key bảo mật cục bộ
+  const handleSaveApiKey = (val) => {
+    setApiKey(val);
+    localStorage.setItem('gemini_api_key_v2', val);
   };
 
-  // --- Thuật toán gọi API Gemini chuẩn hóa với Exponential Backoff ---
-  const callGeminiWithRetry = async (prompt, keyToUse, maxRetries = 5) => {
-    const model = 'gemini-2.5-flash-preview-09-2025';
-    // Sử dụng CORS Proxy nếu được kích hoạt
+  const pushLog = (text, type = 'info') => {
+    setSystemLogs(prev => [
+      ...prev,
+      { id: Date.now(), type, text, time: new Date().toLocaleTimeString() }
+    ]);
+  };
+
+  useEffect(() => {
+    runLocalDiagnostics(codeContent);
+  }, [codeContent]);
+
+  const runLocalDiagnostics = (code) => {
+    if (!code.trim()) {
+      setLocalErrors([]);
+      return;
+    }
+
+    let errors = [];
+    
+    // 1. Quét lỗi cấu trúc thẻ HTML
+    const tagRegex = /<\/?([a-zA-Z0-9:-]+)(?:\s+[^>]*?)?(\/?)>/g;
+    const stack = [];
+    let match;
+    const selfClosingTags = ['img', 'br', 'input', 'hr', 'meta', 'link', 'source', 'embed', '!doctype'];
+
+    function getLineNumber(index) {
+      return code.substring(0, index).split('\n').length;
+    }
+
+    while ((match = tagRegex.exec(code)) !== null) {
+      const fullTag = match[0];
+      const tagName = match[1].toLowerCase();
+      const isSelfClosing = match[2] === '/';
+      const index = match.index;
+      const line = getLineNumber(index);
+
+      if (selfClosingTags.includes(tagName) || isSelfClosing) {
+        continue;
+      }
+
+      if (fullTag.startsWith('</')) {
+        if (stack.length === 0) {
+          errors.push({
+            line,
+            message: `Thừa thẻ đóng </${tagName}> không tìm thấy thẻ mở trước đó.`,
+            type: 'html-excess',
+            tagName,
+            pos: index,
+            len: fullTag.length
+          });
+        } else {
+          const last = stack.pop();
+          if (last.name !== tagName) {
+            errors.push({
+              line,
+              message: `Sai thứ tự: Phát hiện thẻ </${tagName}> đóng sai vị trí. Hệ thống đang đợi thẻ đóng </${last.name}> (mở ở dòng ${last.line}).`,
+              type: 'html-mismatch',
+              tagName: last.name,
+              incorrectTag: tagName,
+              pos: index,
+              len: fullTag.length
+            });
+          }
+        }
+      } else if (!fullTag.startsWith('<!--')) {
+        stack.push({ name: tagName, line, pos: index, len: fullTag.length });
+      }
+    }
+
+    while (stack.length > 0) {
+      const unclosed = stack.pop();
+      errors.push({
+        line: unclosed.line,
+        message: `Thẻ <${unclosed.name}> bị thiếu thẻ đóng </${unclosed.name}> thích hợp.`,
+        type: 'html-unclosed',
+        tagName: unclosed.name,
+        pos: unclosed.pos,
+        len: unclosed.len
+      });
+    }
+
+    // 2. Quét lỗi đóng mở ngoặc ({}, [], ())
+    const bracketStack = [];
+    const pairs = { ')': '(', ']': '[', '}': '{' };
+    const openers = ['(', '[', '{'];
+
+    for (let i = 0; i < code.length; i++) {
+      const char = code[i];
+      if (openers.includes(char)) {
+        bracketStack.push({ char, line: getLineNumber(i), pos: i });
+      } else if (pairs[char]) {
+        if (bracketStack.length === 0) {
+          errors.push({
+            line: getLineNumber(i),
+            message: `Dấu đóng ngoặc '${char}' không có dấu mở tương ứng.`,
+            type: 'bracket-excess',
+            char,
+            pos: i
+          });
+        } else {
+          const last = bracketStack.pop();
+          if (last.char !== pairs[char]) {
+            errors.push({
+              line: getLineNumber(i),
+              message: `Đóng ngoặc sai thứ tự: Gặp dấu đóng '${char}' trong khi đang đợi kết thúc ngoặc mở '${last.char}' ở dòng ${last.line}.`,
+              type: 'bracket-mismatch',
+              expected: Object.keys(pairs).find(key => pairs[key] === last.char),
+              actual: char,
+              pos: i
+            });
+          }
+        }
+      }
+    }
+
+    while (bracketStack.length > 0) {
+      const unclosedBracket = bracketStack.pop();
+      const expectedClosing = Object.keys(pairs).find(key => pairs[key] === unclosedBracket.char);
+      errors.push({
+        line: unclosedBracket.line,
+        message: `Quên đóng ngoặc kết thúc '${expectedClosing}' cho dấu mở '${unclosedBracket.char}'.`,
+        type: 'bracket-unclosed',
+        expected: expectedClosing,
+        pos: unclosedBracket.pos
+      });
+    }
+
+    // Lọc trùng lỗi lặp trên cùng một dòng
+    const uniqueErrors = [];
+    const visitedLines = new Set();
+    errors.forEach(err => {
+      if (!visitedLines.has(err.line)) {
+        visitedLines.add(err.line);
+        uniqueErrors.push(err);
+      }
+    });
+
+    setLocalErrors(uniqueErrors);
+  };
+
+  const callGeminiWithBackoff = async (promptText, systemPrompt = '', maxRetries = 5) => {
+    const model = 'gemini-2.5-flash';
     const baseUrl = corsProxyActive 
       ? 'https://cors-anywhere.herokuapp.com/https://generativelanguage.googleapis.com' 
       : 'https://generativelanguage.googleapis.com';
     
-    const url = `${baseUrl}/v1beta/models/${model}:generateContent?key=${keyToUse}`;
+    const url = `${baseUrl}/v1beta/models/${model}:generateContent?key=${apiKey}`;
     
     const payload = {
-      contents: [{ parts: [{ text: prompt }] }]
+      contents: [{ parts: [{ text: promptText }] }],
+      ...(systemPrompt && {
+        systemInstruction: { parts: [{ text: systemPrompt }] }
+      })
     };
 
-    let delay = 1000; // Khởi đầu từ 1s
+    let delay = 1000;
 
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    for (let i = 1; i <= maxRetries; i++) {
       try {
         const response = await fetch(url, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
         if (response.ok) {
-          const data = await response.json();
-          return { success: true, data };
+          const resJson = await response.json();
+          return { success: true, data: resJson };
         }
 
-        // Nếu gặp lỗi rate limit (429) hoặc máy chủ bận (503/504), tiến hành thử lại
+        // Tự động thử lại khi gặp lỗi Rate Limit (429) hoặc lỗi hệ thống bận (5xx)
         if (response.status === 429 || response.status >= 500) {
-          if (attempt === maxRetries) {
-            throw new Error(`Đã thử lại ${maxRetries} lần thất bại. Lỗi từ máy chủ: ${response.status}`);
+          if (i === maxRetries) {
+            throw new Error(`Đã thử kết nối ${maxRetries} lần nhưng không thành công. Mã phản hồi từ máy chủ: ${response.status}`);
           }
-          // Chờ đợi trước khi thử lại (Exponential Backoff)
+          pushLog(`Phát hiện nghẽn đường truyền (Mã ${response.status}). Đang tự động thử lại sau ${delay / 1000}s...`, 'warning');
           await new Promise(resolve => setTimeout(resolve, delay));
-          delay *= 2; // Gấp đôi thời gian chờ cho lượt sau (1s -> 2s -> 4s -> 8s -> 16s)
+          delay *= 2;
           continue;
         }
 
-        // Các lỗi khác như 400, 403 không thử lại vì cấu hình sai
-        const errData = await response.json().catch(() => ({}));
-        const errMsg = errData?.error?.message || `Mã lỗi ${response.status}`;
-        throw new Error(errMsg);
+        const errRes = await response.json().catch(() => ({}));
+        throw new Error(errRes?.error?.message || `Lỗi phản hồi hệ thống (Mã ${response.status})`);
 
-      } catch (error) {
-        // Nếu không phải là lỗi có thể thử lại, hoặc đã hết số lần thử
-        if (attempt === maxRetries || (!error.message.includes('429') && !error.message.includes('500') && !error.message.includes('Failed to fetch'))) {
-          return { success: false, error: error.message };
+      } catch (err) {
+        if (i === maxRetries || (!err.message.includes('429') && !err.message.includes('500') && !err.message.includes('Failed to fetch'))) {
+          return { success: false, error: err.message };
         }
         await new Promise(resolve => setTimeout(resolve, delay));
         delay *= 2;
@@ -172,598 +359,843 @@ export default function App() {
     }
   };
 
-  // --- Kiểm tra sức khỏe kết nối API (Diagnostics Run) ---
-  const handleDiagnoseConnection = async () => {
-    if (!apiKey) {
-      setDiagnosticResult({
+  // Tiến hành kiểm tra sức khỏe đường truyền API
+  const handleTestConnection = async () => {
+    if (!apiKey.trim()) {
+      setApiTestResult({
         status: 'error',
-        message: 'Vui lòng nhập mã API Key để tiến hành kiểm tra kết nối.',
-        suggestion: 'Bạn có thể lấy mã API miễn phí tại nền tảng Google AI Studio.'
+        title: 'Chưa Nhập API Key',
+        message: 'Bạn chưa dán mã khóa API. Vui lòng lấy khóa và dán vào ô cấu hình ở góc trên màn hình.',
+        suggestion: 'Lấy API Key hoàn toàn miễn phí từ bảng điều khiển Google AI Studio.'
       });
-      addLog('Thử nghiệm thất bại: Thiếu API Key.', 'error');
       return;
     }
 
-    setIsTesting(true);
-    setDiagnosticResult(null);
-    addLog(`Đang khởi chạy tiến trình chẩn đoán kết nối API...`, 'system');
+    setIsTestingApi(true);
+    setApiTestResult(null);
+    pushLog('Bắt đầu quy trình kiểm tra trạng thái liên kết API...', 'info');
 
-    // Bước 1: Kiểm tra kết nối Internet cơ bản
-    const isOnline = navigator.onLine;
-    if (!isOnline) {
-      setDiagnosticResult({
+    if (!navigator.onLine) {
+      setApiTestResult({
         status: 'error',
-        message: 'Không có kết nối Internet. Vui lòng kiểm tra lại đường truyền mạng của thiết bị.',
-        suggestion: 'Kiểm tra biểu tượng Wi-Fi hoặc cáp mạng LAN của bạn.'
+        title: 'Lỗi Mạng Thiết Bị',
+        message: 'Thiết bị của bạn hiện không có kết nối internet ngoại vi.',
+        suggestion: 'Kiểm tra lại bộ định tuyến Wi-Fi hoặc cáp kết nối LAN của bạn.'
       });
-      setIsTesting(false);
-      addLog('Thử nghiệm thất bại: Ngoại tuyến.', 'error');
+      setIsTestingApi(false);
       return;
     }
 
-    // Bước 2: Chạy kiểm tra latency & CORS bằng cách ping nhẹ
     const startTime = performance.now();
-    addLog('Đang phân tích độ trễ và khả năng tiếp cận máy chủ Google API...', 'system');
-
-    // Chạy truy vấn kiểm tra thực tế
-    const prompt = "Kiểm tra kết nối. Vui lòng trả lời ngắn gọn từ 'OK'.";
-    const result = await callGeminiWithRetry(prompt, apiKey, 3);
+    const testPrompt = "Kiểm tra kết nối. Vui lòng phản hồi ngắn gọn bằng từ 'OK'.";
+    const result = await callGeminiWithBackoff(testPrompt, 'Bạn là trợ lý máy khách kiểm tra kết nối.', 3);
     const endTime = performance.now();
     const latency = Math.round(endTime - startTime);
 
     if (result.success) {
-      const responseText = result.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      setDiagnosticResult({
+      const responseSample = result.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      setApiTestResult({
         status: 'success',
+        title: 'Kết Nối Hoàn Hảo!',
         latency,
-        message: 'Kết nối API thành công tốt đẹp!',
-        responseSample: responseText.trim(),
-        details: `Độ phản hồi trung bình đạt ${latency}ms. Quy trình xử lý lỗi Exponential Backoff hoạt động mượt mà.`
+        message: 'Trợ lý AI của bạn đã liên kết thành công tốt đẹp với mô hình Gemini.',
+        sample: responseSample.trim()
       });
-      addLog(`Kiểm tra API hoàn tất thành công. Độ trễ: ${latency}ms`, 'success');
+      pushLog(`API hoạt động ổn định. Độ phản hồi: ${latency}ms.`, 'success');
     } else {
-      // Nhận diện lỗi để đưa ra giải pháp cụ thể
-      const errorMsg = result.error;
-      let errorCategory = 'LỖI CHƯA XÁC ĐỊNH';
-      let cleanSuggestion = 'Kiểm tra lại cấu trúc URL và định dạng API Key.';
+      let category = 'LỖI CHƯA PHÂN LOẠI';
+      let fixSuggest = 'Xem lại cú pháp gọi URL hoặc cấu trúc của payload truyền lên.';
 
-      if (errorMsg.includes('API_KEY_INVALID') || errorMsg.includes('key is not valid') || errorMsg.includes('403')) {
-        errorCategory = 'Mã API Key không hợp lệ';
-        cleanSuggestion = 'Hãy sao chép chính xác từng ký tự mã khóa trong bảng điều khiển AI Studio.';
-      } else if (errorMsg.includes('Failed to fetch') || errorMsg.includes('CORS')) {
-        errorCategory = 'Lỗi bảo mật CORS hoặc chặn mạng cục bộ';
-        cleanSuggestion = 'Bật tính năng "Sử dụng Proxy CORS" phía dưới để lách qua rào cản kiểm duyệt của trình duyệt.';
-      } else if (errorMsg.includes('429') || errorMsg.includes('quota')) {
-        errorCategory = 'Quá tải định mức (Rate Limit Exceeded)';
-        cleanSuggestion = 'Tài khoản miễn phí của bạn tạm thời hết lượt yêu cầu. Đợi vài phút hoặc nâng cấp hạn mức.';
-      } else if (errorMsg.includes('location') || errorMsg.includes('not supported')) {
-        errorCategory = 'Khu vực địa lý không được hỗ trợ';
-        cleanSuggestion = 'Gemini API giới hạn một số quốc gia. Hãy dùng VPN chuyển vùng sang Mỹ hoặc Singapore để khắc phục.';
+      const errText = result.error || '';
+      if (errText.includes('API_KEY_INVALID') || errText.includes('key is not valid') || errText.includes('403')) {
+        category = 'Mã API Key Không Hợp Lệ';
+        fixSuggest = 'Sao chép chính xác từng ký tự mã khóa trong tài khoản Google AI Studio của bạn.';
+      } else if (errText.includes('Failed to fetch') || errText.includes('CORS')) {
+        category = 'Bị Chặn CORS Trình Duyệt';
+        fixSuggest = 'Kích hoạt công tắc "Sử dụng Proxy CORS" phía dưới để lách qua rào cản chia sẻ tài nguyên bảo mật.';
+      } else if (errText.includes('quota') || errText.includes('429')) {
+        category = 'Hết Hạn Mức Yêu Cầu (Quota Exceeded)';
+        fixSuggest = 'Tài khoản miễn phí đã hết lượt truy vấn tạm thời. Đợi một lúc rồi thử lại hoặc nâng cấp hạn mức.';
+      } else if (errText.includes('location') || errText.includes('not supported')) {
+        category = 'Khu Vực Địa Lý Bị Hạn Chế';
+        fixSuggest = 'Sử dụng dịch vụ VPN (vượt tường lửa) chuyển hướng vùng IP sang Hoa Kỳ (US) hoặc Singapore.';
       }
 
-      setDiagnosticResult({
+      setApiTestResult({
         status: 'error',
-        errorName: errorCategory,
-        message: errorMsg,
-        suggestion: cleanSuggestion
+        title: category,
+        message: errText,
+        suggestion: fixSuggest
       });
-      addLog(`Phát hiện lỗi API: ${errorCategory} (${errorMsg})`, 'error');
+      pushLog(`Lỗi liên kết API: ${category}`, 'error');
     }
-    setIsTesting(false);
+
+    setIsTestingApi(false);
   };
 
-  // --- Trộn & Chèn Code Tự động (Mô phỏng xử lý) ---
-  const handleSmartMerge = () => {
+  const triggerFileSelection = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    readFileContent(file);
+  };
+
+  const readFileContent = (file) => {
+    setFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setCodeContent(event.target.result);
+      pushLog(`Đã tải file gốc: ${file.name}`, 'success');
+    };
+    reader.readAsText(file);
+  };
+
+  const downloadModifiedFile = () => {
+    if (!codeContent.trim()) return;
+    const blob = new Blob([codeContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    pushLog(`Đã xuất và tải về file: ${fileName}`, 'success');
+  };
+
+  const handleLocalQuickFix = (idx) => {
+    const err = localErrors[idx];
+    if (!err) return;
+
+    let updated = codeContent;
+
+    if (err.type === 'html-unclosed') {
+      const insertTag = `</${err.tagName}>`;
+      updated = updated.substring(0, err.pos + err.len) + insertTag + updated.substring(err.pos + err.len);
+      pushLog(`Tự động bổ sung thẻ đóng ${insertTag} thành công.`, 'success');
+    } else if (err.type === 'html-mismatch') {
+      const correctTag = `</${err.tagName}>`;
+      updated = updated.substring(0, err.pos) + correctTag + updated.substring(err.pos + err.len);
+      pushLog(`Đã sửa đổi thẻ đóng sai khớp sang ${correctTag}.`, 'success');
+    } else if (err.type === 'bracket-unclosed') {
+      updated = updated.substring(0, err.pos + 1) + err.expected + updated.substring(err.pos + 1);
+      pushLog(`Tự động bù ngoặc ${err.expected} hoàn thành.`, 'success');
+    } else if (err.type === 'bracket-excess' || err.type === 'html-excess') {
+      updated = updated.substring(0, err.pos) + updated.substring(err.pos + (err.len || 1));
+      pushLog(`Đã tẩy ký tự dư thừa khỏi cấu trúc.`, 'success');
+    }
+
+    setCodeContent(updated);
+  };
+
+  // Chèn một khuôn mẫu code tại vị trí con trỏ chuột hiện hành
+  const handleInsertSnippetAtCaret = (snippetText) => {
+    if (!editorRef.current) return;
+    const start = editorRef.current.selectionStart;
+    const end = editorRef.current.selectionEnd;
+    const currentVal = editorRef.current.value;
+
+    const updated = currentVal.substring(0, start) + snippetText + currentVal.substring(end);
+    setCodeContent(updated);
+    
+    setTimeout(() => {
+      editorRef.current.focus();
+      const newCursor = start + snippetText.length;
+      editorRef.current.setSelectionRange(newCursor, newCursor);
+    }, 50);
+  };
+
+  // AI Trộn và ghép mã nguồn tự động
+  const handleRequestSmartMerge = async () => {
+    if (!apiKey) {
+      pushLog('Yêu cầu AI bị từ chối: Hãy điền API Key ở góc trên để liên kết dịch vụ.', 'error');
+      return;
+    }
     if (!inputSnippet.trim()) {
-      addLog('Lỗi trộn mã: Không tìm thấy nội dung mã con cần chèn.', 'error');
+      pushLog('Yêu cầu AI bị từ chối: Nội dung đoạn mã cần chèn đang trống.', 'error');
       return;
     }
 
-    addLog('Bắt đầu quy trình ghép nối và trộn mã thông minh...', 'system');
-    
-    // Thuật toán chèn mã cơ bản dựa trên chỉ dẫn của người dùng
-    let updatedCode = codeContent;
-    const instructionClean = mergeInstruction.toLowerCase();
+    setIsAiLoading(true);
+    setAiResult(null);
+    pushLog('Đang chuyển yêu cầu chèn code thông minh tới bộ não AI...', 'info');
 
-    try {
-      if (instructionClean.includes('cuối body') || instructionClean.includes('</body>')) {
-        if (updatedCode.includes('</body>')) {
-          updatedCode = updatedCode.replace('</body>', `${inputSnippet}\n</body>`);
-        } else {
-          updatedCode = updatedCode + `\n${inputSnippet}`;
-        }
-        addLog('Đã chèn mã thành công vào ngay trước thẻ </body>.', 'success');
-      } else if (instructionClean.includes('cuối head') || instructionClean.includes('</head>')) {
-        if (updatedCode.includes('</head>')) {
-          updatedCode = updatedCode.replace('</head>', `${inputSnippet}\n</head>`);
-        } else {
-          updatedCode = `\n${inputSnippet}\n` + updatedCode;
-        }
-        addLog('Đã chèn mã thành công vào ngay trước thẻ </head>.', 'success');
-      } else {
-        // Chèn vào cuối tệp nếu không khớp mẫu đặc biệt nào
-        updatedCode = updatedCode + `\n\n<!-- Đoạn mã chèn bổ sung -->\n${inputSnippet}`;
-        addLog('Không định vị rõ từ khóa, đã tự động chèn đoạn mã mới vào cuối tệp tin.', 'system');
+    const systemPrompt = "Bạn là trợ lý AI chuyên môn chắp vá và gộp mã nguồn cực kỳ chính xác. Nhiệm vụ của bạn là nhận tệp mã nguồn chính, nhận tệp mã nguồn con cần chèn, và chỉ thị yêu cầu vị trí chèn để gộp thành một tệp duy nhất sạch đẹp. Bạn PHẢI trả về một chuỗi JSON chuẩn có định dạng:\n" +
+      "{\n" +
+      "  \"explanation\": \"Ghi rõ điểm lồng ghép và các chỉnh sửa bằng tiếng Việt (không lồng markdown).\",\n" +
+      "  \"updatedCode\": \"Toàn bộ mã nguồn hoàn chỉnh đã gộp.\"\n" +
+      "}\n" +
+      "Không bao gồm thêm bất cứ ký tự nào ngoài chuỗi JSON này.";
+
+    const query = `Mã nguồn gốc hiện tại:\n\`\`\`\n${codeContent}\n\`\`\`\n\nMã nguồn con muốn chèn vào:\n\`\`\`\n${inputSnippet}\n\`\`\`\n\nHướng dẫn vị trí hoặc cách chèn: ${mergeInstruction}`;
+
+    const res = await callGeminiWithBackoff(query, systemPrompt);
+
+    if (res.success) {
+      try {
+        const rawText = res.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const data = JSON.parse(rawText);
+        setAiResult(data);
+        pushLog('Đã ghép mã nguồn thông minh thành công thông qua trí tuệ nhân tạo!', 'success');
+      } catch (e) {
+        pushLog('Đầu ra của AI có định dạng chưa chuẩn, vui lòng thử lại yêu cầu.', 'error');
       }
-
-      setCodeContent(updatedCode);
-      addLog('Đã cập nhật Sandbox với mã nguồn mới ghép nối.', 'success');
-      setActiveTab('editor'); // Chuyển sang tab biên tập để người dùng quan sát
-    } catch (e) {
-      addLog(`Lỗi xử lý ghép nối: ${e.message}`, 'error');
+    } else {
+      pushLog(`Xảy ra sự cố khi gọi mô hình: ${res.error}`, 'error');
     }
+    setIsAiLoading(false);
   };
 
-  // --- Gửi câu hỏi cho Trợ lý hỗ trợ lập trình ---
-  const handleSendChat = async () => {
+  // Trợ lý đàm thoại thông minh
+  const handleRequestChat = async () => {
     if (!chatInput.trim()) return;
 
-    const userMsg = { role: 'user', text: chatInput };
-    setChatHistory(prev => [...prev, userMsg]);
+    const userMessage = chatInput;
+    setChatHistory(prev => [...prev, { role: 'user', text: userMessage }]);
     setChatInput('');
 
-    // Nếu người dùng có nhập API key, sử dụng API thật để trả lời, ngược lại sử dụng dữ liệu mẫu thông minh
-    if (apiKey) {
-      setChatHistory(prev => [...prev, { role: 'assistant', text: 'Đang liên hệ với bộ não AI để phản hồi bạn...', loading: true }]);
-      
-      const systemContext = "Bạn là trợ lý ảo chuyên về chẩn đoán lỗi lập trình và API hệ thống. Hãy phản hồi ngắn gọn, rõ ràng, luôn cung cấp giải pháp cụ thể bằng tiếng Việt.";
-      const promptText = `${systemContext}\n\nNgười dùng hỏi: ${userMsg.text}`;
-
-      const res = await callGeminiWithRetry(promptText, apiKey);
-      
-      setChatHistory(prev => {
-        const filtered = prev.filter(c => !c.loading);
-        if (res.success) {
-          const aiResponse = res.data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Tôi đã xử lý yêu cầu nhưng không có nội dung trả về.';
-          return [...filtered, { role: 'assistant', text: aiResponse }];
-        } else {
-          return [...filtered, { role: 'assistant', text: `Tôi không thể tự động trả lời vì API gặp lỗi: ${res.error}. Hãy tham khảo các cẩm nang lỗi ở thanh bên nhé!` }];
-        }
-      });
-    } else {
-      // Mô phỏng câu trả lời thông minh dựa trên từ khóa người dùng nhập vào
-      setChatHistory(prev => [...prev, { role: 'assistant', text: 'Trợ lý đang phân tích mã lỗi...', loading: true }]);
-      
+    if (!apiKey) {
+      // Mô phỏng chế độ trả lời thông minh cục bộ không cần API
+      setChatHistory(prev => [...prev, { role: 'assistant', text: 'Đang chuẩn bị câu trả lời ngoại tuyến...', loading: true }]);
       setTimeout(() => {
-        let aiAnswer = 'Tôi hiểu bạn đang gặp rắc rối với mã nguồn hoặc kết nối. Hãy thử nhập API Key hợp lệ để kích hoạt toàn bộ sức mạnh chẩn đoán tự động nhé!';
-        const cleanInput = userMsg.text.toLowerCase();
-
-        if (cleanInput.includes('cors') || cleanInput.includes('chặn')) {
-          aiAnswer = 'Lỗi CORS xảy ra do trình duyệt từ chối nhận dữ liệu từ domain lạ. Bạn hãy chuyển đổi nút "Sử dụng Proxy CORS" phía dưới phần chẩn đoán, hoặc cấu hình backend để trả về header `Access-Control-Allow-Origin: *`.';
-        } else if (cleanInput.includes('403') || cleanInput.includes('key')) {
-          aiAnswer = 'Mã lỗi 403 Forbidden thường đại diện cho khóa API bị từ chối. Vui lòng xác thực xem bạn đã bật "Gemini API" trong bảng điều khiển Google Cloud và dán đúng khóa hay chưa.';
-        } else if (cleanInput.includes('chèn') || cleanInput.includes('dán')) {
-          aiAnswer = 'Để trộn mã tối ưu nhất, hãy chuyển qua tab "Trộn & Chèn Code" ở cột bên cạnh, dán đoạn code vào và ghi rõ yêu cầu như: "Chèn vào ngay sau thẻ mở body". Hệ thống sẽ thực hiện lắp ráp tự động.';
+        let responseText = 'Tôi nhận thấy bạn đang hỏi về cấu trúc hệ thống. Bạn hãy dán khóa API Key ở góc trên bên phải để tôi có thể kết nối với mô hình AI mạnh mẽ trả lời trực tiếp nhé!';
+        const lowerInput = userMessage.toLowerCase();
+        if (lowerInput.includes('lỗi') || lowerInput.includes('đỏ')) {
+          responseText = 'Mã lỗi đỏ nghĩa là tệp code của bạn đang bị lỗi đóng thẻ HTML hoặc lệch ngoặc {}, []. Hãy xem bảng danh sách chẩn đoán lỗi ở góc dưới màn hình, bấm nút "Sửa nhanh" để được tự động dọn dẹp lỗi tức thì!';
+        } else if (lowerInput.includes('chèn') || lowerInput.includes('trộn')) {
+          responseText = 'Để thực hiện chèn code con vào tệp chính, bạn hãy chọn Tab "Trộn & Chèn Code" ở panel trái, dán đoạn code con vào rồi ghi rõ yêu cầu chèn ở cuối nhé!';
         }
-
         setChatHistory(prev => {
-          const filtered = prev.filter(c => !c.loading);
-          return [...filtered, { role: 'assistant', text: aiAnswer }];
+          const clean = prev.filter(c => !c.loading);
+          return [...clean, { role: 'assistant', text: responseText }];
         });
-      }, 800);
+      }, 700);
+      return;
     }
-  };
 
-  const addLog = (message, type = 'system') => {
-    setAssistantLogs(prev => [
-      ...prev,
-      { id: Date.now(), type, message, time: new Date().toLocaleTimeString() }
-    ]);
-  };
+    setChatHistory(prev => [...prev, { role: 'assistant', text: 'Đang hỏi AI trợ giúp...', loading: true }]);
 
-  const handleCopyCode = () => {
-    document.execCommand('copy'); // Sử dụng dự phòng tương thích môi trường iFrame
-    navigator.clipboard.writeText(codeContent).then(() => {
-      setCopiedIndex(true);
-      setTimeout(() => setCopiedIndex(false), 2000);
+    const systemPrompt = "Bạn là chuyên gia chẩn đoán lập trình và gỡ lỗi API có kinh nghiệm dày dạn. Luôn luôn giải đáp nhiệt tình, lịch sự, ngắn gọn và cung cấp phương pháp sửa mã chi tiết bằng tiếng Việt.";
+    const query = `Mã nguồn hiện tại:\n\`\`\`\n${codeContent}\n\`\`\`\n\nCâu hỏi của tôi: ${userMessage}`;
+
+    const res = await callGeminiWithBackoff(query, systemPrompt);
+
+    setChatHistory(prev => {
+      const clean = prev.filter(c => !c.loading);
+      if (res.success) {
+        const text = res.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        return [...clean, { role: 'assistant', text }];
+      } else {
+        return [...clean, { role: 'assistant', text: `Tôi không thể phản hồi do trục trặc API kết nối: ${res.error}. Vui lòng kiểm tra lại cấu hình khóa API.` }];
+      }
     });
   };
 
-  const handleResetCode = () => {
-    if (window.confirm('Bạn có chắc chắn muốn khôi phục mã nguồn ban đầu không?')) {
-      setCodeContent(defaultCode);
-      addLog('Đã khôi phục mã nguồn mẫu mặc định.', 'system');
-    }
+  // Cập nhật tọa độ trỏ chuột
+  const handleCursorMovement = (e) => {
+    const el = e.target;
+    const start = el.selectionStart;
+    const text = el.value.substring(0, start);
+    const lines = text.split('\n');
+    setCursorPosition({
+      line: lines.length,
+      col: lines[lines.length - 1].length + 1
+    });
+  };
+
+  // Áp dụng đoạn code sau khi AI đã gộp về khung biên soạn gốc
+  const handleApplyAiCodeToEditor = () => {
+    if (!aiResult?.updatedCode) return;
+    setCodeContent(aiResult.updatedCode);
+    setAiResult(null);
+    pushLog('Đã đồng bộ đoạn mã được trộn thành công trở về khung biên soạn chính.', 'success');
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-950 text-slate-100 font-sans overflow-hidden">
-      
-      {/* HEADER */}
-      <header className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-500/20">
-            <Terminal size={24} className="animate-pulse" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">
-              AI Code Diagnostic & Smart Studio
-            </h1>
-            <p className="text-xs text-slate-400">Trình phân tích & Trộn mã tự động chuyên sâu</p>
-          </div>
-        </div>
-
-        {/* Trạng thái mạng / API Key nhanh */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-slate-850 px-3 py-1.5 rounded-lg border border-slate-800 text-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            <span className="text-slate-300">Tự động Thử Lại (Exponential Backoff: Bật)</span>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <input
-              type="password"
-              placeholder="Nhập Gemini API Key để kiểm thử..."
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              className="bg-slate-950 text-xs text-slate-200 border border-slate-800 rounded-lg px-3 py-1.5 w-60 focus:outline-none focus:border-blue-500 transition-all"
-            />
-          </div>
-        </div>
-      </header>
-
-      {/* MAIN CONTAINER */}
-      <div className="flex flex-1 overflow-hidden">
+    <ErrorBoundary>
+      <div className="flex flex-col h-screen bg-slate-950 text-slate-100 font-sans overflow-hidden">
         
-        {/* PANEL TRÁI: ĐIỀU KHIỂN & CHẨN ĐOÁN (40% Width) */}
-        <div className="w-[40%] flex flex-col border-r border-slate-800 bg-slate-900/50 overflow-hidden">
-          
-          {/* THANH MENU TABS */}
-          <div className="flex border-b border-slate-800 bg-slate-900 shrink-0">
-            <button
-              onClick={() => setActiveTab('diagnose')}
-              className={`flex-1 py-3 text-sm font-semibold transition-all border-b-2 flex items-center justify-center gap-2 ${
-                activeTab === 'diagnose' 
-                  ? 'border-blue-500 text-blue-400 bg-slate-850' 
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
-              }`}
-            >
-              <ShieldAlert size={16} />
-              Chẩn Đoán API
-            </button>
-            <button
-              onClick={() => setActiveTab('merge')}
-              className={`flex-1 py-3 text-sm font-semibold transition-all border-b-2 flex items-center justify-center gap-2 ${
-                activeTab === 'merge' 
-                  ? 'border-blue-500 text-blue-400 bg-slate-850' 
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
-              }`}
-            >
-              <Layers size={16} />
-              Trộn & Chèn Code
-            </button>
-            <button
-              onClick={() => setActiveTab('chat')}
-              className={`flex-1 py-3 text-sm font-semibold transition-all border-b-2 flex items-center justify-center gap-2 ${
-                activeTab === 'chat' 
-                  ? 'border-blue-500 text-blue-400 bg-slate-850' 
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-850/50'
-              }`}
-            >
-              <Sparkles size={16} />
-              Trợ Lý AI
-            </button>
+        {/* TOP NAVBAR HEADER */}
+        <header className="flex flex-col md:flex-row md:items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shrink-0 gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-gradient-to-tr from-rose-600 to-red-600 rounded-xl text-white shadow-lg shadow-rose-500/10">
+              <ShieldAlert size={24} className="animate-pulse" />
+            </div>
+            <div>
+              <h1 className="text-base md:text-lg font-bold bg-gradient-to-r from-red-400 to-rose-300 bg-clip-text text-transparent flex items-center gap-2">
+                AI Code Diagnostic & Smart Studio
+                <span className="text-[9px] bg-red-500/15 text-red-400 border border-red-500/30 px-2 py-0.5 rounded font-extrabold uppercase tracking-wide">Pro</span>
+              </h1>
+              <p className="text-[11px] text-slate-400">Hệ thống phân tích lỗi cú pháp thời gian thực & Gộp ghép mã thông minh</p>
+            </div>
           </div>
 
-          {/* NỘI DUNG CHI TIẾT TỪNG TAB */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-5">
+          {/* Quick system status dashboard */}
+          <div className="flex flex-wrap items-center gap-3 text-xs">
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileChange} 
+              className="hidden" 
+              accept=".html,.js,.css,.json,.py,.java,.cpp,.txt"
+            />
+
+            <button 
+              onClick={triggerFileSelection}
+              className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg font-semibold transition text-[11px] text-slate-200 border border-slate-700"
+            >
+              <Upload size={14} className="text-blue-400" />
+              <span>Nạp File Gốc</span>
+            </button>
+
+            <button 
+              onClick={downloadModifiedFile}
+              className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg font-semibold transition text-[11px] text-slate-200 border border-slate-700"
+            >
+              <Download size={14} className="text-emerald-400" />
+              <span>Xuất File</span>
+            </button>
+
+            {/* Quick API key secure setup */}
+            <div className="relative flex items-center gap-2 bg-slate-950 p-1.5 rounded-lg border border-slate-850">
+              <i data-lucide="key" className="w-3.5 h-3.5 text-amber-500"></i>
+              <input
+                type="password"
+                placeholder="Nhập Gemini API Key của bạn..."
+                value={apiKey}
+                onChange={(e) => handleSaveApiKey(e.target.value)}
+                className="bg-transparent text-[11px] outline-none text-slate-200 w-44 placeholder-slate-600 focus:w-56 transition-all"
+              />
+            </div>
+
+            {/* Global diagnostic status light */}
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[11px] font-semibold ${
+              localErrors.length === 0 
+                ? 'bg-emerald-950/20 border-emerald-800/40 text-emerald-400' 
+                : 'bg-rose-950/20 border-rose-800/40 text-red-400 animate-pulse'
+            }`}>
+              <span className={`w-2 h-2 rounded-full ${localErrors.length === 0 ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
+              <span>{localErrors.length === 0 ? 'Sạch lỗi đỏ' : `Phát hiện ${localErrors.length} lỗi`}</span>
+            </div>
+          </div>
+        </header>
+
+        {/* WORKSPACE DIVIDER */}
+        <div className="flex flex-1 flex-col lg:flex-row overflow-hidden">
+          
+          {}
+          {/* PANEL TRÁI: ĐIỀU KHIỂN & CHẨN ĐOÁN (35% WIDTH) */}
+          <section className="w-full lg:w-[35%] flex flex-col border-r border-slate-800 bg-slate-900/40 overflow-hidden">
             
-            {/* TAB 1: CHẨN ĐOÁN LỖI KẾT NỐI API */}
-            {activeTab === 'diagnose' && (
-              <div className="space-y-4 animate-fadeIn">
-                <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
-                  <h3 className="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
-                    <Wifi size={16} className="text-blue-400" />
-                    Thử nghiệm và phân tích đường truyền API
-                  </h3>
-                  <p className="text-xs text-slate-400 mb-4">
-                    Nhập mã API của bạn ở đầu trang, sau đó nhấn nút "Chạy Chẩn Đoán" để quét toàn bộ trạng thái kết nối và phản hồi từ hệ thống Google AI Studio.
-                  </p>
+            {/* TABS MENU */}
+            <div className="flex border-b border-slate-800 bg-slate-900 shrink-0 text-xs">
+              <button
+                onClick={() => setActiveTab('diagnose')}
+                className={`flex-1 py-3 font-semibold transition border-b-2 flex items-center justify-center gap-2 ${
+                  activeTab === 'diagnose' ? 'border-red-500 text-red-400 bg-slate-850/50' : 'border-transparent text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <ShieldAlert size={14} />
+                Phân Tích API & Sức Khỏe
+              </button>
+              <button
+                onClick={() => setActiveTab('merge')}
+                className={`flex-1 py-3 font-semibold transition border-b-2 flex items-center justify-center gap-2 ${
+                  activeTab === 'merge' ? 'border-red-500 text-red-400 bg-slate-850/50' : 'border-transparent text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Layers size={14} />
+                Trộn & Chèn Code
+              </button>
+              <button
+                onClick={() => setActiveTab('chat')}
+                className={`flex-1 py-3 font-semibold transition border-b-2 flex items-center justify-center gap-2 ${
+                  activeTab === 'chat' ? 'border-red-500 text-red-400 bg-slate-850/50' : 'border-transparent text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Sparkles size={14} />
+                Trợ Lý Cấu Trúc AI
+              </button>
+            </div>
 
-                  <div className="flex items-center justify-between mb-4 bg-slate-950 p-3 rounded-lg border border-slate-850">
-                    <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-slate-300">Sử dụng Proxy CORS</span>
-                      <span className="text-[10px] text-slate-500">Giúp bypass lỗi chia sẻ tài nguyên trên localhost/trình duyệt</span>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input 
-                        type="checkbox" 
-                        checked={corsProxyActive} 
-                        onChange={() => {
-                          setCorsProxyActive(!corsProxyActive);
-                          addLog(`Đã ${!corsProxyActive ? 'BẬT' : 'TẮT'} cơ chế CORS Proxy.`, 'system');
-                        }}
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 peer-checked:after:bg-white"></div>
-                    </label>
-                  </div>
-
-                  <button
-                    onClick={handleDiagnoseConnection}
-                    disabled={isTesting}
-                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 text-white rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 shadow-md shadow-blue-500/10"
-                  >
-                    {isTesting ? (
-                      <>
-                        <RefreshCw size={14} className="animate-spin" />
-                        Đang dò lỗi và đo độ trễ...
-                      </>
-                    ) : (
-                      <>
-                        <Play size={14} />
-                        Khởi Chạy Chẩn Đoán Kết Nối
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                {/* Kết quả chẩn đoán */}
-                {diagnosticResult && (
-                  <div className={`p-4 rounded-xl border animate-fadeIn ${
-                    diagnosticResult.status === 'success' 
-                      ? 'bg-emerald-950/30 border-emerald-800/60 text-emerald-300' 
-                      : 'bg-rose-950/30 border-rose-800/60 text-rose-300'
-                  }`}>
-                    <div className="flex items-start gap-2.5">
-                      {diagnosticResult.status === 'success' ? (
-                        <CheckCircle2 size={18} className="text-emerald-400 shrink-0 mt-0.5" />
-                      ) : (
-                        <AlertTriangle size={18} className="text-rose-400 shrink-0 mt-0.5" />
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-xs font-bold uppercase tracking-wider mb-1">
-                          {diagnosticResult.status === 'success' ? 'Kết quả: Hoạt Động Tốt' : `Kết quả: ${diagnosticResult.errorName || 'Lỗi Kết Nối'}`}
-                        </h4>
-                        <p className="text-xs text-slate-300 mb-2">{diagnosticResult.message}</p>
-                        
-                        {diagnosticResult.latency && (
-                          <div className="text-[11px] bg-emerald-950/50 p-2 rounded border border-emerald-900/50 font-mono mb-2">
-                            Độ trễ phản hồi: <span className="font-bold text-emerald-400">{diagnosticResult.latency}ms</span>
-                          </div>
-                        )}
-
-                        <div className="text-xs bg-slate-900/80 p-2.5 rounded border border-slate-800">
-                          <span className="font-semibold block text-slate-200 mb-1">Gợi ý sửa lỗi nhanh:</span>
-                          <span className="text-[11px] text-slate-300">{diagnosticResult.suggestion}</span>
-                        </div>
-
-                        {diagnosticResult.responseSample && (
-                          <div className="mt-3">
-                            <span className="text-[10px] uppercase text-slate-400 block font-bold mb-1">Chuỗi Phản Hồi Mẫu (Mô hình):</span>
-                            <pre className="text-[10px] font-mono p-2 bg-slate-950 rounded border border-slate-800 text-slate-300 overflow-x-auto whitespace-pre-wrap">
-                              {diagnosticResult.responseSample}
-                            </pre>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Danh mục Cẩm nang lỗi tích hợp */}
-                <div className="space-y-3">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                    <HelpCircle size={14} />
-                    Cẩm nang sửa lỗi API nhanh (Tiếng Việt)
-                  </h3>
+            {/* TAB PANES */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              
+              {/* TAB 1: DIAGNOSE API HEALTH */}
+              {activeTab === 'diagnose' && (
+                <div className="space-y-4 animate-fadeIn">
                   
-                  {commonErrors.map((err, idx) => (
-                    <div key={idx} className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-850 hover:border-slate-800 transition-all">
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500"></div>
-                        <span className="text-xs font-bold text-slate-200">{err.code}</span>
+                  {/* Test action block */}
+                  <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <h3 className="text-xs font-bold text-slate-200 flex items-center gap-2">
+                      <Wifi size={16} className="text-red-400" />
+                      Hộp đo lường & Chẩn đoán kết nối API
+                    </h3>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">
+                      Để ứng dụng hoạt động không đứt quãng, bạn có thể thực hiện kiểm tra cấu hình mạng, đo độ trễ ngoại vi và kích hoạt các cổng proxy dự phòng khi bị nghẽn.
+                    </p>
+
+                    {/* CORS Proxy toggle switcher */}
+                    <div className="flex items-center justify-between bg-slate-950 p-2.5 rounded-lg border border-slate-850 text-[11px]">
+                      <div>
+                        <span className="font-semibold block text-slate-300">Sử dụng Proxy CORS dự phòng</span>
+                        <span className="text-[9px] text-slate-500">Kích hoạt khi gặp lỗi bị chặn Access-Control-Allow-Origin</span>
                       </div>
-                      <p className="text-[11px] text-slate-400 mb-2"><strong className="text-slate-300">Nguyên nhân:</strong> {err.cause}</p>
-                      <div className="p-2 bg-slate-950 rounded border border-slate-850 text-[11px] text-slate-300">
-                        <strong className="text-blue-400 font-semibold">Khắc phục:</strong> {err.fix}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* TAB 2: TRỘN & CHÈN CODE THÔNG MINH */}
-            {activeTab === 'merge' && (
-              <div className="space-y-4 animate-fadeIn">
-                <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
-                  <h3 className="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2">
-                    <Layers size={16} className="text-blue-400" />
-                    Trình dán & Ghép mã thông minh
-                  </h3>
-                  <p className="text-xs text-slate-400 mb-3">
-                    Dán một khối code ngoài (HTML, Script, CSS, v.v.) rồi đặt vị trí cần tích hợp. Hệ thống AI cục bộ sẽ tìm kiếm điểm ghép phù hợp nhất trong file chính mà không làm vỡ mã sẵn có.
-                  </p>
-
-                  <div className="space-y-3.5">
-                    {/* Ô nhập Code Snippet */}
-                    <div>
-                      <label className="block text-xs font-bold text-slate-300 mb-1">Mã con cần chèn (Snippet):</label>
-                      <textarea
-                        value={inputSnippet}
-                        onChange={(e) => setInputSnippet(e.target.value)}
-                        placeholder="Ví dụ: <button class='bg-red-500'>Nút Khẩn Cấp</button> hoặc đoạn JS xử lý..."
-                        className="w-full h-32 bg-slate-950 font-mono text-xs text-slate-300 p-3 rounded-lg border border-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                      />
+                      <label className="relative inline-flex items-center cursor-pointer select-none">
+                        <input 
+                          type="checkbox" 
+                          checked={corsProxyActive}
+                          onChange={() => {
+                            setCorsProxyActive(!corsProxyActive);
+                            pushLog(`Đã ${!corsProxyActive ? 'BẬT' : 'TẮT'} cơ chế máy chủ Proxy CORS.`, 'info');
+                          }}
+                          className="sr-only peer"
+                        />
+                        <div className="w-9 h-5 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600 peer-checked:after:bg-white"></div>
+                      </label>
                     </div>
 
-                    {/* Vị trí chèn */}
-                    <div>
-                      <label className="block text-xs font-bold text-slate-300 mb-1">Yêu cầu vị trí chèn:</label>
-                      <input
-                        type="text"
-                        value={mergeInstruction}
-                        onChange={(e) => setMergeInstruction(e.target.value)}
-                        placeholder="Chèn vào ngay trước thẻ đóng </body>..."
-                        className="w-full bg-slate-950 text-xs text-slate-300 p-2.5 rounded-lg border border-slate-800 focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-
-                    {/* Nút thực thi */}
                     <button
-                      onClick={handleSmartMerge}
-                      className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/10"
+                      onClick={handleTestConnection}
+                      disabled={isTestingApi}
+                      className="w-full py-2 bg-red-600 hover:bg-red-500 disabled:bg-red-800 text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 shadow-md shadow-red-600/10"
                     >
-                      <Sparkles size={14} />
-                      Yêu Cầu AI Trộn & Chèn Ngay
+                      {isTestingApi ? (
+                        <>
+                          <RefreshCw size={14} className="animate-spin" />
+                          Đang chẩn đoán độ trễ hệ thống...
+                        </>
+                      ) : (
+                        <>
+                          <Play size={14} />
+                          Quét & Đo Độ Trễ API Trực Tuyến
+                        </>
+                      )}
                     </button>
                   </div>
-                </div>
 
-                {/* Nhật ký hoạt động */}
-                <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Nhật Ký Hệ Thống & Trộn Mã</h4>
-                  <div className="space-y-1.5 max-h-40 overflow-y-auto font-mono text-[10px]">
-                    {assistantLogs.map((log) => (
-                      <div key={log.id} className="flex items-start gap-1">
-                        <span className="text-slate-600">[{log.time}]</span>
-                        <span className={
-                          log.type === 'error' ? 'text-rose-400' :
-                          log.type === 'success' ? 'text-emerald-400' :
-                          'text-slate-300'
-                        }>
-                          {log.message}
+                  {/* API Test outcomes */}
+                  {apiTestResult && (
+                    <div className={`p-4 rounded-xl border text-xs leading-relaxed animate-fadeIn ${
+                      apiTestResult.status === 'success' 
+                        ? 'bg-emerald-950/20 border-emerald-800/40 text-emerald-300' 
+                        : 'bg-rose-950/20 border-rose-800/40 text-rose-300'
+                    }`}>
+                      <h4 className="font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                        {apiTestResult.status === 'success' ? (
+                          <CheckCircle2 size={14} className="text-emerald-400" />
+                        ) : (
+                          <AlertTriangle size={14} className="text-red-400" />
+                        )}
+                        {apiTestResult.title}
+                      </h4>
+                      <p className="text-[11px] text-slate-300 mb-2">{apiTestResult.message}</p>
+                      
+                      {apiTestResult.latency && (
+                        <div className="bg-emerald-950/40 p-2 rounded border border-emerald-900/30 text-[10px] font-mono text-emerald-400 mb-2">
+                          Thời gian phản hồi (Ping latency): <span className="font-bold">{apiTestResult.latency}ms</span>
+                        </div>
+                      )}
+
+                      <div className="bg-slate-900/60 p-2.5 rounded border border-slate-800">
+                        <span className="font-bold block text-slate-200 mb-0.5">Khuyên dùng:</span>
+                        <span className="text-[10px] text-slate-300">{apiTestResult.suggestion || 'Đường truyền ổn định, các chức năng AI đã mở khóa hoàn toàn.'}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* API Error manuals */}
+                  <div className="space-y-2">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+                      <HelpCircle size={12} />
+                      Sổ tay gỡ rối sự cố kết nối API
+                    </h4>
+                    {commonApiErrors.map((item, idx) => (
+                      <div key={idx} className="p-3 bg-slate-900/40 rounded-lg border border-slate-850 text-[11px]">
+                        <span className="font-bold text-slate-200 flex items-center gap-1.5 mb-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                          {item.code}
+                        </span>
+                        <p class="text-slate-400 mb-1"><strong>Nguyên nhân:</strong> {item.cause}</p>
+                        <p class="text-slate-300"><strong>Cách sửa:</strong> <span className="text-red-400">{item.fix}</span></p>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+              )}
+
+              {/* TAB 2: SMART MERGE CONTROL */}
+              {activeTab === 'merge' && (
+                <div className="space-y-4 animate-fadeIn">
+                  <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <h3 className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                      <Layers size={16} className="text-red-400" />
+                      Trộn & Dán ghép mã thông minh bằng AI
+                    </h3>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">
+                      Dán đoạn code phụ bạn muốn chèn từ bên ngoài vào ô dưới, chỉ định vị trí cần gộp, AI sẽ chèn chuẩn xác vào tệp gốc mà không ảnh hưởng tới các hàm xung quanh.
+                    </p>
+
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1">Đoạn code cần ghép (Code Snippet):</label>
+                        <textarea
+                          value={inputSnippet}
+                          onChange={(e) => setInputSnippet(e.target.value)}
+                          placeholder="Ví dụ: <button class='bg-red-500'>Nút bấm khẩn cấp</button> hoặc mã script JS..."
+                          className="w-full h-32 bg-slate-950 text-xs font-mono p-3 rounded-lg border border-slate-800 focus:outline-none focus:border-red-500 leading-normal"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-slate-400 mb-1">Vị trí và yêu cầu chèn của bạn:</label>
+                        <input
+                          type="text"
+                          value={mergeInstruction}
+                          onChange={(e) => setMergeInstruction(e.target.value)}
+                          placeholder="Ví dụ: chèn ngay phía trên thẻ kết thúc </body>..."
+                          className="w-full bg-slate-950 text-xs px-3 py-2 rounded-lg border border-slate-800 focus:outline-none focus:border-red-500"
+                        />
+                      </div>
+
+                      <button
+                        onClick={handleRequestSmartMerge}
+                        disabled={isAiLoading}
+                        className="w-full py-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs rounded-lg transition flex items-center justify-center gap-2 shadow-lg shadow-red-500/10"
+                      >
+                        {isAiLoading ? (
+                          <>
+                            <RefreshCw size={14} className="animate-spin" />
+                            Đang xử lý lồng ghép code...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles size={14} />
+                            Yêu Cầu AI Trộn & Chèn Ngay
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* AI Response Block */}
+                  {aiResult && (
+                    <div className="bg-slate-900 border border-red-800/40 p-4 rounded-xl space-y-3 animate-fadeIn">
+                      <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 size={14} />
+                        Kết quả gộp ghép của AI:
+                      </h4>
+                      <p className="text-[11px] text-slate-300 leading-relaxed bg-slate-950 p-2.5 rounded border border-slate-850">
+                        {aiResult.explanation}
+                      </p>
+                      
+                      <div className="flex gap-2 text-xs">
+                        <button
+                          onClick={handleApplyAiCodeToEditor}
+                          className="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold transition flex items-center justify-center gap-1"
+                        >
+                          <Check size={14} />
+                          Áp Dụng Vào File Gốc
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(aiResult.updatedCode);
+                            pushLog('Đã sao chép mã được trộn của AI.', 'success');
+                          }}
+                          className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded text-slate-300 transition"
+                        >
+                          Sao chép
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* System runtime audit logs */}
+                  <div className="bg-slate-900/60 rounded-xl border border-slate-800 p-4">
+                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Nhật ký hoạt động (System Audit)</h4>
+                    <div className="max-h-36 overflow-y-auto font-mono text-[10px] space-y-1.5 text-slate-500">
+                      {systemLogs.map(log => (
+                        <div key={log.id} className="flex items-start gap-1">
+                          <span>[{log.time}]</span>
+                          <span className={
+                            log.type === 'error' ? 'text-red-400' :
+                            log.type === 'success' ? 'text-emerald-400' :
+                            log.type === 'warning' ? 'text-amber-400' : 'text-slate-400'
+                          }>{log.text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: CONVERSATIONAL AI CHAT */}
+              {activeTab === 'chat' && (
+                <div className="flex flex-col h-[520px] bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden animate-fadeIn">
+                  <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
+                    {chatHistory.map((chat, idx) => (
+                      <div key={idx} className={`flex flex-col max-w-[85%] ${chat.role === 'user' ? 'ml-auto items-end' : 'mr-auto items-start'}`}>
+                        <div className={`p-3 rounded-2xl text-[11px] leading-relaxed ${
+                          chat.role === 'user' 
+                            ? 'bg-red-600 text-white rounded-tr-none' 
+                            : 'bg-slate-800 text-slate-200 border border-slate-700 rounded-tl-none whitespace-pre-wrap'
+                        }`}>
+                          {chat.loading ? (
+                            <div className="flex items-center gap-1.5 py-1">
+                              <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
+                              <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                              <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                            </div>
+                          ) : (
+                            chat.text
+                          )}
+                        </div>
+                        <span className="text-[9px] text-slate-500 mt-1 px-1">
+                          {chat.role === 'user' ? 'Bạn' : 'Trợ lý AI'}
                         </span>
                       </div>
                     ))}
                   </div>
-                </div>
-              </div>
-            )}
 
-            {/* TAB 3: TRỢ LÝ AI CHUYÊN SÂU */}
-            {activeTab === 'chat' && (
-              <div className="flex flex-col h-[520px] bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden animate-fadeIn">
-                {/* Khu vực nội dung Chat */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                  {chatHistory.map((chat, idx) => (
-                    <div 
-                      key={idx} 
-                      className={`flex flex-col max-w-[85%] ${chat.role === 'user' ? 'ml-auto items-end' : 'mr-auto items-start'}`}
+                  <div className="p-2.5 bg-slate-900 border-t border-slate-800 flex gap-2">
+                    <input
+                      type="text"
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleRequestChat()}
+                      placeholder={apiKey ? "Đặt câu hỏi gỡ lỗi cho AI..." : "Hỏi trợ lý (Chế độ offline)..."}
+                      className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-red-500 text-slate-100"
+                    />
+                    <button
+                      onClick={handleRequestChat}
+                      className="p-2 bg-red-600 hover:bg-red-500 rounded-lg text-white transition shrink-0"
                     >
-                      <div className={`p-3 rounded-2xl text-xs ${
-                        chat.role === 'user' 
-                          ? 'bg-blue-600 text-white rounded-tr-none' 
-                          : 'bg-slate-800 text-slate-200 border border-slate-700 rounded-tl-none'
-                      }`}>
-                        {chat.loading ? (
-                          <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce"></span>
-                            <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:0.2s]"></span>
-                            <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:0.4s]"></span>
-                          </div>
-                        ) : (
-                          <p className="whitespace-pre-wrap leading-relaxed">{chat.text}</p>
-                        )}
-                      </div>
-                      <span className="text-[9px] text-slate-500 mt-1 px-1">
-                        {chat.role === 'user' ? 'Bạn' : 'Trợ Lý Diagnostic'}
-                      </span>
-                    </div>
-                  ))}
+                      <Send size={14} />
+                    </button>
+                  </div>
                 </div>
+              )}
 
-                {/* Khu vực gõ nhập */}
-                <div className="p-3 bg-slate-900 border-t border-slate-800 flex gap-2">
-                  <input
-                    type="text"
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
-                    placeholder={apiKey ? "Hỏi Trợ lý AI (Sử dụng API của bạn)..." : "Hỏi trợ lý (Chế độ offline mô phỏng)..."}
-                    className="flex-1 bg-slate-950 border border-slate-800 text-xs rounded-lg px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500"
-                  />
-                  <button 
-                    onClick={handleSendChat}
-                    className="p-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white transition-all"
-                  >
-                    <Send size={14} />
-                  </button>
-                </div>
+            </div>
+          </section>
+
+          {}
+          {/* PANEL GIỮA: TRÌNH BIÊN SOẠN CODE & CẢNH BÁO ĐỎ (35% WIDTH) */}
+          <section className="w-full lg:w-[35%] flex flex-col border-r border-slate-800 bg-slate-950">
+            
+            {/* Gutter Toolbar / Template loader */}
+            <div className="bg-[#161622] border-b border-slate-800 px-4 py-2.5 flex items-center justify-between text-xs shrink-0 select-none">
+              <div className="flex items-center gap-2">
+                <FileCode size={14} className="text-red-400" />
+                <span className="font-bold text-slate-300">Khung Biên Soạn Chính</span>
               </div>
-            )}
-
-          </div>
-
-        </div>
-
-        {/* PANEL PHẢI: BIÊN SOẠN CODE & PREVIEW (60% Width) */}
-        <div className="w-[60%] flex flex-col overflow-hidden bg-slate-950">
-          
-          {/* Header trình soạn thảo */}
-          <div className="flex items-center justify-between px-4 py-2.5 bg-slate-900 border-b border-slate-800 shrink-0">
-            <div className="flex items-center gap-2">
-              <FileCode size={16} className="text-blue-400" />
-              <span className="text-xs font-bold text-slate-200">index.html (Mã Nguồn Chính)</span>
+              <div className="flex items-center gap-1.5">
+                <button 
+                  onClick={() => { setCodeContent(defaultTemplates.html); pushLog('Đã nạp mẫu thử lỗi HTML.', 'info'); }}
+                  className="px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded text-[10px] text-slate-400 hover:text-slate-200 transition"
+                >
+                  Mẫu HTML
+                </button>
+                <button 
+                  onClick={() => { setCodeContent(defaultTemplates.bracket); pushLog('Đã nạp mẫu thử lỗi ngoặc.', 'info'); }}
+                  className="px-2 py-1 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded text-[10px] text-slate-400 hover:text-slate-200 transition"
+                >
+                  Mẫu Ngoặc
+                </button>
+              </div>
             </div>
-            
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleCopyCode}
-                className="p-1.5 hover:bg-slate-800 text-slate-400 hover:text-slate-200 rounded transition-all flex items-center gap-1 text-[11px]"
-                title="Sao chép toàn bộ mã"
+
+            {/* Quick Insertion toolbar */}
+            <div className="bg-slate-900 px-4 py-1.5 border-b border-slate-800 flex items-center gap-2 overflow-x-auto shrink-0 text-[10px] select-none">
+              <span className="text-slate-400 font-bold uppercase shrink-0">Chèn nhanh:</span>
+              <button 
+                onClick={() => handleInsertSnippetAtCaret('<div className="p-4 bg-slate-800 rounded-xl"></div>')}
+                className="px-2 py-0.5 bg-slate-950 border border-slate-850 hover:bg-slate-800 hover:border-slate-700 rounded text-slate-300 transition"
               >
-                {copiedIndex ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
-                {copiedIndex ? 'Đã chép!' : 'Sao chép'}
+                &lt;div&gt; Bọc ngoài
               </button>
-              <button
-                onClick={handleResetCode}
-                className="p-1.5 hover:bg-slate-800 text-slate-400 hover:text-rose-400 rounded transition-all flex items-center gap-1 text-[11px]"
-                title="Khôi phục code mặc định"
+              <button 
+                onClick={() => handleInsertSnippetAtCaret('<script>\n    console.log("Ready");\n<\/script>')}
+                className="px-2 py-0.5 bg-slate-950 border border-slate-850 hover:bg-slate-800 hover:border-slate-700 rounded text-slate-300 transition"
               >
-                <RefreshCw size={14} />
-                Làm mới
+                Script
+              </button>
+              <button 
+                onClick={() => handleInsertSnippetAtCaret('fetch("https://api.github.com")')}
+                className="px-2 py-0.5 bg-slate-950 border border-slate-850 hover:bg-slate-800 hover:border-slate-700 rounded text-slate-300 transition"
+              >
+                Fetch API
               </button>
             </div>
-          </div>
 
-          {/* CHIA ĐÔI: BẢNG VIẾT CODE PHÍA TRÊN & BẢNG PREVIEW PHÍA DƯỚI */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            
-            {/* VÙNG BIÊN TẬP CODE (EDITOR) */}
-            <div className="h-1/2 min-h-[200px] relative border-b border-slate-800">
+            {/* Custom Interactive Code Textarea with Warning indicators */}
+            <div className="flex-1 flex overflow-hidden relative">
+              {/* Line Gutter Column with red alert highlighting on error */}
+              <div className="w-11 bg-slate-900 border-r border-slate-850 select-none py-4 text-right pr-2 text-xs font-mono text-slate-600 flex flex-col space-y-[2px] overflow-hidden">
+                {codeContent.split('\n').map((_, index) => {
+                  const lineNum = index + 1;
+                  const hasErr = localErrors.some(e => e.line === lineNum);
+                  return (
+                    <div 
+                      key={index} 
+                      className={`h-5 flex items-center justify-end font-semibold ${hasErr ? 'text-red-500 bg-red-950/40 border-r-2 border-red-500 animate-pulse' : ''}`}
+                      title={hasErr ? localErrors.find(e => e.line === lineNum)?.message : ''}
+                    >
+                      {lineNum}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Textarea editor workspace */}
               <textarea
+                ref={editorRef}
                 value={codeContent}
                 onChange={(e) => setCodeContent(e.target.value)}
-                className="w-full h-full p-4 bg-slate-950 font-mono text-xs text-emerald-400 focus:outline-none resize-none leading-relaxed overflow-y-auto selection:bg-blue-500/30"
+                onKeyUp={handleCursorMovement}
+                onClick={handleCursorMovement}
                 spellCheck="false"
+                placeholder="Dán hoặc viết mã HTML/CSS/JS tại đây..."
+                className="flex-1 bg-slate-950/80 p-4 font-mono text-xs text-slate-100 outline-none resize-none overflow-y-auto leading-5"
               />
-              <div className="absolute bottom-2 right-4 bg-slate-900/90 text-[10px] text-slate-400 px-2 py-1 rounded border border-slate-800 pointer-events-none">
-                Chế độ tự động đồng bộ hóa Sandbox
+            </div>
+
+            {/* Local Error list console box (Red Diagnostics) */}
+            <div className="h-[25%] border-t border-slate-800 flex flex-col overflow-hidden bg-slate-900/70">
+              <div className="bg-[#161622] border-b border-slate-800 px-4 py-2 flex items-center justify-between text-[10px] uppercase font-bold text-slate-400">
+                <span>Rà soát lỗi đỏ thời gian thực (Local Alerts)</span>
+                <span className="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full">
+                  {localErrors.length} Lỗi đỏ
+                </span>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-3 space-y-2">
+                {localErrors.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-slate-500 text-xs text-center">
+                    <CheckCircle2 size={24} className="text-emerald-500/60 mb-1" />
+                    <p>Mã nguồn không phát hiện thấy bất kỳ lỗi cấu trúc thẻ hay dấu ngoặc nào!</p>
+                  </div>
+                ) : (
+                  localErrors.map((err, idx) => (
+                    <div key={idx} className="bg-red-950/15 border-l-3 border-red-500 p-2.5 rounded-r flex items-start justify-between gap-3 text-[11px]">
+                      <div>
+                        <span className="font-extrabold text-red-400 bg-red-500/15 border border-red-500/25 px-1.5 py-0.5 rounded mr-1.5">Dòng {err.line}</span>
+                        <span className="text-slate-300 leading-relaxed">{err.message}</span>
+                      </div>
+                      <button 
+                        onClick={() => handleLocalQuickFix(idx)}
+                        className="px-2 py-1 bg-red-600/20 hover:bg-red-500 border border-red-500/30 text-red-200 hover:text-white rounded text-[10px] font-bold transition shrink-0"
+                      >
+                        Sửa nhanh
+                      </button>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
-            {/* VÙNG XEM TRƯỚC (SANDBOX PREVIEW) */}
-            <div className="flex-1 flex flex-col overflow-hidden bg-white">
-              <div className="px-4 py-1.5 bg-slate-900 border-b border-slate-800 flex items-center justify-between text-[11px] shrink-0 text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                  Bản xem trước trực tiếp (Sandbox IFrame)
-                </span>
-                <span className="text-[10px]">HTML5 / CSS3 / Tailwind / JS</span>
-              </div>
-              <div className="flex-1 bg-slate-100">
-                <iframe
-                  ref={iframeRef}
-                  title="Sandbox Preview"
-                  className="w-full h-full border-none bg-white"
-                  sandbox="allow-scripts"
+          </section>
+
+          {}
+          {/* PANEL PHẢI: LIVE SANDBOX & WEBSITE SIMULATOR (30% WIDTH) */}
+          <section className="w-full lg:w-[30%] flex flex-col bg-[#11111a]">
+            
+            {/* Header / Tabs controls */}
+            <div className="bg-[#161624] border-b border-slate-800 p-3 flex items-center justify-between text-xs shrink-0 select-none">
+              <div className="flex items-center gap-1.5 bg-[#12121e] border border-slate-800 rounded-lg px-2.5 py-1 flex-1 mr-3">
+                <Globe size={12} className="text-slate-400" />
+                <input
+                  type="text"
+                  value={externalUrl}
+                  onChange={(e) => setExternalUrl(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && setActivePreviewTab('web')}
+                  placeholder="Dán link web bất kỳ rồi ấn Enter..."
+                  className="bg-transparent text-[10px] text-slate-300 outline-none w-full"
                 />
               </div>
+
+              <div className="flex bg-[#1e1e2f] border border-slate-700 rounded-lg p-0.5 shrink-0 text-[10px]">
+                <button
+                  onClick={() => setActivePreviewTab('live')}
+                  className={`px-2.5 py-1 rounded transition ${activePreviewTab === 'live' ? 'bg-slate-700 text-white font-bold' : 'text-slate-400'}`}
+                >
+                  Live Preview
+                </button>
+                <button
+                  onClick={() => setActivePreviewTab('web')}
+                  className={`px-2.5 py-1 rounded transition ${activePreviewTab === 'web' ? 'bg-slate-700 text-white font-bold' : 'text-slate-400'}`}
+                >
+                  Web Online
+                </button>
+              </div>
             </div>
 
-          </div>
+            {/* Sandbox compiling display */}
+            <div className="flex-1 bg-white relative flex flex-col">
+              <div className="bg-slate-100 border-b border-slate-200 px-3 py-1 flex items-center justify-between text-[10px] text-slate-500 font-semibold select-none">
+                <span>
+                  {activePreviewTab === 'live' ? 'Bản xem trước trực tiếp (Sandbox):' : 'Bản lướt mạng giả lập (Web Viewer):'}
+                </span>
+                <span className="text-[9px] bg-slate-200 border border-slate-300 px-1 py-0.5 rounded text-slate-600">allow-same-origin</span>
+              </div>
+
+              {activePreviewTab === 'live' ? (
+                localErrors.length > 0 ? (
+                  /* Display stunning safety alert panel if code is broken */
+                  <div className="absolute inset-0 bg-rose-50 text-rose-950 p-6 flex flex-col items-center justify-center text-center">
+                    <div className="max-w-xs p-5 bg-white border border-rose-200 rounded-xl shadow-md">
+                      <AlertTriangle size={32} className="text-red-500 mx-auto mb-2 animate-bounce" />
+                      <h4 class="font-bold text-sm text-red-600">Trình xem trước đã gián đoạn</h4>
+                      <p class="text-[11px] text-slate-500 leading-normal mt-1.5">Chúng tôi đã tạm dừng nạp code vào Sandbox vì đang phát hiện thấy {localErrors.length} lỗi đỏ cấu trúc nghiêm trọng bên khung soạn thảo.</p>
+                      <div class="mt-3 p-1.5 bg-rose-100 border border-rose-200 rounded text-[10px] text-red-700 font-semibold">
+                        Lỗi tại dòng {localErrors[0].line}
+                      </div>
+                      <p class="text-[9px] text-slate-400 mt-3">Khắc phục các số dòng đỏ để tự động đồng bộ hóa giao diện Sandbox.</p>
+                    </div>
+                  </div>
+                ) : (
+                  /* Render user HTML smoothly in iframe using srcDoc */
+                  <iframe
+                    title="Live Code Preview"
+                    srcDoc={codeContent}
+                    className="w-full flex-1 bg-white border-none"
+                    sandbox="allow-scripts allow-modals allow-same-origin allow-popups allow-forms"
+                  />
+                )
+              ) : (
+                /* External Web Online Simulator */
+                <iframe
+                  title="External Web Viewer"
+                  src={externalUrl}
+                  className="w-full flex-1 bg-white border-none"
+                  sandbox="allow-scripts allow-modals allow-same-origin allow-popups allow-forms"
+                />
+              )}
+            </div>
+
+          </section>
 
         </div>
 
-      </div>
+        {/* BOTTOM STATUS FOOTER */}
+        <footer className="px-6 py-2 bg-[#12121a] border-t border-slate-800 text-[10px] text-slate-500 shrink-0 flex items-center justify-between select-none">
+          <div className="flex items-center gap-1.5">
+            <Info size={12} className="text-red-400" />
+            <span>Mô hình hoạt động: <strong class="text-slate-300">gemini-2.5-flash</strong> • Hệ thống tự động sửa nhanh: Đã bật</span>
+          </div>
+          <div>
+            <span>Dòng: <span className="text-slate-300 font-semibold">{cursorPosition.line}</span> • Cột: <span className="text-slate-300 font-semibold">{cursorPosition.col}</span></span>
+          </div>
+        </footer>
 
-      {/* FOOTER */}
-      <footer className="px-6 py-2 bg-slate-900 border-t border-slate-800 text-[10px] text-slate-500 shrink-0 flex items-center justify-between">
-        <span>AI Studio Code Diagnostic & Merger Tool • 2026</span>
-        <span>Hỗ trợ API Gemini 2.5 & Exponential Backoff Retry</span>
-      </footer>
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
+
+export default App;
