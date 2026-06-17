@@ -1105,7 +1105,7 @@
 
             // Đảm bảo luôn có tài khoản mặc định eco
             if (!allAccounts['eco']) {
-                allAccounts['eco001'] = {
+                allAccounts['eco'] = {
                     isLoggedIn: true,
                     username: "eco",
                     hideUsername: true,
@@ -1174,7 +1174,7 @@
         function updateUsernameDisplay() {
             const welcomeCodeEl = document.getElementById('welcome-user-code');
             if (welcomeCodeEl) {
-                welcomeCodeEl.textContent = getMaskedUsername(appState.username || "eco001");
+                welcomeCodeEl.textContent = getMaskedUsername(appState.username || "eco");
             }
             const btnToggleMask = document.getElementById('btn-toggle-mask');
             if (btnToggleMask) {
@@ -1212,7 +1212,7 @@
                 }
             } else {
                 loginScreen.classList.remove('hidden');
-                document.getElementById('login-code').value = "eco001";
+                document.getElementById('login-code').value = "eco";
             }
         }
 
@@ -1351,7 +1351,7 @@
                 () => {
                     appState = {
                         isLoggedIn: true,
-                        username: appState.username || "eco001",
+                        username: appState.username || "eco",
                         hideUsername: true,
                         currentUnit: 1,
                         completedLessons: [],
