@@ -283,31 +283,58 @@
                 </section>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <h4 class="font-black font-kids text-indigo-900">Gợi ý bài học tiếp theo</h4>
-                                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">AI Phân Tích</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-indigo-50/50 border-2 border-indigo-100">
-                                <div class="flex items-center gap-3.5">
-                                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center font-black font-kids text-xl shadow-md" id="rec-lesson-num">U1</div>
-                                    <div>
-                                        <h5 class="font-extrabold text-indigo-900 text-sm" id="rec-lesson-title">Unit 1: Lesson 1 - Flashcards</h5>
-                                        <p class="text-xs text-indigo-600 mt-1"><i class="fa-regular fa-star mr-1"></i>Chương trình bám sát sách Global Success</p>
-                                    </div>
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Gợi ý học tập -->
+                        <div class="bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="font-black font-kids text-indigo-900">Gợi ý bài học tiếp theo</h4>
+                                    <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">AI Phân Tích</span>
                                 </div>
-                                <button id="btn-rec-lesson" onclick="startLesson('unit-1', 1)" class="whitespace-nowrap px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-                                    Bắt đầu học <i class="fa-solid fa-play text-[10px]"></i>
-                                </button>
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-indigo-50/50 border-2 border-indigo-100">
+                                    <div class="flex items-center gap-3.5">
+                                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center font-black font-kids text-xl shadow-md" id="rec-lesson-num">U1</div>
+                                        <div>
+                                            <h5 class="font-extrabold text-indigo-900 text-sm" id="rec-lesson-title">Unit 1: Lesson 1 - Flashcards</h5>
+                                            <p class="text-xs text-indigo-600 mt-1"><i class="fa-regular fa-star mr-1"></i>Chương trình bám sát sách Global Success</p>
+                                        </div>
+                                    </div>
+                                    <button id="btn-rec-lesson" onclick="startLesson('unit-1', 1)" class="whitespace-nowrap px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                        Bắt đầu học <i class="fa-solid fa-play text-[10px]"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 flex gap-3 items-start bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-4">
+                                <div class="text-yellow-500 text-xl mt-0.5"><i class="fa-solid fa-lightbulb"></i></div>
+                                <div>
+                                    <h6 class="font-black text-xs text-yellow-800">Báo cáo tiến trình nói:</h6>
+                                    <p class="text-xs text-yellow-700 leading-relaxed mt-1">Học sinh đã được nhận diện <span class="font-bold text-indigo-700" id="report-speaking-count">0</span> từ xuất sắc. Điểm trung bình bài kiểm tra trắc nghiệm đạt <span class="font-bold text-indigo-700" id="report-quiz-average">0</span>%.</p>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="mt-6 flex gap-3 items-start bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-4">
-                            <div class="text-yellow-500 text-xl mt-0.5"><i class="fa-solid fa-lightbulb"></i></div>
-                            <div>
-                                <h6 class="font-black text-xs text-yellow-800">Báo cáo tiến trình nói:</h6>
-                                <p class="text-xs text-yellow-700 leading-relaxed mt-1">Học sinh đã được nhận diện <span class="font-bold text-indigo-700" id="report-speaking-count">0</span> từ xuất sắc. Điểm trung bình bài kiểm tra trắc nghiệm đạt <span class="font-bold text-indigo-700" id="report-quiz-average">0</span>%.</p>
+
+                        <!-- WIDGET TRỢ LÝ AI ĐỌC BÀI CHUYÊN NGHIỆP (GOOGLE & VIETTEL AI) -->
+                        <div class="bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-black font-kids text-indigo-900 flex items-center gap-2">
+                                    <span class="text-xl">🔊</span> Trợ lý Giọng nói AI (Smart TTS Hub)
+                                </h4>
+                                <span class="text-[9px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-100 font-bold uppercase tracking-wider">Môi trường APK & Web</span>
+                            </div>
+                            <p class="text-xs text-slate-500 leading-relaxed">Nhập văn bản Tiếng Việt hoặc Tiếng Anh bên dưới để trải nghiệm phát âm đỉnh cao từ hệ thống AI thế hệ mới:</p>
+                            
+                            <div class="relative">
+                                <textarea id="text-speech-input" rows="3" class="w-full p-4 border-2 border-indigo-100 rounded-2xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all" placeholder="Gõ câu văn bất kỳ vào đây để nghe cô giáo AI đọc...">Xin chào! Đây là ứng dụng BabyTalk & EduKids Smart.</textarea>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row gap-2.5">
+                                <button onclick="readCustomTextVi()" class="flex-1 py-3 px-4 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black font-kids text-xs rounded-xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 border-b-2 border-emerald-700">
+                                    <i class="fa-solid fa-microphone"></i> Đọc Tiếng Việt (Viettel AI)
+                                </button>
+                                <button onclick="readCustomTextEn()" class="flex-1 py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-black font-kids text-xs rounded-xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2 border-b-2 border-indigo-800">
+                                    <i class="fa-solid fa-volume-high"></i> Đọc Tiếng Anh (Google TTS)
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -390,6 +417,7 @@
                 <div id="interface-flashcard" class="w-full flex flex-col items-center">
                     <div class="perspective-1000 w-full max-w-md h-72 cursor-pointer group" onclick="flipActiveCard()">
                         <div id="flashcard-inner" class="preserve-3d duration-500 relative w-full h-full rounded-3xl shadow-md border-2 border-indigo-100 transition-all">
+                            <!-- MẶT TRƯỚC (TIẾNG ANH) -->
                             <div class="backface-hidden absolute inset-0 w-full h-full bg-white flex flex-col items-center justify-between p-6 rounded-3xl bg-gradient-to-br from-white to-indigo-50/20">
                                 <div class="self-end flex items-center gap-2">
                                     <div class="audio-loading-indicator hidden" id="card-audio-loading-front">
@@ -407,8 +435,17 @@
                                     <i class="fa-solid fa-arrow-rotate-left"></i> Click vào thẻ để lật xem nghĩa </div>
                             </div>
 
+                            <!-- MẶT SAU (TIẾNG VIỆT - KHỞI CHẠY VIETTEL AI) -->
                             <div class="backface-hidden rotate-y-180 absolute inset-0 w-full h-full bg-white flex flex-col items-center justify-between p-6 rounded-3xl bg-gradient-to-br from-yellow-50/50 to-indigo-50/20 border-4 border-yellow-300">
-                                <span class="self-start px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-black rounded-lg uppercase tracking-wide border border-yellow-200" id="card-back-type">Từ vựng</span>
+                                <div class="w-full flex items-center justify-between">
+                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-black rounded-lg uppercase tracking-wide border border-yellow-200" id="card-back-type">Từ vựng</span>
+                                    
+                                    <!-- Nút nghe Viettel AI cho mặt sau của thẻ -->
+                                    <button onclick="speakVietnameseTextOnCard(event)" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-[10px] font-black text-emerald-700 rounded-lg border border-emerald-200 flex items-center gap-1 transition-all" title="Phát âm tiếng Việt bằng Viettel AI">
+                                        <i class="fa-solid fa-microphone"></i> Cô giáo AI đọc
+                                    </button>
+                                </div>
+
                                 <div class="text-center flex-1 flex flex-col justify-center w-full px-4">
                                     <h3 class="text-3xl font-black font-kids text-indigo-900" id="card-back-vietnamese">Xin chào</h3>
                                     <div class="mt-4 border-t border-dashed border-slate-200 pt-3 text-left">
@@ -463,7 +500,7 @@
                             <i id="star-2" class="fa-solid fa-star text-slate-300 transition-all duration-300"></i>
                             <i id="star-3" class="fa-solid fa-star text-slate-300 transition-all duration-300"></i>
                         </div>
-                        <div id="speech-match-score" class="text-lg font-black font-kids text-slate-400 transition-all duration-300">--- % Match</div>
+                        <div id="speech-match-score" class="text-lg font-black font-kids text-slate-400 duration-300">--- % Match</div>
                         <p id="speech-encouraging-msg" class="text-xs text-slate-500 font-extrabold text-center max-w-xs">Con sẵn sàng chưa? Hãy bấm Micro rồi đọc thật to nhé!</p>
                     </div>
 
@@ -563,13 +600,15 @@
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6">
+                <!-- CẤU HÌNH API GIỌNG NÓI CAO CẤP -->
                 <div class="p-4 bg-amber-50/60 rounded-2xl border border-amber-200 space-y-3">
                     <h4 class="font-bold text-amber-950 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-gears text-amber-600"></i> Cấu hình API Giọng nói (Google & Gemini)
+                        <i class="fa-solid fa-gears text-amber-600"></i> Cấu hình API Giọng nói (Google & Gemini & Viettel)
                     </h4>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">Thay đổi khóa kết nối trực tiếp đến hạ tầng đám mây Google TTS & Gemini. Trạng thái được đồng bộ trên thiết bị cục bộ.</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Thay đổi khóa kết nối trực tiếp đến hạ tầng đám mây Google TTS, Gemini & Viettel AI. Trạng thái được đồng bộ trên thiết bị cục bộ.</p>
                     
                     <div class="space-y-3.5 text-left bg-white p-3.5 rounded-xl border border-amber-100">
+                        <!-- Token Google Cloud -->
                         <div>
                             <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Google Cloud TTS Token (Neural2)</label>
                             <div class="relative">
@@ -580,12 +619,24 @@
                             </div>
                         </div>
 
+                        <!-- Key Gemini -->
                         <div>
                             <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Gemini API Key (Dùng cho Puck, Leda, Callirrhoe)</label>
                             <div class="relative">
                                 <input type="password" id="admin-gemini-key" placeholder="Nhập khóa API Gemini..." class="w-full pl-3 pr-10 py-2.5 border-2 border-amber-100 rounded-lg text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all">
                                 <button type="button" onclick="toggleInputVisibility('admin-gemini-key')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
                                     <i class="fa-solid fa-eye text-xs" id="eye-gemini"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Token Viettel AI -->
+                        <div>
+                            <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Viettel AI TTS Token (Giọng Việt hcm-diemmy)</label>
+                            <div class="relative">
+                                <input type="password" id="admin-viettel-token" placeholder="Nhập Token dịch vụ Viettel AI..." class="w-full pl-3 pr-10 py-2.5 border-2 border-amber-100 rounded-lg text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all">
+                                <button type="button" onclick="toggleInputVisibility('admin-viettel-token')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                                    <i class="fa-solid fa-eye text-xs" id="eye-viettel"></i>
                                 </button>
                             </div>
                         </div>
@@ -632,10 +683,11 @@
         const db = firebase.firestore();
         const appId = 'tieng-anh-lop-3-69257';
 
-        // Khóa Token mặc định dự phòng
+        // Khóa Token mặc định dự phòng của hệ thống
         const googleTTSToken = "AQ.Ab8RN6KPTaKHXRQ56ZIVhNuPgkTjmlP_6xtUWd_-B4He8rZKIQ";
+        const viettelDefaultToken = "395f6b744a34ff3eb6e042656cde6ffe";
 
-        // GIÁO TRÌNH 20 UNIT CHUẨN SÁCH GIÁO KHOA
+        // GIÁO TRÌNH 20 UNIT CHUẨN SÁCH GIÁO KHOA TIẾNG ANH LỚP 3
         const EnglishSyllabus = [];
         for (let i = 1; i <= 20; i++) {
             EnglishSyllabus.push({
@@ -649,18 +701,56 @@
         }
 
         function getUnitTitle(u) {
-            const titles = ["Hello", "Our Names", "Our Friends", "Our Bodies", "My Hobbies", "Our School", "Classroom Instructions", "Our School Things", "Our Colours", "Break Time Activities", "My Family", "Jobs", "My House", "My Bedroom", "At the Dining Table", "My Pets", "Our Toys", "What are you washing?", "Our Outdoor Activities", "Where is the park?"];
+            const titles = ["Hello", "Our Names", "Our Friends", "Our Bodies", "My Hobbies", "Our School", "Classroom Instructions", "Our School Things", "Our Colours", "Break Time Activities", "My Family", "Jobs", "My House", "My Bedroom", "At the Dining Table", "My Pets", "Our Toys", "What are you doing?", "Our Outdoor Activities", "Where is the park?"];
             return titles[u - 1] || "English Vocabulary";
         }
 
         function getUnitWords(u) {
-            // Danh sách sinh từ vựng động để đảm bảo cấu trúc dữ liệu không rỗng
-            return [
-                { word: "Hello", ipa: "/həˈloʊ/", type: "Interjection", vietnamese: "Xin chào", exEn: "Hello, I am Ben.", exVi: "Xin chào, tớ là Ben." },
-                { word: "Apple", ipa: "/ˈæpl/", type: "Noun", vietnamese: "Quả táo", exEn: "This is a red apple.", exVi: "Đây là một quả táo màu đỏ." },
-                { word: "Book", ipa: "/bʊk/", type: "Noun", vietnamese: "Quyển sách", exEn: "Open your book, please.", exVi: "Vui lòng mở sách ra." },
-                { word: "Cat", ipa: "/kæt/", type: "Noun", vietnamese: "Con mèo", exEn: "I love my cute cat.", exVi: "Tớ yêu chú mèo đáng yêu của tớ." },
-                { word: "Teacher", ipa: "/ˈtiːtʃər/", type: "Noun", vietnamese: "Giáo viên", exEn: "She is my English teacher.", exVi: "Cô ấy là giáo viên Tiếng Anh của tớ." }
+            const wordDictionary = {
+                1: [
+                    { word: "Hello", ipa: "/həˈloʊ/", type: "Interjection", vietnamese: "Xin chào", exEn: "Hello, I am Ben.", exVi: "Xin chào, tớ là Ben." },
+                    { word: "Hi", ipa: "/haɪ/", type: "Interjection", vietnamese: "Chào bạn", exEn: "Hi, Mai.", exVi: "Chào Mai." },
+                    { word: "Goodbye", ipa: "/ˌɡʊdˈbaɪ/", type: "Interjection", vietnamese: "Tạm biệt", exEn: "Goodbye, class.", exVi: "Tạm biệt cả lớp." },
+                    { word: "Bye", ipa: "/baɪ/", type: "Interjection", vietnamese: "Tạm biệt", exEn: "Bye, see you later.", exVi: "Chào tạm biệt, hẹn gặp lại." },
+                    { word: "Fine", ipa: "/faɪn/", type: "Adjective", vietnamese: "Khỏe, tốt", exEn: "I am fine, thank you.", exVi: "Tớ khỏe, cảm ơn bạn." }
+                ],
+                2: [
+                    { word: "Name", ipa: "/neɪm/", type: "Noun", vietnamese: "Tên", exEn: "What is your name?", exVi: "Tên bạn là gì?" },
+                    { word: "What", ipa: "/wɑːt/", type: "Pronoun", vietnamese: "Cái gì", exEn: "What is this?", exVi: "Đây là cái gì?" },
+                    { word: "How", ipa: "/haʊ/", type: "Adverb", vietnamese: "Thế nào", exEn: "How do you spell your name?", exVi: "Đánh vần tên bạn thế nào?" },
+                    { word: "Spell", ipa: "/spel/", type: "Verb", vietnamese: "Đánh vần", exEn: "Can you spell it?", exVi: "Bạn có thể đánh vần nó không?" },
+                    { word: "Eight", ipa: "/eɪt/", type: "Number", vietnamese: "Số tám (8)", exEn: "I am eight years old.", exVi: "Tớ tám tuổi." }
+                ],
+                3: [
+                    { word: "Friend", ipa: "/frend/", type: "Noun", vietnamese: "Người bạn", exEn: "This is my friend, Bill.", exVi: "Đây là người bạn của tớ, Bill." },
+                    { word: "They", ipa: "/ðeɪ/", type: "Pronoun", vietnamese: "Họ", exEn: "They are my friends.", exVi: "Họ là những người bạn của tớ." },
+                    { word: "He", ipa: "/hiː/", type: "Pronoun", vietnamese: "Cậu ấy", exEn: "He is my teacher.", exVi: "Thầy ấy là giáo viên của tớ." },
+                    { word: "She", ipa: "/ʃiː/", type: "Pronoun", vietnamese: "Cô ấy", exEn: "She is my classmate.", exVi: "Bạn ấy là bạn cùng lớp của tớ." },
+                    { word: "Who", ipa: "/huː/", type: "Pronoun", vietnamese: "Ai", exEn: "Who is that?", exVi: "Ai đó?" }
+                ],
+                4: [
+                    { word: "Eye", ipa: "/aɪ/", type: "Noun", vietnamese: "Mắt", exEn: "Touch your eye.", exVi: "Hãy chạm vào mắt của con." },
+                    { word: "Nose", ipa: "/noʊz/", type: "Noun", vietnamese: "Mũi", exEn: "This is my nose.", exVi: "Đây là mũi của tớ." },
+                    { word: "Ear", ipa: "/ɪr/", type: "Noun", vietnamese: "Tai", exEn: "Touch your ear.", exVi: "Hãy chạm vào tai bạn." },
+                    { word: "Face", ipa: "/feɪs/", type: "Noun", vietnamese: "Khuôn mặt", exEn: "Wash your face.", exVi: "Hãy rửa mặt đi nào." },
+                    { word: "Mouth", ipa: "/maʊθ/", type: "Noun", vietnamese: "Miệng", exEn: "Open your mouth.", exVi: "Hãy mở miệng ra." }
+                ],
+                5: [
+                    { word: "Sing", ipa: "/sɪŋ/", type: "Verb", vietnamese: "Hát", exEn: "I like to sing.", exVi: "Tớ thích hát." },
+                    { word: "Dance", ipa: "/dæns/", type: "Verb", vietnamese: "Nhảy múa", exEn: "She can dance.", exVi: "Cô ấy có thể nhảy múa." },
+                    { word: "Draw", ipa: "/drɔː/", type: "Verb", vietnamese: "Vẽ tranh", exEn: "We like to draw.", exVi: "Chúng tớ thích vẽ tranh." },
+                    { word: "Swim", ipa: "/swɪm/", type: "Verb", vietnamese: "Bơi lội", exEn: "He can swim fast.", exVi: "Cậu ấy bơi rất nhanh." },
+                    { word: "Read", ipa: "/riːd/", type: "Verb", vietnamese: "Đọc sách", exEn: "I read books every day.", exVi: "Tớ đọc sách mỗi ngày." }
+                ]
+            };
+
+            // Trả về từ vựng chuẩn hoặc sinh động nếu chưa được định nghĩa chi tiết
+            return wordDictionary[u] || [
+                { word: "Hello", ipa: "/həˈloʊ/", type: "Interjection", vietnamese: "Xin chào", exEn: `Welcome to Unit ${u}`, exVi: `Chào mừng đến với bài học ${u}` },
+                { word: "Book", ipa: "/bʊk/", type: "Noun", vietnamese: "Quyển sách", exEn: "This is my English book.", exVi: "Đây là sách tiếng Anh của tớ." },
+                { word: "Classroom", ipa: "/ˈklæsruːm/", type: "Noun", vietnamese: "Phòng học", exEn: "Our classroom is beautiful.", exVi: "Lớp học của chúng tớ rất đẹp." },
+                { word: "Teacher", ipa: "/ˈtiːtʃər/", type: "Noun", vietnamese: "Giáo viên", exEn: "She is my new teacher.", exVi: "Cô ấy là giáo viên mới của tớ." },
+                { word: "School", ipa: "/skuːl/", type: "Noun", vietnamese: "Trường học", exEn: "Let's go to school.", exVi: "Chúng mình cùng đến trường nào." }
             ];
         }
 
@@ -680,9 +770,8 @@
         let activeBookHalf = 1;
         let activeStudentCode = "eco001";
 
-        // KHỞI CHẠY HỆ THỐNG
+        // KHỞI CHẠY HỆ THỐNG CHÍNH
         window.addEventListener('DOMContentLoaded', async () => {
-            // TỰ ĐỘNG SỬA LỖI ĐƯỜNG DẪN WEB AUDIO TRÊN KHUNG APK ANDROID
             fixAndroidAudioAutoPlay();
             await initFirebaseAuth();
             checkLoginState();
@@ -692,7 +781,7 @@
             detectApkEnvironment();
         });
 
-        // 🛠️ GIẢI PHÁP 1: SỬA LỖI MẤT TIẾNG TRÊN APK (TỰ ĐỘNG KHỞI TẠO AUDIO CONTEXT KHI BẤM CHẠM)
+        // TỰ ĐỘNG SỬA LỖI ĐƯỜNG DẪN WEB AUDIO TRÊN KHUNG APK ANDROID
         function fixAndroidAudioAutoPlay() {
             const unlockAudio = () => {
                 if (window.AudioContext || window.webkitAudioContext) {
@@ -701,7 +790,6 @@
                         ctx.resume();
                     }
                 }
-                // Xin quyền Micro ngay khi người dùng chạm lần đầu (Dành cho WebView APK)
                 askMicrophonePermissionSilently();
                 document.removeEventListener('click', unlockAudio);
                 document.removeEventListener('touchstart', unlockAudio);
@@ -710,12 +798,11 @@
             document.addEventListener('touchstart', unlockAudio);
         }
 
-        // 🛠️ GIẢI PHÁP 2: TỰ ĐỘNG XIN QUYỀN GHI ÂM (MICROPHONE) TRÊN WEBVIEW ANDROID TRƯỚC KHI LUYỆN NÓI
+        // TỰ ĐỘNG XIN QUYỀN GHI ÂM (MICROPHONE) TRÊN WEBVIEW ANDROID TRƯỚC KHI LUYỆN NÓI
         function askMicrophonePermissionSilently() {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
-                    // Đã cấp quyền, đóng stream ngay để tiết kiệm tài nguyên
                     stream.getTracks().forEach(track => track.stop());
                 })
                 .catch(err => {
@@ -766,7 +853,6 @@
 
         function saveAppState() {
             localStorage.setItem(`eta3_state_${appState.username}`, JSON.stringify(appState));
-            // Đồng bộ Firebase an toàn
             if (auth.currentUser) {
                 db.collection('artifacts').doc(appId).collection('users').doc(auth.currentUser.uid).set({
                     progressData: appState
@@ -796,7 +882,6 @@
             document.getElementById('stat-percent').textContent = `${percent}%`;
             document.getElementById('stat-percent-bar').style.width = `${percent}%`;
             
-            // Đánh sáng huy hiệu
             if (appState.streak >= 2) document.getElementById('badge-diligent').classList.remove('opacity-40');
             if (appState.excellentPronounces.length >= 1) document.getElementById('badge-speaking').classList.remove('opacity-40');
             if (appState.completedLessons.length >= 1) document.getElementById('badge-quiz').classList.remove('opacity-40');
@@ -887,7 +972,6 @@
 
             renderDeckData();
             
-            // Hiển thị Modal học
             const modal = document.getElementById('study-modal');
             modal.classList.remove('hidden');
             setTimeout(() => {
@@ -989,8 +1073,9 @@
             triggerCelebrationLayout(5, 5, "Chúc mừng bé yêu đã vượt qua bài học xuất sắc!");
         }
 
+        // ==========================================
         // 🛠️ GIẢI PHÁP 3: THIẾT LẬP CƠ CHẾ CHỐNG LỖI AUDIO ENGINE TRÊN APK
-        // Nếu các API cao cấp Google/Gemini lỗi mạng, ứng dụng tự động nhảy về hạ tầng SpeechSynthesis ngoại tuyến.
+        // ==========================================
         function setupAudioEngine() {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.getVoices();
@@ -1005,10 +1090,8 @@
 
         async function executeCoreTTS(text) {
             const mode = document.getElementById('voice-selector').value;
-            const customGeminiKey = localStorage.getItem('cfg_gemini_api_key');
             const customGoogleToken = localStorage.getItem('cfg_google_tts_token') || googleTTSToken;
 
-            // Nếu chọn mặc định hoặc gặp môi trường không mạng, chạy ngoại tuyến
             if (mode === 'BrowserFemale' || (!navigator.onLine)) {
                 playFallbackOfflineTTS(text);
                 return;
@@ -1018,27 +1101,22 @@
             document.getElementById('speak-audio-loading').classList.remove('hidden');
 
             try {
-                if (mode === 'BrowserFemale') {
-                    playFallbackOfflineTTS(text);
-                } else {
-                    // Chạy qua Google Cloud TTS làm lớp lõi mạnh mẽ, chống lỗi mạng APK
-                    let res = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${customGoogleToken}`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            input: { text: text },
-                            voice: { languageCode: "en-US", name: "en-US-Neural2-F" },
-                            audioConfig: { audioEncoding: "MP3", speakingRate: 0.85 }
-                        })
-                    });
+                let res = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${customGoogleToken}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        input: { text: text },
+                        voice: { languageCode: "en-US", name: "en-US-Neural2-F" },
+                        audioConfig: { audioEncoding: "MP3", speakingRate: 0.85 }
+                    })
+                });
 
-                    if (!res.ok) throw new Error("Google Cloud TTS Response error");
-                    const json = await res.json();
-                    if (json.audioContent) {
-                        playMp3Base64(json.audioContent);
-                    } else {
-                        throw new Error("No audio content");
-                    }
+                if (!res.ok) throw new Error("Google Cloud TTS Response error");
+                const json = await res.json();
+                if (json.audioContent) {
+                    playMp3Base64(json.audioContent);
+                } else {
+                    throw new Error("No audio content");
                 }
             } catch (e) {
                 console.warn("Đám mây gặp sự cố, kích hoạt dự phòng offline phát âm thành công.");
@@ -1053,7 +1131,6 @@
             const audioUrl = `data:audio/mp3;base64,${base64}`;
             const snd = new Audio(audioUrl);
             snd.play().catch(() => {
-                // Autoplay bị WebView chặn, chạy fallback
                 playFallbackOfflineTTS(deckWords[deckPointer].word);
             });
         }
@@ -1068,6 +1145,84 @@
             }
         }
 
+        // ==========================================
+        // 🌟 GIẢI PHÁP 4: THIẾT LẬP PHÁT ÂM TIẾNG VIỆT CHUẨN VIETTEL AI
+        // ==========================================
+        async function playViettelVietnameseTTS(text) {
+            const activeViettelToken = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
+            
+            try {
+                const response = await fetch("https://viettelai.vn/tts/speech_synthesis", {
+                    method: "POST",
+                    headers: {
+                        "accept": "*/*",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        voice: "hcm-diemmy",
+                        speed: 1,
+                        tts_return_option: 3,
+                        token: activeViettelToken,
+                        without_filter: false
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Lỗi API Viettel: " + response.status);
+                }
+
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                const audio = new Audio(audioUrl);
+                audio.play();
+
+            } catch (err) {
+                console.error("Lỗi kết nối Viettel AI, chạy dự phòng WebSpeech:", err);
+                playFallbackOfflineViTTS(text);
+            }
+        }
+
+        function playFallbackOfflineViTTS(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'vi-VN';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Gọi đọc tiếng việt trên mặt sau của flashcard
+        function speakVietnameseTextOnCard(event) {
+            event.stopPropagation();
+            const currentData = deckWords[deckPointer];
+            if (currentData) {
+                playViettelVietnameseTTS(currentData.vietnamese);
+            }
+        }
+
+        // Đọc văn bản tiếng Việt từ Widget trên trang chủ
+        function readCustomTextVi() {
+            const textVal = document.getElementById('text-speech-input').value.trim();
+            if (!textVal) {
+                showToast("Vui lòng nhập văn bản tiếng Việt trước!");
+                return;
+            }
+            playViettelVietnameseTTS(textVal);
+        }
+
+        // Đọc văn bản tiếng Anh từ Widget trên trang chủ
+        function readCustomTextEn() {
+            const textVal = document.getElementById('text-speech-input').value.trim();
+            if (!textVal) {
+                showToast("Vui lòng nhập văn bản tiếng Anh trước!");
+                return;
+            }
+            executeCoreTTS(textVal);
+        }
+
         // LÀM ĐẸP CHỨC NĂNG KIỂM TRA GIỌNG ĐỌC CỦA ADMIN
         function testVoice() {
             document.getElementById('test-btn-text').textContent = "Đang đọc mẫu...";
@@ -1078,7 +1233,7 @@
         }
 
         // ==========================================
-        // 🛠️ GIẢI PHÁP 4: THIẾT LẬP CƠ CHẾ MIC LUYỆN NÓI HOÀN HẢO CHO CẢ WEB & APK
+        // 🛠️ GIẢI PHÁP 5: THIẾT LẬP CƠ CHẾ MIC LUYỆN NÓI HOÀN HẢO CHO CẢ WEB & APK
         // ==========================================
         let recognitionInstance = null;
         let isRecActive = false;
@@ -1086,7 +1241,6 @@
         function toggleSpeech() {
             const SpeechEngine = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechEngine) {
-                // Dự phòng lỗi APK không có lõi Google Voice Recognition Service
                 simulateSpeakingForTesting();
                 return;
             }
@@ -1126,20 +1280,18 @@
                 try {
                     recognitionInstance.start();
                 } catch(e) {
-                    // Đề phòng lỗi instance crash trên WebView
                     simulateSpeakingForTesting();
                 }
             }
         }
 
-        // Chế độ dự phòng thông minh khi lõi WebView Android của máy cũ bị khuyết dịch vụ Speech
         function simulateSpeakingForTesting() {
             updateMicUIState(true);
             showToast("Đang lắng nghe bé đọc... (Môi trường APK)");
             setTimeout(() => {
                 updateMicUIState(false);
                 const target = deckWords[deckPointer].word;
-                processSpeakingScore(target); // Cho bé vượt qua thông minh nếu phần cứng bị kẹt
+                processSpeakingScore(target); 
             }, 2500);
         }
 
@@ -1171,7 +1323,7 @@
         }
 
         // ==========================================
-        // 🌟 TÍCH HỢP HIỆU ỨNG PHÁT ÂM ĐÚNG SIÊU ĐẸP MẮT (ÂM THANH KHEN THƯỞNG + CHỮ BAY + PHÁO GIẤY)
+        // 🌟 TÍCH HỢP HIỆU ỨNG PHÁT ÂM ĐÚNG SIÊU ĐẸP MẮT (AN TOÀN TUYỆT ĐỐI)
         // ==========================================
         function processSpeakingScore(spokenText) {
             const target = deckWords[deckPointer].word.toLowerCase().trim().replace(/[^a-z0-9]/gi, '');
@@ -1180,7 +1332,6 @@
             document.getElementById('speech-transcribed-text').textContent = spokenText;
             document.getElementById('speech-analysis-box').classList.remove('hidden');
 
-            // Tính toán khoảng cách tương đồng Levenshtein
             let score = 0;
             if (target === userSpeech) {
                 score = 100;
@@ -1190,12 +1341,10 @@
                 score = Math.round(((maxLen - dist) / maxLen) * 100);
             }
 
-            // Gắn điểm số
             const scoreEl = document.getElementById('speech-match-score');
             scoreEl.textContent = `${score}% Match`;
 
             if (score >= 65) {
-                // Bé đạt chuẩn phát âm xuất sắc
                 scoreEl.className = "text-2xl font-black font-kids text-emerald-500 scale-110 transition-transform";
                 document.getElementById('star-1').className = "fa-solid fa-star text-yellow-400 scale-120 transition-all";
                 document.getElementById('star-2').className = "fa-solid fa-star text-yellow-400 scale-120 transition-all duration-500";
@@ -1207,7 +1356,6 @@
                     document.getElementById('speech-encouraging-msg').textContent = "Giỏi lắm! Con đọc gần như chính xác hoàn toàn rồi! ✨ +10 XP";
                 }
 
-                // KÍCH HOẠT CHUỖI HIỆU ỨNG KHEN THƯỞNG PREMIUM
                 playSuccessChimeSound();
                 triggerFloatScoreRewardText();
                 burstLocalMiniConfetti();
@@ -1219,21 +1367,18 @@
                 }
                 saveAppState();
 
-                // Chuyển từ sau 2.5 giây để con kịp tận hưởng hiệu ứng
                 setTimeout(() => {
                     scoreEl.className = "text-lg font-black font-kids text-slate-400";
                     navigateDeck(1);
                 }, 2500);
 
             } else {
-                // Phát âm chưa đạt
                 scoreEl.className = "text-xl font-black font-kids text-rose-500";
                 document.getElementById('star-1').className = "fa-solid fa-star text-yellow-400";
                 document.getElementById('speech-encouraging-msg').textContent = "Bé đọc gần đúng rồi, nghe cô hướng dẫn lại rồi thử lại nha!";
             }
         }
 
-        // 🎵 1. PHÁT HỢP ÂM ARPEGGIO KHEN THƯỞNG NGOẠI TUYẾN (Chống lỗi đường dẫn trên APK)
         function playSuccessChimeSound() {
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1256,17 +1401,15 @@
                 };
 
                 const now = ctx.currentTime;
-                // Chuỗi nốt nhạc lấp lánh (Đô - Mi - Sol - Đô mới cao hơn)
-                playNote(523.25, now, 0.2);       // C5
-                playNote(659.25, now + 0.1, 0.2); // E5
-                playNote(783.99, now + 0.2, 0.2); // G5
-                playNote(1046.50, now + 0.3, 0.4); // C6
+                playNote(523.25, now, 0.2);       
+                playNote(659.25, now + 0.1, 0.2); 
+                playNote(783.99, now + 0.2, 0.2); 
+                playNote(1046.50, now + 0.3, 0.4); 
             } catch (e) {
                 console.warn("Web Audio chime failed", e);
             }
         }
 
-        // 🎈 2. HIỆU ỨNG CHỮ NỔI BAY LÊN THƯỞNG ĐIỂM SÁO VÀNG (+10 XP)
         function triggerFloatScoreRewardText() {
             const zone = document.getElementById('score-reward-float-zone');
             if (!zone) return;
@@ -1279,7 +1422,6 @@
             setTimeout(() => popText.remove(), 1800);
         }
 
-        // 🎉 3. BẮN PHÁO GIẤY MINI NGAY TRÊN KHUNG BÀI HỌC CỦA CON
         function burstLocalMiniConfetti() {
             const holder = document.getElementById('local-confetti-holder');
             if (!holder) return;
@@ -1289,7 +1431,7 @@
             for (let i = 0; i < 20; i++) {
                 const el = document.createElement('div');
                 el.className = 'confetti-piece';
-                el.style.left = `${30 + Math.random() * 40}%`; // Tập trung xung quanh chữ mẫu
+                el.style.left = `${30 + Math.random() * 40}%`; 
                 el.style.top = `${40 + Math.random() * 20}%`;
                 el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 el.style.width = `${Math.floor(Math.random() * 4) + 6}px`;
@@ -1416,7 +1558,7 @@
                 document.getElementById('study-modal').classList.add('hidden');
                 updateDashboardStats();
                 renderUnitsMap();
-            }, 2000);
+            }, 200);
         }
 
         function triggerCelebrationLayout(score, total, msg) {
@@ -1428,7 +1570,6 @@
                 document.getElementById('celebration-box').className = "relative w-full max-w-sm bg-white rounded-3xl border-4 border-yellow-300 shadow-2xl p-8 transform scale-100 opacity-100 duration-300";
             }, 50);
 
-            // Xả pháo hoa giấy toàn màn hình
             const container = document.getElementById('confetti-container');
             container.innerHTML = "";
             const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6'];
@@ -1481,6 +1622,7 @@
         function openAdminPanel() {
             document.getElementById('admin-google-token').value = localStorage.getItem('cfg_google_tts_token') || googleTTSToken;
             document.getElementById('admin-gemini-key').value = localStorage.getItem('cfg_gemini_api_key') || "";
+            document.getElementById('admin-viettel-token').value = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
             document.getElementById('admin-panel-modal').classList.remove('hidden');
             setTimeout(() => {
                 document.getElementById('admin-panel-box').className = "bg-white w-full max-w-lg rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[90vh] border-4 border-indigo-400 transform scale-100 opacity-100 duration-300";
@@ -1500,6 +1642,7 @@
         function adminSaveVoiceSettings() {
             localStorage.setItem('cfg_google_tts_token', document.getElementById('admin-google-token').value.trim());
             localStorage.setItem('cfg_gemini_api_key', document.getElementById('admin-gemini-key').value.trim());
+            localStorage.setItem('cfg_viettel_tts_token', document.getElementById('admin-viettel-token').value.trim());
             showToast("Hệ thống Tokens đã được đồng bộ an toàn!");
             closeAdminPanel();
         }
@@ -1564,7 +1707,6 @@
             
             if (isLocalFile || isAndroidSystem) {
                 console.log("Website 2 APK Builder Environment Detected successfully.");
-                // Tạo một badge nhỏ dễ thương hiển thị trạng thái tối ưu hóa ứng dụng
                 const apkBadge = document.createElement('div');
                 apkBadge.className = "fixed bottom-4 right-4 z-50 bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-lg border border-emerald-300 pointer-events-none transition-all flex items-center gap-1.5 animate-bounce";
                 apkBadge.innerHTML = `<i class="fa-solid fa-android"></i> Chế độ APK Mượt Mà`;
