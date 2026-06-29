@@ -1078,30 +1078,40 @@
             if (cardBackLoader) cardBackLoader.classList.remove('hidden');
             if (speakLoader) speakLoader.classList.remove('hidden');
 
-            try {
-                let res = await fetch("https://viettelai.vn/tts/speech_synthesis", {
-                    method: "POST",
-                    headers: {
-                        "accept": "*/*",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        text: text,
-                        voice: activeVoice,
-                        speed: 0.9,
-                        tts_return_option: 3,
-                        token: activeViettelToken,
-                        without_filter: false
-                    })
-                });
+            const isEng = !/[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(text);
 
-                if (!res.ok) throw new Error("Viettel AI TTS Response error: " + res.status);
-                const audioBlob = await res.blob();
-                const audioUrl = URL.createObjectURL(audioBlob);
-                const snd = new Audio(audioUrl);
-                await snd.play();
+            try {
+                if (isEng) {
+                    // Sử dụng giọng đọc chuẩn Mỹ (en-US) chất lượng cao, không độ trễ
+                    const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en-US&client=tw-ob&q=${encodeURIComponent(text)}`;
+                    const snd = new Audio(audioUrl);
+                    await snd.play();
+                } else {
+                    // Sử dụng giọng đọc Viettel AI được chọn cho Tiếng Việt
+                    let res = await fetch("https://viettelai.vn/tts/speech_synthesis", {
+                        method: "POST",
+                        headers: {
+                            "accept": "*/*",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            text: text,
+                            voice: activeVoice,
+                            speed: 0.9,
+                            tts_return_option: 3,
+                            token: activeViettelToken,
+                            without_filter: false
+                        })
+                    });
+
+                    if (!res.ok) throw new Error("Viettel AI TTS Response error: " + res.status);
+                    const audioBlob = await res.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const snd = new Audio(audioUrl);
+                    await snd.play();
+                }
             } catch (e) {
-                console.warn("Lỗi kết nối Viettel AI, sử dụng giọng nói dự phòng offline:", e);
+                console.warn("Lỗi kết nối TTS Engine, sử dụng giọng nói dự phòng offline:", e);
                 playFallbackOfflineTTS(text);
             } finally {
                 if (cardFrontLoader) cardFrontLoader.classList.add('hidden');
