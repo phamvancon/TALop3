@@ -189,13 +189,14 @@
                     <h4 class="font-extrabold text-sm font-kids text-indigo-100">Chọn Cô Giáo AI</h4>
                     
                     <select id="voice-selector" class="mt-2 w-full bg-indigo-800 border-2 border-indigo-600 text-white text-xs font-bold rounded-xl p-2 focus:outline-none">
-                        <option value="Leda">Leda (Thân thiện, trẻ trung)</option>
-                        <option value="Puck" selected>Puck (Năng động, vui tươi)</option>
-                        <option value="Callirrhoe">Callirrhoe (Dịu dàng, ấm áp)</option>
-                        <option value="BrowserFemale">Giọng mặc định máy (Dự phòng)</option>
+                        <option value="hcm-diemmy" selected>Cô Diễm My (Nữ miền Nam ấm áp)</option>
+                        <option value="hn-phuongtrang">Cô Phương Trang (Nữ miền Bắc thanh lịch)</option>
+                        <option value="hn-quynhanh">Cô Quỳnh Anh (Nữ miền Bắc nhẹ nhàng)</option>
+                        <option value="hcm-minhquan">Thầy Minh Quân (Nam miền Nam truyền cảm)</option>
+                        <option value="hn-thanhtung">Thầy Thanh Tùng (Nam miền Bắc dõng dạc)</option>
                     </select>
 
-                    <p class="text-[10px] text-indigo-200 mt-2 leading-relaxed">Gemini AI TTS cao cấp giúp phát âm chuẩn giọng bản xứ Mỹ để bé bắt chước phát âm.</p>
+                    <p class="text-[10px] text-indigo-200 mt-2 leading-relaxed">Hệ thống chuyển đổi giọng nói cao cấp Viettel AI giúp phát âm chuẩn và tự nhiên nhất.</p>
                     
                     <button id="btn-test-voice" onclick="testVoice()" class="mt-3 text-xs bg-indigo-500/50 hover:bg-indigo-500 text-white font-extrabold py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all w-full border-2 border-indigo-400/30">
                         <i class="fa-solid fa-volume-high"></i> <span id="test-btn-text">Nghe thử giọng</span>
@@ -603,36 +604,14 @@
                 <!-- CẤU HÌNH API GIỌNG NÓI CAO CẤP -->
                 <div class="p-4 bg-amber-50/60 rounded-2xl border border-amber-200 space-y-3">
                     <h4 class="font-bold text-amber-950 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-gears text-amber-600"></i> Cấu hình API Giọng nói (Google & Gemini & Viettel)
+                        <i class="fa-solid fa-gears text-amber-600"></i> Cấu hình API Giọng nói Viettel AI
                     </h4>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">Thay đổi khóa kết nối trực tiếp đến hạ tầng đám mây Google TTS, Gemini & Viettel AI. Trạng thái được đồng bộ trên thiết bị cục bộ.</p>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Thay đổi khóa kết nối trực tiếp đến hạ tầng đám mây Viettel AI TTS. Trạng thái được đồng bộ trên thiết bị cục bộ.</p>
                     
                     <div class="space-y-3.5 text-left bg-white p-3.5 rounded-xl border border-amber-100">
-                        <!-- Token Google Cloud -->
-                        <div>
-                            <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Google Cloud TTS Token (Neural2)</label>
-                            <div class="relative">
-                                <input type="password" id="admin-google-token" placeholder="Dán Google Premium Token vào đây..." class="w-full pl-3 pr-10 py-2.5 border-2 border-amber-100 rounded-lg text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all">
-                                <button type="button" onclick="toggleInputVisibility('admin-google-token')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
-                                    <i class="fa-solid fa-eye text-xs" id="eye-google"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Key Gemini -->
-                        <div>
-                            <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Gemini API Key (Dùng cho Puck, Leda, Callirrhoe)</label>
-                            <div class="relative">
-                                <input type="password" id="admin-gemini-key" placeholder="Nhập khóa API Gemini..." class="w-full pl-3 pr-10 py-2.5 border-2 border-amber-100 rounded-lg text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all">
-                                <button type="button" onclick="toggleInputVisibility('admin-gemini-key')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
-                                    <i class="fa-solid fa-eye text-xs" id="eye-gemini"></i>
-                                </button>
-                            </div>
-                        </div>
-
                         <!-- Token Viettel AI -->
                         <div>
-                            <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Viettel AI TTS Token (Giọng Việt hcm-diemmy)</label>
+                            <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Viettel AI TTS Token</label>
                             <div class="relative">
                                 <input type="password" id="admin-viettel-token" placeholder="Nhập Token dịch vụ Viettel AI..." class="w-full pl-3 pr-10 py-2.5 border-2 border-amber-100 rounded-lg text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all">
                                 <button type="button" onclick="toggleInputVisibility('admin-viettel-token')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
@@ -642,7 +621,7 @@
                         </div>
 
                         <button onclick="adminSaveVoiceSettings()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-black font-kids text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 border-b-2 border-amber-700">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> Lưu cấu hình API Giọng nói
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Lưu cấu hình Viettel AI Token
                         </button>
                     </div>
                 </div>
@@ -684,7 +663,6 @@
         const appId = 'tieng-anh-lop-3-69257';
 
         // Khóa Token mặc định dự phòng của hệ thống
-        const googleTTSToken = "AQ.Ab8RN6KPTaKHXRQ56ZIVhNuPgkTjmlP_6xtUWd_-B4He8rZKIQ";
         const viettelDefaultToken = "395f6b744a34ff3eb6e042656cde6ffe";
 
         // GIÁO TRÌNH 20 UNIT CHUẨN SÁCH GIÁO KHOA TIẾNG ANH LỚP 3
@@ -1074,7 +1052,7 @@
         }
 
         // ==========================================
-        // 🛠️ GIẢI PHÁP 3: THIẾT LẬP CƠ CHẾ CHỐNG LỖI AUDIO ENGINE TRÊN APK
+        // 🛠️ GIẢI PHÁP 3: THIẾT LẬP CƠ CHẾ CHỐNG LỖI AUDIO ENGINE TRÊN APK VỚI VIETTEL AI
         // ==========================================
         function setupAudioEngine() {
             if ('speechSynthesis' in window) {
@@ -1089,58 +1067,56 @@
         }
 
         async function executeCoreTTS(text) {
-            const mode = document.getElementById('voice-selector').value;
-            const customGoogleToken = localStorage.getItem('cfg_google_tts_token') || googleTTSToken;
+            const activeVoice = document.getElementById('voice-selector').value;
+            const activeViettelToken = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
 
-            if (mode === 'BrowserFemale' || (!navigator.onLine)) {
-                playFallbackOfflineTTS(text);
-                return;
-            }
+            const cardFrontLoader = document.getElementById('card-audio-loading-front');
+            const cardBackLoader = document.getElementById('card-audio-loading-back');
+            const speakLoader = document.getElementById('speak-audio-loading');
 
-            document.getElementById('card-audio-loading-front').classList.remove('hidden');
-            document.getElementById('speak-audio-loading').classList.remove('hidden');
+            if (cardFrontLoader) cardFrontLoader.classList.remove('hidden');
+            if (cardBackLoader) cardBackLoader.classList.remove('hidden');
+            if (speakLoader) speakLoader.classList.remove('hidden');
 
             try {
-                let res = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${customGoogleToken}`, {
+                let res = await fetch("https://viettelai.vn/tts/speech_synthesis", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "accept": "*/*",
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify({
-                        input: { text: text },
-                        voice: { languageCode: "en-US", name: "en-US-Neural2-F" },
-                        audioConfig: { audioEncoding: "MP3", speakingRate: 0.85 }
+                        text: text,
+                        voice: activeVoice,
+                        speed: 0.9,
+                        tts_return_option: 3,
+                        token: activeViettelToken,
+                        without_filter: false
                     })
                 });
 
-                if (!res.ok) throw new Error("Google Cloud TTS Response error");
-                const json = await res.json();
-                if (json.audioContent) {
-                    playMp3Base64(json.audioContent);
-                } else {
-                    throw new Error("No audio content");
-                }
+                if (!res.ok) throw new Error("Viettel AI TTS Response error: " + res.status);
+                const audioBlob = await res.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const snd = new Audio(audioUrl);
+                await snd.play();
             } catch (e) {
-                console.warn("Đám mây gặp sự cố, kích hoạt dự phòng offline phát âm thành công.");
+                console.warn("Lỗi kết nối Viettel AI, sử dụng giọng nói dự phòng offline:", e);
                 playFallbackOfflineTTS(text);
             } finally {
-                document.getElementById('card-audio-loading-front').classList.add('hidden');
-                document.getElementById('speak-audio-loading').classList.add('hidden');
+                if (cardFrontLoader) cardFrontLoader.classList.add('hidden');
+                if (cardBackLoader) cardBackLoader.classList.add('hidden');
+                if (speakLoader) speakLoader.classList.add('hidden');
             }
-        }
-
-        function playMp3Base64(base64) {
-            const audioUrl = `data:audio/mp3;base64,${base64}`;
-            const snd = new Audio(audioUrl);
-            snd.play().catch(() => {
-                playFallbackOfflineTTS(deckWords[deckPointer].word);
-            });
         }
 
         function playFallbackOfflineTTS(text) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                utterance.rate = 0.8;
+                // Kiểm tra nếu có chứa ký tự tiếng Việt thì phát âm tiếng Việt, ngược lại tiếng Anh
+                utterance.lang = text.match(/[\u0100-\u1EF9]/) ? 'vi-VN' : 'en-US';
+                utterance.rate = 0.85;
                 window.speechSynthesis.speak(utterance);
             }
         }
@@ -1149,49 +1125,8 @@
         // 🌟 GIẢI PHÁP 4: THIẾT LẬP PHÁT ÂM TIẾNG VIỆT CHUẨN VIETTEL AI
         // ==========================================
         async function playViettelVietnameseTTS(text) {
-            const activeViettelToken = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
-            
-            try {
-                const response = await fetch("https://viettelai.vn/tts/speech_synthesis", {
-                    method: "POST",
-                    headers: {
-                        "accept": "*/*",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        text: text,
-                        voice: "hcm-diemmy",
-                        speed: 1,
-                        tts_return_option: 3,
-                        token: activeViettelToken,
-                        without_filter: false
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error("Lỗi API Viettel: " + response.status);
-                }
-
-                const audioBlob = await response.blob();
-                const audioUrl = URL.createObjectURL(audioBlob);
-
-                const audio = new Audio(audioUrl);
-                audio.play();
-
-            } catch (err) {
-                console.error("Lỗi kết nối Viettel AI, chạy dự phòng WebSpeech:", err);
-                playFallbackOfflineViTTS(text);
-            }
-        }
-
-        function playFallbackOfflineViTTS(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'vi-VN';
-                utterance.rate = 0.95;
-                window.speechSynthesis.speak(utterance);
-            }
+            // Tất cả các yêu cầu đọc tiếng Việt và tiếng Anh giờ đều chuyển qua hàm executeCoreTTS thống nhất.
+            await executeCoreTTS(text);
         }
 
         // Gọi đọc tiếng việt trên mặt sau của flashcard
@@ -1226,7 +1161,7 @@
         // LÀM ĐẸP CHỨC NĂNG KIỂM TRA GIỌNG ĐỌC CỦA ADMIN
         function testVoice() {
             document.getElementById('test-btn-text').textContent = "Đang đọc mẫu...";
-            executeCoreTTS("Welcome to English 3 Success core panel.");
+            executeCoreTTS("Chào mừng các bạn nhỏ đến với ứng dụng học tập Viettel AI!");
             setTimeout(() => {
                 document.getElementById('test-btn-text').textContent = "Nghe thử giọng";
             }, 2000);
@@ -1620,8 +1555,6 @@
         }
 
         function openAdminPanel() {
-            document.getElementById('admin-google-token').value = localStorage.getItem('cfg_google_tts_token') || googleTTSToken;
-            document.getElementById('admin-gemini-key').value = localStorage.getItem('cfg_gemini_api_key') || "";
             document.getElementById('admin-viettel-token').value = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
             document.getElementById('admin-panel-modal').classList.remove('hidden');
             setTimeout(() => {
@@ -1640,8 +1573,6 @@
         }
 
         function adminSaveVoiceSettings() {
-            localStorage.setItem('cfg_google_tts_token', document.getElementById('admin-google-token').value.trim());
-            localStorage.setItem('cfg_gemini_api_key', document.getElementById('admin-gemini-key').value.trim());
             localStorage.setItem('cfg_viettel_tts_token', document.getElementById('admin-viettel-token').value.trim());
             showToast("Hệ thống Tokens đã được đồng bộ an toàn!");
             closeAdminPanel();
