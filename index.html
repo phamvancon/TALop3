@@ -227,7 +227,7 @@
                 </button>
             </nav>
 
-            <!-- Khung liên kết Sách Giáo Khoa Lớp 3 (Cho Mobile & Tablet hiển thị trực quan) -->
+            <!-- Khung liên kết Sách Giáo Khoa Lớp 3 -->
             <div class="bg-white rounded-3xl border-2 border-indigo-100 p-5 shadow-sm space-y-3">
                 <h4 class="font-black font-kids text-indigo-900 text-sm flex items-center gap-1.5">
                     <i class="fa-solid fa-book-open-reader text-indigo-500"></i> Sách Giáo Khoa Lớp 3
@@ -261,8 +261,8 @@
                     <h4 class="font-extrabold text-sm font-kids text-indigo-100">Chọn giọng giáo viên</h4>
                     
                     <select id="voice-selector" class="mt-2 w-full bg-indigo-800 border-2 border-indigo-600 text-white text-xs font-bold rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                        <option value="GoogleTTS" selected>🇺🇸 Google Cloud TTS (Siêu chuẩn & Truyền cảm)</option>
-                        <option value="OfflineFast">⚡ Giọng Offline máy (Siêu nhanh - Không cần mạng)</option>
+                        <option value="GoogleTTS" selected>🇺🇸 Google Cloud TTS (Chuẩn & Tự Nhiên)</option>
+                        <option value="OfflineFast">⚡ Giọng Offline máy (Không cần mạng)</option>
                         <option value="Puck">🤖 Gemini - Puck (Vui tươi)</option>
                         <option value="Leda">🤖 Gemini - Leda (Thân thiện)</option>
                         <option value="Callirrhoe">🤖 Gemini - Callirrhoe (Ấm áp)</option>
@@ -271,7 +271,7 @@
                     <div class="mt-2.5">
                         <label class="block text-[10px] font-black text-indigo-200 uppercase tracking-wider mb-1">Tốc độ phát âm</label>
                         <select id="speech-speed-selector" class="w-full bg-indigo-800 border-2 border-indigo-600 text-white text-xs font-bold rounded-xl p-2 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                            <option value="0.7">🐢 Chậm (Cho bé dễ nghe rõ âm đuôi)</option>
+                            <option value="0.7">🐢 Chậm (Dễ nghe rõ âm đuôi)</option>
                             <option value="0.85" selected>⚡ Vừa phải (Khuyên dùng)</option>
                             <option value="1.0">🏃 Tốc độ bình thường (Tự nhiên)</option>
                         </select>
@@ -295,11 +295,11 @@
         </aside>
 
         <!-- KHUNG HIỂN THỊ NỘI DUNG CHÍNH -->
-        <main class="flex-1 min-w-0">
+        <main class="flex-1 min-w-0 flex flex-col gap-6">
             
             <!-- VIEW 1: TRANG CHỦ HỌC VIÊN -->
             <div id="view-dashboard" class="space-y-6">
-                <!-- Banner Chào Mừng Đẹp Mắt -->
+                <!-- Banner Chào Mừng -->
                 <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-6 sm:p-8 text-white shadow-xl">
                     <div class="absolute right-0 top-0 -mr-4 -mt-4 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
                     <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -369,33 +369,50 @@
                     </div>
                 </section>
 
-                <!-- Đề xuất thông minh -->
+                <!-- Đề xuất thông minh & Trợ lý Đọc bài -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-2 bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <h4 class="font-black font-kids text-indigo-900">Bài học tiếp theo cho bé</h4>
-                                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">AI Đề xuất</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-indigo-50/50 border-2 border-indigo-100">
-                                <div class="flex items-center gap-3.5">
-                                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center font-black font-kids text-xl shadow-md" id="rec-lesson-num">W1</div>
-                                    <div>
-                                        <h5 class="font-extrabold text-indigo-900 text-sm" id="rec-lesson-title">Tuần 1: Unit 1 - Hello (Lesson 1)</h5>
-                                        <p class="text-xs text-indigo-600 mt-1"><i class="fa-regular fa-star mr-1"></i>Học từ vựng cơ bản và giới thiệu tên</p>
-                                    </div>
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Đề xuất học tiếp -->
+                        <div class="bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="font-black font-kids text-indigo-900">Bài học tiếp theo cho bé</h4>
+                                    <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">AI Đề xuất</span>
                                 </div>
-                                <button id="btn-rec-lesson" onclick="startWeekLesson('week-1', 1)" class="whitespace-nowrap px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-                                    Học ngay <i class="fa-solid fa-play text-[10px]"></i>
-                                </button>
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-indigo-50/50 border-2 border-indigo-100">
+                                    <div class="flex items-center gap-3.5">
+                                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center font-black font-kids text-xl shadow-md" id="rec-lesson-num">W1</div>
+                                        <div>
+                                            <h5 class="font-extrabold text-indigo-900 text-sm" id="rec-lesson-title">Tuần 1: Unit 1 - Hello (Lesson 1)</h5>
+                                            <p class="text-xs text-indigo-600 mt-1"><i class="fa-regular fa-star mr-1"></i>Học từ vựng cơ bản và giới thiệu tên</p>
+                                        </div>
+                                    </div>
+                                    <button id="btn-rec-lesson" onclick="startWeekLesson('week-1', 1)" class="whitespace-nowrap px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-black shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                                        Học ngay <i class="fa-solid fa-play text-[10px]"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="mt-6 flex gap-3 items-start bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-4">
-                            <div class="text-yellow-500 text-xl mt-0.5"><i class="fa-solid fa-circle-question"></i></div>
-                            <div>
-                                <h6 class="font-black text-xs text-yellow-800">Thông báo từ sách:</h6>
-                                <p class="text-xs text-yellow-700 leading-relaxed mt-1">Con có thể tra cứu nhanh các bài tập trong SGK điện tử chính thức bất cứ lúc nào bằng các liên kết ở menu bên trái hoặc phía trên đầu trang.</p>
+
+                        <!-- WIDGET TRỢ LÝ AI ĐỌC BÀI VIETTEL AI / GOOGLE (Yêu cầu đề xuất) -->
+                        <div class="bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-black font-kids text-indigo-900 flex items-center gap-2">
+                                    <span class="text-xl">🔊</span> Trợ lý AI Đọc Bài (EduKids Smart Talk)
+                                </h4>
+                                <span class="text-[10px] font-black text-pink-500 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100">Premium Viettel AI</span>
+                            </div>
+                            <p class="text-xs text-slate-500 leading-relaxed mb-3">Nhập đoạn văn Tiếng Anh hoặc Tiếng Việt để trợ lý AI của BabyTalk phát âm chính xác:</p>
+                            
+                            <textarea id="ai-assistant-textarea" rows="3" class="w-full p-4 text-xs font-extrabold border-2 border-indigo-100 rounded-2xl text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none transition-all" placeholder="Xin chào! Đây là ứng dụng BabyTalk & EduKids Smart.">Xin chào! Đây là ứng dụng BabyTalk & EduKids Smart.</textarea>
+                            
+                            <div class="flex flex-col sm:flex-row gap-2 mt-3">
+                                <button onclick="readAssistantText('vi')" class="flex-1 py-3 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white text-xs font-black rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/10">
+                                    <i class="fa-solid fa-microphone text-white"></i> Giọng Việt (Viettel AI Diễm My)
+                                </button>
+                                <button onclick="readAssistantText('en')" class="flex-1 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-black rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/10">
+                                    <i class="fa-solid fa-volume-high text-white"></i> Giọng Anh (Google Cloud Mỹ)
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -512,10 +529,15 @@
                                 </div>
                             </div>
 
-                            <!-- MẶT SAU (TIẾNG VIỆT) -->
+                            <!-- MẶT SAU (TIẾNG VIỆT - TÍCH HỢP VIETTEL AI) -->
                             <div class="backface-hidden rotate-y-180 absolute inset-0 w-full h-full bg-white flex flex-col items-center justify-between p-6 rounded-3xl bg-gradient-to-br from-yellow-50/50 to-indigo-50/20 border-4 border-yellow-300">
-                                <div class="self-start">
+                                <div class="self-start flex justify-between w-full items-center">
                                     <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-black rounded-lg uppercase tracking-wide border border-yellow-200" id="card-back-type">Từ vựng</span>
+                                    
+                                    <!-- VIETTEL AI ĐỌC TIẾNG VIỆT -->
+                                    <button onclick="speakVietnameseWord(event)" class="px-2.5 py-1 bg-pink-50 hover:bg-pink-100 border border-pink-200 text-pink-600 rounded-lg text-[10px] font-black flex items-center gap-1 transition-all" title="Nghe cô giáo AI đọc tiếng Việt">
+                                        <i class="fa-solid fa-volume-high"></i> Giọng Việt AI
+                                    </button>
                                 </div>
 
                                 <div class="text-center flex-1 flex flex-col justify-center w-full px-4">
@@ -568,11 +590,18 @@
                         </div>
                     </div>
 
-                    <!-- Mẹo phát âm -->
+                    <!-- Mẹo phát âm - Cập nhật chức năng nghe mẹo Viettel AI -->
                     <div class="w-full max-w-md mt-4 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-4 shadow-sm">
-                        <div class="flex items-center gap-2 text-amber-800 font-black text-xs uppercase tracking-wider mb-2">
-                            <i class="fa-solid fa-lightbulb text-amber-500 text-sm animate-pulse"></i>
-                            <span>Bí kíp phát âm cho con:</span>
+                        <div class="flex items-center justify-between text-amber-800 font-black text-xs uppercase tracking-wider mb-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-lightbulb text-amber-500 text-sm animate-pulse"></i>
+                                <span>Bí kíp phát âm cho con:</span>
+                            </div>
+                            
+                            <!-- Đọc giải thích tiếng Việt bằng Viettel AI -->
+                            <button onclick="speakPronunciationTip()" class="px-2 py-1 bg-white hover:bg-amber-100 border border-amber-300 text-amber-700 rounded-lg text-[9px] font-black flex items-center gap-1 transition-all" title="Nghe cô giáo giải thích mẹo">
+                                <i class="fa-solid fa-volume-high"></i> Nghe hướng dẫn AI
+                            </button>
                         </div>
                         <p id="speak-tip-vi" class="text-xs text-amber-950 font-bold leading-relaxed">
                             Đang tải hướng dẫn...
@@ -677,7 +706,7 @@
         </div>
     </div>
 
-    <!-- CUSTOM CONFIRMATION DIALOG (Không dùng alert/confirm mặc định) -->
+    <!-- CUSTOM CONFIRMATION DIALOG -->
     <div id="confirm-modal" class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 border-4 border-indigo-100 text-center transform scale-95 transition-all duration-300 opacity-0" id="confirm-modal-box">
             <div class="text-4xl mb-3" id="confirm-icon">❓</div>
@@ -830,15 +859,9 @@
         </div>
     </div>
 
-    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 font-medium space-y-2">
-            <p>© 2026 E-Learning English 3 Success - Hệ sinh thái Học liệu số bám sát 35 Tuần Sách Giáo Khoa GD&ĐT.</p>
-            <p class="text-[10px] text-slate-400">Được vận hành trên hệ thống máy chủ lưu trữ đồng bộ bảo mật chính thức.</p>
-        </div>
-    </footer>
-
+    <!-- SCRIPT ĐIỀU KHIỂN LOGIC CHƯƠNG TRÌNH -->
     <script>
-        // CẤU HÌNH ĐỒNG BỘ CLOUD FIREBASE ĐỒNG BỘ CỦA USER
+        // CẤU HÌNH ĐỒNG BỘ CLOUD FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDc2t5HpTQdBcRx_VYwtknOMtnfjOgMIPg",
             authDomain: "tieng-anh-lop-3-69257.firebaseapp.com",
@@ -982,44 +1005,20 @@
                 id: "week-11",
                 weekNumber: 11,
                 term: 1,
-                unitRef: 0,
-                title: "Week 11: Review 1 (Ôn tập giữa kì 1)",
-                desc: "Ôn tập tổng hợp kiến thức từ Unit 1 đến Unit 5.",
-                words: [
-                    { word: "Hello", ipa: "/həˈloʊ/", type: "Interjection", vietnamese: "Xin chào", exEn: "Hello again!", exVi: "Xin chào lại nhé!", tipVi: "Ôn tập phát âm từ chào cơ bản." },
-                    { word: "Friend", ipa: "/frend/", type: "Noun", vietnamese: "Người bạn", exEn: "My good friend.", exVi: "Người bạn tốt của tớ.", tipVi: "Ôn tập từ bạn bè thân yêu." }
-                ]
-            },
-            {
-                id: "week-12",
-                weekNumber: 12,
-                term: 1,
-                unitRef: 0,
-                title: "Week 12: Mid-term 1 Exam (Khảo sát giữa kì 1)",
-                desc: "Thử tài trí nhớ với bài kiểm tra đặc biệt.",
-                words: [
-                    { word: "What", ipa: "/wɑːt/", type: "Pronoun", vietnamese: "Cái gì", exEn: "What is this?", exVi: "Cái này là cái gì?", tipVi: "Bật mạnh âm 't' ở cuối từ để máy chấm điểm chính xác." },
-                    { word: "Old", ipa: "/oʊld/", type: "Adjective", vietnamese: "Tuổi", exEn: "Eight years old.", exVi: "Tám tuổi.", tipVi: "Nhớ kết hợp cả âm 'l' và 'd' ở cuối từ." }
-                ]
-            },
-            {
-                id: "week-13",
-                weekNumber: 13,
-                term: 1,
                 unitRef: 6,
-                title: "Week 13: Unit 6 - Our School (Lesson 1)",
-                desc: "Các phòng học chính tại trường.",
+                title: "Week 11: Unit 6 - Our School (Lesson 1)",
+                desc: "Các phòng học chính tại trường học.",
                 words: [
                     { word: "School", ipa: "/skuːl/", type: "Noun", vietnamese: "Trường học", exEn: "I love my school.", exVi: "Tớ yêu trường học của tớ.", tipVi: "Đọc giống 'S-kun'. Cong lưỡi chữ 'l' để tạo âm hơi nghẹn ở cuối từ." },
                     { word: "Classroom", ipa: "/ˈklæsruːm/", type: "Noun", vietnamese: "Lớp học", exEn: "Go to the classroom.", exVi: "Hãy đi vào lớp học.", tipVi: "Đọc là 'Klát-rum'. Có âm 's' gió nhẹ ở giữa: 'klát-s-rum'." }
                 ]
             },
             {
-                id: "week-14",
-                weekNumber: 14,
+                id: "week-12",
+                weekNumber: 12,
                 term: 1,
                 unitRef: 6,
-                title: "Week 14: Unit 6 - Our School (Lesson 2 & 3)",
+                title: "Week 12: Unit 6 - Our School (Lesson 2 & 3)",
                 desc: "Rủ bạn cùng đi tham quan trường.",
                 words: [
                     { word: "Library", ipa: "/ˈlaɪbreri/", type: "Noun", vietnamese: "Thư viện", exEn: "Let's go to the library.", exVi: "Chúng mình cùng đến thư viện đi.", tipVi: "Đọc là 'Lai-brơ-ri'. Nhấn giọng mạnh vào âm đầu 'Lai'." },
@@ -1027,11 +1026,11 @@
                 ]
             },
             {
-                id: "week-15",
-                weekNumber: 15,
+                id: "week-13",
+                weekNumber: 13,
                 term: 1,
                 unitRef: 7,
-                title: "Week 15: Unit 7 - Classroom Instructions (Lesson 1)",
+                title: "Week 13: Unit 7 - Classroom Instructions (Lesson 1)",
                 desc: "Các hiệu lệnh cơ bản của giáo viên.",
                 words: [
                     { word: "Open", ipa: "/ˈoʊpən/", type: "Verb", vietnamese: "Mở ra", exEn: "Open your book, please.", exVi: "Vui lòng mở sách ra.", tipVi: "Đọc tròn môi thành 'Ôu-pần'. Nhấn giọng ở âm đầu 'Ôu'." },
@@ -1039,11 +1038,11 @@
                 ]
             },
             {
-                id: "week-16",
-                weekNumber: 16,
+                id: "week-14",
+                weekNumber: 14,
                 term: 1,
                 unitRef: 7,
-                title: "Week 16: Unit 7 - Classroom Instructions (Lesson 2 & 3)",
+                title: "Week 14: Unit 7 - Classroom Instructions (Lesson 2 & 3)",
                 desc: "Đứng lên, ngồi xuống trong lớp.",
                 words: [
                     { word: "Sit down", ipa: "/sɪt daʊn/", type: "Phrase", vietnamese: "Ngồi xuống", exEn: "Sit down, class.", exVi: "Mời cả lớp ngồi xuống.", tipVi: "Đọc là 'Xít đao'. Có âm 's' nhẹ ở đầu và âm 't' ở chữ 'Sit'." },
@@ -1051,11 +1050,11 @@
                 ]
             },
             {
-                id: "week-17",
-                weekNumber: 17,
+                id: "week-15",
+                weekNumber: 15,
                 term: 1,
                 unitRef: 8,
-                title: "Week 17: Unit 8 - My School Things (Lesson 1)",
+                title: "Week 15: Unit 8 - My School Things (Lesson 1)",
                 desc: "Các dụng cụ học tập hàng ngày.",
                 words: [
                     { word: "Pen", ipa: "/pen/", type: "Noun", vietnamese: "Chiếc bút mực", exEn: "I have a pen.", exVi: "Tớ có một cái bút.", tipVi: "Mím nhẹ môi rồi bật mạnh luồng hơi gió cho chữ 'P' ở đầu." },
@@ -1063,19 +1062,43 @@
                 ]
             },
             {
-                id: "week-18",
-                weekNumber: 18,
+                id: "week-16",
+                weekNumber: 16,
                 term: 1,
                 unitRef: 8,
-                title: "Week 18: Unit 8 - My School Things (Lesson 2 & 3)",
-                desc: "Ôn tập cuối kì 1 & Làm bài thi học kì 1.",
+                title: "Week 16: Unit 8 - My School Things (Lesson 2 & 3)",
+                desc: "Thước kẻ và sách vở.",
                 words: [
                     { word: "Ruler", ipa: "/ˈruːlər/", type: "Noun", vietnamese: "Thước kẻ", exEn: "This is my ruler.", exVi: "Đây là thước kẻ của tớ.", tipVi: "Đọc là 'Ru-lờ'. Con nhớ chu môi tạo âm 'r' thật rõ ràng nhé." },
                     { word: "Book", ipa: "/bʊk/", type: "Noun", vietnamese: "Sách học", exEn: "Open your book.", exVi: "Mở sách của em ra.", tipVi: "Đọc dứt khoát là 'Búc' và bật nhẹ âm 'k' ở cuống họng." }
                 ]
             },
+            {
+                id: "week-17",
+                weekNumber: 17,
+                term: 1,
+                unitRef: 0,
+                title: "Week 17: Review 1 (Ôn tập kì I)",
+                desc: "Ôn tập tổng kết kiến thức Học kì 1.",
+                words: [
+                    { word: "Hello", ipa: "/həˈloʊ/", type: "Interjection", vietnamese: "Xin chào", exEn: "Hello again!", exVi: "Xin chào lại nhé!", tipVi: "Ôn tập phát âm từ chào cơ bản." },
+                    { word: "Friend", ipa: "/frend/", type: "Noun", vietnamese: "Người bạn", exEn: "My good friend.", exVi: "Người bạn tốt của tớ.", tipVi: "Ôn tập từ bạn bè thân yêu." }
+                ]
+            },
+            {
+                id: "week-18",
+                weekNumber: 18,
+                term: 1,
+                unitRef: 0,
+                title: "Week 18: Semester I Exam (Thi cuối Học kì I)",
+                desc: "Kiểm tra học kì 1 chuẩn.",
+                words: [
+                    { word: "What", ipa: "/wɑːt/", type: "Pronoun", vietnamese: "Cái gì", exEn: "What is this?", exVi: "Cái này là cái gì?", tipVi: "Bật mạnh âm 't' ở cuối từ để máy chấm điểm chính xác." },
+                    { word: "Old", ipa: "/oʊld/", type: "Adjective", vietnamese: "Tuổi", exEn: "Eight years old.", exVi: "Tám tuổi.", tipVi: "Nhớ kết hợp cả âm 'l' và 'd' ở cuối từ." }
+                ]
+            },
 
-            // ================= HỌC KÌ 2 (WEEKS 19 - 35) =================
+            // Học kì 2
             {
                 id: "week-19",
                 weekNumber: 19,
@@ -1108,7 +1131,7 @@
                 title: "Week 21: Unit 10 - Break Time Activities (Lesson 1)",
                 desc: "Các trò chơi trong giờ nghỉ.",
                 words: [
-                    { word: "Football", ipa: "/ˈfʊtbɔːl/", type: "Noun", vietnamese: "Bóng đá", exEn: "I play football.", exVi: "Tớ chơi đá bóng.", tipVi: "Đọc là 'Phút-bol'. Nhấn mạnh âm 'Phút' và cong lưỡi 'l' ở 'bol'." },
+                    { word: "Football", ipa: "/ˈfʊtbɔːl/", type: "Noun", vietnamese: "Bóng đá", exEn: "I play football.", ixe: "Tớ chơi đá bóng.", tipVi: "Đọc là 'Phút-bol'. Nhấn mạnh âm 'Phút' và cong lưỡi 'l' ở 'bol'." },
                     { word: "Chess", ipa: "/tʃes/", type: "Noun", vietnamese: "Cờ vua", exEn: "We play chess.", exVi: "Chúng tớ chơi cờ.", tipVi: "Đọc là 'Chét'. Chu môi bật âm 'ch' và xì hơi gió 's' ở đuôi." }
                 ]
             },
@@ -1118,7 +1141,7 @@
                 term: 2,
                 unitRef: 10,
                 title: "Week 22: Unit 10 - Break Time Activities (Lesson 2 & 3)",
-                desc: "Hỏi đáp bạn thích trò chơi gì.",
+                desc: "Hỏi đáp về các hoạt động giờ ra chơi.",
                 words: [
                     { word: "Chatting", ipa: "/ˈtʃætɪŋ/", type: "Noun", vietnamese: "Tán gẫu", exEn: "They like chatting.", exVi: "Họ thích trò chuyện.", tipVi: "Đọc là 'Chét-tinh'. Chu môi phát âm chữ 'ch' thật rõ nhé." },
                     { word: "Wordplay", ipa: "/ˈwɜːrdpleɪ/", type: "Noun", vietnamese: "Đố chữ", exEn: "Play wordplay.", exVi: "Chơi trò đố chữ.", tipVi: "Đọc là 'Uơt-plei'. Cong nhẹ lưỡi chữ 'r' ở phần 'word'." }
@@ -1142,7 +1165,7 @@
                 term: 2,
                 unitRef: 11,
                 title: "Week 24: Unit 11 - My Family (Lesson 2 & 3)",
-                desc: "Hỏi đáp về độ tuổi của thành viên.",
+                desc: "Hỏi tuổi của người thân.",
                 words: [
                     { word: "Brother", ipa: "/ˈbrʌðər/", type: "Noun", vietnamese: "Anh/Em trai", exEn: "My brother is ten.", exVi: "Anh trai tớ mười tuổi.", tipVi: "Đọc là 'Bră-đờ'. Phát âm nhanh cụm 'br' và hạ giọng ở 'đờ'." },
                     { word: "Sister", ipa: "/ˈsɪstər/", type: "Noun", vietnamese: "Chị/Em gái", exEn: "This is my sister.", exVi: "Đây là em gái tớ.", tipVi: "Đọc là 'Xít-stờ'. Con nhớ xì gió nhẹ ở giữa: 'xít-(s)-tờ' nha." }
@@ -1190,7 +1213,7 @@
                 term: 2,
                 unitRef: 13,
                 title: "Week 28: Unit 13 - My House (Lesson 2 & 3)",
-                desc: "Khảo sát và giới thiệu phòng khách/phòng ngủ.",
+                desc: "Mô tả chi tiết phòng khách và phòng bếp.",
                 words: [
                     { word: "Living room", ipa: "/ˈlɪvɪŋ ruːm/", type: "Noun", vietnamese: "Phòng khách", exEn: "The living room is big.", exVi: "Phòng khách rất to rộng.", tipVi: "Đọc là 'Li-vinh rum'. Nhớ mím nhẹ môi âm 'm' ở cuối từ 'rum'." },
                     { word: "Garden", ipa: "/ˈɡɑːrdn/", type: "Noun", vietnamese: "Khu vườn", exEn: "A beautiful garden.", exVi: "Một khu vườn xinh đẹp.", tipVi: "Đọc là 'Gar-đần'. Hãy hạ giọng nhẹ ở âm tiết 'đần' nha con." }
@@ -1214,7 +1237,7 @@
                 term: 2,
                 unitRef: 14,
                 title: "Week 30: Unit 14 - My Bedroom (Lesson 2 & 3)",
-                desc: "Đếm số lượng đồ đạc trong phòng ngủ.",
+                desc: "Hỏi vị trí và số lượng các đồ vật.",
                 words: [
                     { word: "Chair", ipa: "/tʃer/", type: "Noun", vietnamese: "Chiếc ghế", exEn: "Sit on the chair.", exVi: "Hãy ngồi lên ghế.", tipVi: "Đọc là 'Che-ờ'. Chu môi bật âm 'ch' và cong lưỡi ở cuối từ." },
                     { word: "Bedroom", ipa: "/ˈbedruːm/", type: "Noun", vietnamese: "Phòng ngủ riêng", exEn: "I clean my bedroom.", exVi: "Tớ dọn dẹp phòng ngủ của mình.", tipVi: "Đọc là 'Bét-rum'. Mím môi tạo âm đóng 'm' khi kết thúc." }
@@ -1238,7 +1261,7 @@
                 term: 2,
                 unitRef: 15,
                 title: "Week 32: Unit 15 - At the Dining Table (Lesson 2 & 3)",
-                desc: "Cấu trúc mời ăn uống lịch sự.",
+                desc: "Mời ăn uống lịch sự.",
                 words: [
                     { word: "Rice", ipa: "/raɪs/", type: "Noun", vietnamese: "Cơm", exEn: "I eat rice.", exVi: "Tớ ăn cơm.", tipVi: "Đọc là 'Rai' và nhớ rít hơi gió 's' thật dài ở đuôi từ: 'rai-s'." },
                     { word: "Fish", ipa: "/fɪʃ/", type: "Noun", vietnamese: "Món cá", exEn: "They like fish.", exVi: "Họ thích món cá.", tipVi: "Đọc gần giống 'Phích'. Hãy chu môi và thổi hơi xì mạnh như đuổi muỗi." }
@@ -1249,8 +1272,8 @@
                 weekNumber: 33,
                 term: 2,
                 unitRef: 0,
-                title: "Week 33: Semester 2 Review (Ôn tập học kì 2)",
-                desc: "Hệ thống hóa kiến thức từ Unit 11 đến Unit 15.",
+                title: "Week 33: Semester II Review (Ôn tập học kì 2)",
+                desc: "Hệ thống hóa kiến thức học kì 2.",
                 words: [
                     { word: "Doctor", ipa: "/ˈdɑːktər/", type: "Noun", vietnamese: "Bác sĩ", exEn: "He is a doctor.", exVi: "Chú ấy là bác sĩ.", tipVi: "Ôn tập lại từ vựng nghề nghiệp." },
                     { word: "Water", ipa: "/ˈwɔːtər/", type: "Noun", vietnamese: "Nước", exEn: "Drink water.", exVi: "Uống nước.", tipVi: "Ôn tập lại từ vựng ẩm thực học kì 2." }
@@ -1261,8 +1284,8 @@
                 weekNumber: 34,
                 term: 2,
                 unitRef: 0,
-                title: "Week 34: General Semester 2 Review (Hệ thống kiến thức năm học)",
-                desc: "Thao dượt các bài kiểm tra giao tiếp tự nhiên chuẩn Bộ giáo dục.",
+                title: "Week 34: General Revision (Tổng ôn tập cả năm)",
+                desc: "Tổng duyệt kiến thức đàm thoại chuẩn.",
                 words: [
                     { word: "House", ipa: "/haʊs/", type: "Noun", vietnamese: "Ngôi nhà", exEn: "A nice house.", exVi: "Một ngôi nhà xinh xắn.", tipVi: "Ôn luyện âm đuôi hơi gió của từ House." },
                     { word: "Bed", ipa: "/bed/", type: "Noun", vietnamese: "Chiếc giường", exEn: "Soft bed.", exVi: "Chiếc giường êm ái.", tipVi: "Ôn tập âm chặn lưỡi cuối từ Bed." }
@@ -1273,8 +1296,8 @@
                 weekNumber: 35,
                 term: 2,
                 unitRef: 0,
-                title: "Week 35: Final Exam Week (Tổng duyệt & Thi cuối năm)",
-                desc: "Bài kiểm tra sát hạch cuối năm rinh chứng chỉ vàng.",
+                title: "Week 35: Final Exam (Kiểm tra cuối năm)",
+                desc: "Thi thắp sáng bảng vàng trạng nguyên.",
                 words: [
                     { word: "Hello", ipa: "/həˈloʊ/", type: "Interjection", vietnamese: "Xin chào", exEn: "Hello everyone!", exVi: "Chào tất cả mọi người!", tipVi: "Tự tin phát âm thật to rõ trước máy để lấy sao vàng tối đa nhé!" },
                     { word: "Goodbye", ipa: "/ˌɡʊdˈbaɪ/", type: "Interjection", vietnamese: "Tạm biệt", exEn: "Goodbye friends!", exVi: "Tạm biệt các bạn nhé!", tipVi: "Kết thúc năm học tiếng Anh thật xuất sắc và vui vẻ." }
@@ -1286,9 +1309,9 @@
         const DEFAULT_STATE = {
             isLoggedIn: false,
             username: "",
-            completedWeeks: [], // các bài học dạng "week-x:lessonIndex" đã hoàn tất
-            masteredWords: [], // từ vựng thuộc
-            excellentPronounces: [], // từ vựng nói xuất sắc
+            completedWeeks: [], 
+            masteredWords: [], 
+            excellentPronounces: [], 
             streak: 1,
             points: 150,
             lastStudyDate: "",
@@ -1296,9 +1319,9 @@
         };
 
         let appState = { ...DEFAULT_STATE };
-        let activeTerm = 1; // 1: Kì 1, 2: Kì 2
+        let activeTerm = 1; 
         let firebaseUser = null;
-        let activeStudentCode = ""; // Mã học viên tích cực hiện tại
+        let activeStudentCode = ""; 
 
         // KIỂM TRA DOM ĐÃ SẴN SÀNG
         window.addEventListener('DOMContentLoaded', async () => {
@@ -1340,14 +1363,11 @@
         // 2. PHẦN HOẠT ĐỘNG FIREBASE - ĐỒNG BỘ DỰA TRÊN MÃ HỌC SINH RIÊNG BIỆT
         async function initFirebaseAuth() {
             try {
-                // RULE 3: Đăng nhập trước khi truy vấn dữ liệu Firestore
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     try {
-                        // Cố gắng đăng nhập bằng Custom Token hệ thống cấp
                         await auth.signInWithCustomToken(__initial_auth_token);
                     } catch (tokenErr) {
-                        // Dự phòng khi Custom Token không khớp Audience (auth/custom-token-mismatch)
-                        console.warn("Custom token sign-in mismatch/failed, falling back to anonymous auth:", tokenErr);
+                        console.warn("Custom token sign-in failed, falling back to anonymous auth:", tokenErr);
                         await auth.signInAnonymously();
                     }
                 } else {
@@ -1405,7 +1425,6 @@
                 profiles = [];
             }
 
-            // Lọc ra các cấu hình học sinh duy nhất để lưu lại
             if (profiles.length > 0) {
                 safeRemoveClass('recent-profiles-box', 'hidden');
                 profiles.forEach(prof => {
@@ -1451,25 +1470,19 @@
                     appState = { ...DEFAULT_STATE, username: activeStudentCode, isLoggedIn: true };
                 }
             } else {
-                // Khởi tạo trạng thái mới hoàn toàn cho học viên này
                 appState = { ...DEFAULT_STATE, username: activeStudentCode, isLoggedIn: true };
             }
         }
 
-        // Đồng bộ 2 chiều với Cloud dựa trên Mã học sinh của User
+        // Đồng bộ với Cloud
         async function syncDataWithCloud() {
             if (!firebaseUser || !appState.username) return;
-            
-            // RULE 1: Đường dẫn lưu trữ: artifacts/{appId}/users/{userId}/{collectionName}/{docId}
-            // collectionName là 'students', docId là mã học viên (e.g. 'LOP3', 'BAONGOC')
             const cloudDocRef = db.doc(`artifacts/${appId}/users/${firebaseUser.uid}/students/${appState.username}`);
             
             try {
                 const doc = await cloudDocRef.get();
                 if (doc.exists) {
                     const cloudState = doc.data();
-                    
-                    // Hợp nhất dữ liệu thông minh cho từng học viên
                     appState.completedWeeks = Array.from(new Set([...appState.completedWeeks, ...(cloudState.completedWeeks || [])]));
                     appState.masteredWords = Array.from(new Set([...appState.masteredWords, ...(cloudState.masteredWords || [])]));
                     appState.excellentPronounces = Array.from(new Set([...appState.excellentPronounces, ...(cloudState.excellentPronounces || [])]));
@@ -1479,7 +1492,7 @@
                     appState.adminUnlockAll = cloudState.adminUnlockAll || appState.adminUnlockAll;
                 }
                 
-                saveProgress(true); // Lưu tại máy khách và cập nhật hồ sơ lưu trữ nhanh
+                saveProgress(true); 
                 updateCloudSyncStatus('synced');
             } catch (err) {
                 console.error("Lỗi đồng bộ chi tiết cho học sinh:", err);
@@ -1487,19 +1500,16 @@
             }
         }
 
-        // Lưu dữ liệu của một mã học sinh xác định
+        // Lưu dữ liệu của học sinh
         async function saveProgress(skipCloudSync = false) {
             if (!appState.username) return;
             
             const localKey = `tienganh3_state_${appState.username}`;
             localStorage.setItem(localKey, JSON.stringify(appState));
-            
-            // Cập nhật danh sách tài khoản học sinh lưu trên máy
             updateLocalProfileList();
 
             if (!skipCloudSync && firebaseUser) {
                 updateCloudSyncStatus('syncing');
-                // RULE 1: Đồng bộ lên cấu trúc Cloud của tài khoản học viên tương ứng
                 const cloudDocRef = db.doc(`artifacts/${appId}/users/${firebaseUser.uid}/students/${appState.username}`);
                 try {
                     await cloudDocRef.set(appState, { merge: true });
@@ -1511,7 +1521,6 @@
             }
         }
 
-        // Cập nhật danh sách nhanh học viên tại Client
         function updateLocalProfileList() {
             if (!appState.username) return;
             
@@ -1523,7 +1532,6 @@
                 profiles = [];
             }
 
-            // Tìm và cập nhật hoặc thêm mới thông số học sinh
             const existingIdx = profiles.findIndex(p => p.code === appState.username);
             const profData = {
                 code: appState.username,
@@ -1538,13 +1546,11 @@
                 profiles.push(profData);
             }
 
-            // Sắp xếp theo lần học gần nhất
             profiles.sort((a, b) => b.lastUpdated - a.lastUpdated);
             localStorage.setItem('tienganh3_profiles_list', JSON.stringify(profiles));
             loadAllProfilesFromLocal();
         }
 
-        // Chọn nhanh tài khoản học viên gần đây
         function selectRecentProfile(code) {
             playSound('click');
             const loginInput = document.getElementById('login-code');
@@ -1552,7 +1558,6 @@
             handleLogin();
         }
 
-        // Xóa một mã học viên khỏi danh sách hiển thị nhanh (không mất dữ liệu gốc)
         function removeRecentProfile(event, code) {
             event.stopPropagation();
             playSound('wrong');
@@ -1578,9 +1583,7 @@
             );
         }
 
-        // KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP
         function checkLoginState() {
-            // Tải hồ sơ học viên gần đây nhất nếu có
             const profilesJson = localStorage.getItem('tienganh3_profiles_list');
             let profiles = [];
             try {
@@ -1590,7 +1593,6 @@
             }
 
             if (profiles.length > 0 && !activeStudentCode) {
-                // Đăng nhập tài khoản gần nhất
                 activeStudentCode = profiles[0].code;
             } else if (!activeStudentCode) {
                 activeStudentCode = "LOP3";
@@ -1622,13 +1624,11 @@
 
         function generateRandomEcoCode() {
             playSound('click');
-            // Tạo 3 số đuôi ngẫu nhiên từ 001 đến 999
             const randomNum = Math.floor(Math.random() * 999 + 1).toString().padStart(3, '0');
             const newCode = `ECO${randomNum}`;
             const loginInput = document.getElementById('login-code');
             if (loginInput) {
                 loginInput.value = newCode;
-                // Hiệu ứng nhấp nháy nổi bật ô nhập liệu khi mã mới được điền vào
                 loginInput.classList.add('ring-4', 'ring-indigo-300', 'border-indigo-500');
                 setTimeout(() => {
                     loginInput.classList.remove('ring-4', 'ring-indigo-300', 'border-indigo-500');
@@ -1652,20 +1652,17 @@
             }
 
             activeStudentCode = cleanCode;
-            loadLocalProgress(); // Tải tiến trình riêng của học sinh này từ máy khách
-            
+            loadLocalProgress(); 
             appState.isLoggedIn = true;
             appState.username = activeStudentCode;
             
-            await saveProgress(); // Lưu và tự động đồng bộ lên Firestore theo mã học viên riêng
-            
+            await saveProgress(); 
             if (firebaseUser) {
                 updateCloudSyncStatus('syncing');
-                await syncDataWithCloud(); // Lấy dữ liệu nâng cấp nếu học sinh này đã có lịch sử trên Cloud
+                await syncDataWithCloud(); 
             }
 
             showToast(`Mã học sinh ${activeStudentCode} đã sẵn sàng học! 🚀`, "fa-face-smile", "emerald");
-            
             safeAddClass('login-screen', 'hidden');
             safeUpdateText('welcome-user-code', appState.username);
             
@@ -1676,8 +1673,58 @@
             renderWeeksSyllabus();
         }
 
-        // 3. NÂNG CẤP HỆ THỐNG PHÁT ÂM OFFLINE FAST TTS & AI SPEECH
+        // ==========================================
+        // 3. NÂNG CẤP HỆ THỐNG PHÁT ÂM TIẾNG VIỆT VIETTEL AI VÀ TIẾNG ANH
+        // ==========================================
         let browserBestEnglishVoice = null;
+
+        // API VIETTEL AI TTS - ĐỒNG BỘ NÂNG CẤP PHÁT ÂM TIẾNG VIỆT CHUẨN
+        async function playViettelAITTS(text) {
+            toggleAudioLoading(true);
+            try {
+                const response = await fetch("https://viettelai.vn/tts/speech_synthesis", {
+                    method: "POST",
+                    headers: {
+                        "accept": "*/*",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        voice: "hcm-diemmy", // Giọng Southern Diễm My chất lượng cao
+                        speed: 1,
+                        tts_return_option: 3,
+                        token: "395f6b744a34ff3eb6e042656cde6ffe",
+                        without_filter: false
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Lỗi API Viettel: " + response.status);
+                }
+
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                const audio = new Audio(audioUrl);
+                audio.onended = () => toggleAudioLoading(false);
+                audio.onerror = () => toggleAudioLoading(false);
+                await audio.play();
+
+            } catch (err) {
+                console.error("Viettel AI TTS Error, falling back to local SpeechSynthesis:", err);
+                toggleAudioLoading(false);
+                // Fallback cục bộ của trình duyệt sang giọng Tiếng Việt
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'vi-VN';
+                    utterance.rate = 0.95;
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    showToast("Không thể kết nối API Viettel AI và không hỗ trợ giọng nói cục bộ!", "fa-triangle-exclamation", "amber");
+                }
+            }
+        }
 
         function setupVoiceSelection() {
             if ('speechSynthesis' in window) {
@@ -1714,7 +1761,6 @@
 
         function findBestOfflineEnglishVoice() {
             const voices = window.speechSynthesis.getVoices();
-            // Ưu tiên tìm giọng đọc chuẩn tự nhiên en-US hoặc en-GB
             let best = voices.find(v => v.lang === 'en-US' && (v.name.includes('Google') || v.name.includes('Samantha')));
             if (!best) best = voices.find(v => v.lang === 'en-US' && v.name.includes('Natural'));
             if (!best) best = voices.find(v => v.lang.startsWith('en-US'));
@@ -1733,7 +1779,7 @@
                 }
                 const speedSelector = document.getElementById('speech-speed-selector');
                 const rateVal = speedSelector ? parseFloat(speedSelector.value) : 0.85;
-                utterance.rate = rateVal; // Phát âm chậm tùy chọn để bé nghe rõ ending-sounds
+                utterance.rate = rateVal; 
                 window.speechSynthesis.speak(utterance);
             }
         }
@@ -1744,10 +1790,8 @@
             const speedSelector = document.getElementById('speech-speed-selector');
             const rateVal = speedSelector ? parseFloat(speedSelector.value) : 0.85;
             
-            // Google Translate Voice API endpoint
             let url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodedText}`;
             if (rateVal < 0.8) {
-                // Slower speech speed parameter for translate tts if available on standard tw-ob client
                 url += `&ttsspeed=0.24`;
             }
             
@@ -1767,7 +1811,7 @@
 
         async function playGeminiTTS(text, voiceName) {
             toggleAudioLoading(true);
-            const apiKey = ""; // Khóa API môi trường
+            const apiKey = ""; 
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
 
             const payload = {
@@ -1797,7 +1841,7 @@
             }
 
             if (!response || !response.ok) {
-                playGoogleTranslateTTS(text); // Fallback to Google cloud TTS instead of browser fallback
+                playGoogleTranslateTTS(text); 
                 return;
             }
 
@@ -1890,6 +1934,40 @@
             });
         }
 
+        // PHÁT ÂM TIẾNG VIỆT TRÊN FLASHCARD BẰNG VIETTEL AI DIỄM MY
+        function speakVietnameseWord(event) {
+            if (event) event.stopPropagation();
+            const wordData = deckWords[deckPointer];
+            if (wordData) {
+                playViettelAITTS(wordData.vietnamese);
+            }
+        }
+
+        // PHÁT ÂM HƯỚNG DẪN MẸO LUYỆN NÓI BẰNG VIETTEL AI
+        function speakPronunciationTip() {
+            const tipText = document.getElementById('speak-tip-vi')?.textContent || "";
+            if (tipText && tipText !== "Đang tải hướng dẫn...") {
+                playViettelAITTS(tipText);
+            }
+        }
+
+        // ĐỌC VĂN BẢN TRONG KHUNG TRỢ LÝ AI ĐỌC BÀI (EduKids Smart Talk)
+        function readAssistantText(lang) {
+            playSound('click');
+            const textarea = document.getElementById('ai-assistant-textarea');
+            const text = textarea ? textarea.value.trim() : "";
+            if (!text) {
+                showToast("Vui lòng nhập văn bản muốn đọc!", "fa-circle-exclamation", "amber");
+                return;
+            }
+
+            if (lang === 'vi') {
+                playViettelAITTS(text);
+            } else {
+                speakWord(text);
+            }
+        }
+
         // TABS CHUYỂN ĐỔI MÀN HÌNH CHÍNH
         function switchTab(tabId) {
             playSound('click');
@@ -1928,12 +2006,11 @@
             safeUpdateText('stat-speaking', appState.excellentPronounces.length);
             safeUpdateText('stat-lessons', appState.completedWeeks.length);
 
-            const totalLessons = 35 * 3; // 35 Tuần, mỗi tuần có 3 dạng bài
+            const totalLessons = 35 * 3; 
             const percentage = Math.min(100, Math.round((appState.completedWeeks.length / totalLessons) * 100));
             safeUpdateText('stat-percent', `${percentage}%`);
             safeUpdateStyleWidth('stat-percent-bar', `${percentage}%`);
 
-            // Mở huy hiệu
             if (appState.streak >= 2 || appState.completedWeeks.length >= 2) {
                 safeRemoveClass('badge-diligent', 'opacity-40');
             }
@@ -1944,7 +2021,6 @@
                 safeRemoveClass('badge-quiz', 'opacity-40');
             }
 
-            // Đề xuất bài tự động
             let nextWeekNum = 1;
             let nextLessonNum = 1;
             for (let w = 1; w <= 35; w++) {
@@ -1986,7 +2062,6 @@
                     }
                 }
 
-                // Kiểm tra khóa bài
                 const isPreviousCompleted = week.weekNumber === 1 || (() => {
                     const prevId = `week-${week.weekNumber - 1}`;
                     return appState.completedWeeks.includes(`${prevId}:1`);
@@ -2001,7 +2076,7 @@
                     
                     let icon = "fa-regular fa-circle";
                     let colorClass = "text-slate-400";
-                    let actionText = "Hoc";
+                    let actionText = "Học";
                     let badgeHTML = "";
 
                     if (isDone) {
@@ -2360,7 +2435,6 @@
             const tClean = cleanString(targetWord);
             const sClean = cleanString(spokenText);
 
-            // Nâng cấp thuật toán so sánh chuỗi Levenshtein chính xác hơn
             const calculateSimilarity = (str1, str2) => {
                 if (str1 === str2) return 100;
                 
@@ -2376,7 +2450,7 @@
             safeRemoveClass('speech-analysis-box', 'hidden');
             safeUpdateText('speech-match-score', `${score}% Match`);
 
-            if (score >= 70) { // Chấp nhận từ 70% trở lên cho lớp 3 khuyến khích bé học nói
+            if (score >= 70) { 
                 safeSetAttribute('star-1', 'className', "fa-solid fa-star text-yellow-400 scale-110");
                 safeSetAttribute('star-2', 'className', "fa-solid fa-star text-yellow-400 scale-110");
                 safeSetAttribute('star-3', score >= 85 ? "fa-solid fa-star text-yellow-400 scale-110" : "fa-solid fa-star text-slate-300");
@@ -2404,7 +2478,6 @@
             }
         }
 
-        // Bổ sung hàm tính khoảng cách Levenshtein hỗ trợ so khớp phát âm
         function levenshteinDistance(a, b) {
             const matrix = [];
             for (let i = 0; i <= b.length; i++) matrix[i] = [i];
@@ -2415,9 +2488,9 @@
                         matrix[i][j] = matrix[i - 1][j - 1];
                     } else {
                         matrix[i][j] = Math.min(
-                            matrix[i - 1][j - 1] + 1, // substitution
-                            matrix[i][j - 1] + 1,     // insertion
-                            matrix[i - 1][j] + 1      // deletion
+                            matrix[i - 1][j - 1] + 1, 
+                            matrix[i][j - 1] + 1,     
+                            matrix[i - 1][j] + 1      
                         );
                     }
                 }
@@ -2434,7 +2507,6 @@
             const words = week.words;
             if (!words || words.length === 0) return;
 
-            // Q1: Nghe tiếng Anh chọn tiếng Việt
             const w1 = words[0];
             quizQuestions.push({
                 type: "listening",
@@ -2445,7 +2517,6 @@
                 options: shuffle([w1.vietnamese, "Hộp đựng bút", "Khu vườn xanh mát"])
             });
 
-            // Q2: Đọc tiếng Việt chọn tiếng Anh
             const w2 = words[words.length - 1];
             quizQuestions.push({
                 type: "matching",
@@ -2696,8 +2767,6 @@
         function openAdminPanel() {
             const unlockToggle = document.getElementById('admin-unlock-toggle');
             if (unlockToggle) unlockToggle.checked = !!appState.adminUnlockAll;
-
-            // Render danh sách học sinh cho admin quản lý
             renderAdminStudentList();
 
             safeRemoveClass('admin-panel-modal', 'hidden');
@@ -2720,11 +2789,10 @@
                 safeAddClass('admin-panel-modal', 'hidden');
                 updateDashboardStats();
                 renderWeeksSyllabus();
-                loadAllProfilesFromLocal(); // Cập nhật lại màn hình login ngoài
+                loadAllProfilesFromLocal(); 
             }, 250);
         }
 
-        // HÀM QUẢN TRỊ VIÊN LƯU HOẶC SỬA TÀI KHOẢN HỌC SINH
         async function adminSaveStudentAccount() {
             const codeInput = document.getElementById('admin-student-code');
             const xpInput = document.getElementById('admin-student-xp');
@@ -2743,7 +2811,6 @@
             let targetState = { ...DEFAULT_STATE };
 
             if (editingOldCode) {
-                // ĐANG TRONG CHẾ ĐỘ CHỈNH SỬA TÀI KHOẢN CÓ SẴN
                 const oldKey = `tienganh3_state_${editingOldCode}`;
                 const localData = localStorage.getItem(oldKey);
                 if (localData) {
@@ -2758,11 +2825,8 @@
                 targetState.points = xp;
                 targetState.streak = streak;
 
-                // Nếu giáo viên thay đổi luôn Mã học sinh (Rename)
                 if (editingOldCode !== code) {
-                    localStorage.removeItem(oldKey); // Xóa key cũ
-                    
-                    // Cập nhật danh sách hồ sơ học sinh cục bộ
+                    localStorage.removeItem(oldKey); 
                     const profilesJson = localStorage.getItem('tienganh3_profiles_list');
                     if (profilesJson) {
                         try {
@@ -2774,7 +2838,6 @@
                         }
                     }
 
-                    // Đồng thời cập nhật trạng thái hoạt động hiện tại nếu admin đang sửa đúng tài khoản đang đăng nhập
                     if (appState.username === editingOldCode) {
                         appState.username = code;
                         appState.points = xp;
@@ -2784,7 +2847,6 @@
 
                 showToast(`Đã thay đổi thông tin học sinh ${code}! ✏️`, "fa-user-pen", "emerald");
             } else {
-                // CHẾ ĐỘ TẠO MỚI TÀI KHOẢN THỦ CÔNG
                 const existingKey = `tienganh3_state_${code}`;
                 if (localStorage.getItem(existingKey)) {
                     showToast("Mã học sinh này đã tồn tại trên thiết bị!", "fa-circle-exclamation", "amber");
@@ -2799,11 +2861,9 @@
                 showToast(`Đã tạo tài khoản học sinh ${code} thành công! 👥`, "fa-user-plus", "emerald");
             }
 
-            // Lưu dữ liệu của học sinh mục tiêu vào localStorage cục bộ
             const targetKey = `tienganh3_state_${code}`;
             localStorage.setItem(targetKey, JSON.stringify(targetState));
 
-            // Cập nhật lại hồ sơ nhanh trong danh sách thiết bị
             const profilesJson = localStorage.getItem('tienganh3_profiles_list') || "[]";
             let profiles = [];
             try {
@@ -2825,7 +2885,6 @@
             }
             localStorage.setItem('tienganh3_profiles_list', JSON.stringify(profiles));
 
-            // Đồng bộ trực tiếp lên Cloud nếu thiết bị đang có mạng và tài khoản Firebase hoạt động
             if (firebaseUser) {
                 const cloudDocRef = db.doc(`artifacts/${appId}/users/${firebaseUser.uid}/students/${code}`);
                 try {
@@ -2835,7 +2894,6 @@
                 }
             }
 
-            // Nếu đang sửa chính tài khoản đang đăng nhập, nạp lại dữ liệu hiển thị chính
             if (appState.username === code || appState.username === editingOldCode) {
                 appState = { ...targetState };
                 checkLoginState();
@@ -2846,7 +2904,6 @@
             loadAllProfilesFromLocal();
         }
 
-        // ĐIỀN THÔNG TIN ĐỂ CHỈNH SỬA HỌC SINH
         function adminEditStudent(code, xp, streak) {
             playSound('click');
             safeUpdateText('admin-form-title', `✏️ Sửa thông tin: ${code}`);
@@ -2864,7 +2921,6 @@
             safeRemoveClass('admin-btn-clear-edit', 'hidden');
         }
 
-        // HỦY TRẠNG THÁI CHỈNH SỬA VỀ TẠO MỚI
         function clearAdminStudentForm() {
             safeUpdateText('admin-form-title', `👥 Tạo tài khoản học sinh mới`);
             
@@ -2881,7 +2937,6 @@
             safeAddClass('admin-btn-clear-edit', 'hidden');
         }
 
-        // XÓA HỒ SƠ HỌC SINH TRÊN TRÌNH DUYỆT ADMIN
         function adminDeleteStudent(code) {
             playSound('wrong');
             showCustomConfirm(
@@ -2889,10 +2944,7 @@
                 `Thầy/Cô có chắc muốn xóa sạch toàn bộ hồ sơ và lộ trình học tập của học sinh "${code}" không? Hành động này không thể hoàn tác.`,
                 "🗑️",
                 async () => {
-                    // Xóa localStorage
                     localStorage.removeItem(`tienganh3_state_${code}`);
-
-                    // Xóa khỏi danh sách nhanh
                     const profilesJson = localStorage.getItem('tienganh3_profiles_list');
                     if (profilesJson) {
                         try {
@@ -2904,7 +2956,6 @@
                         }
                     }
 
-                    // Xóa trên Firebase Cloud nếu có
                     if (firebaseUser) {
                         const cloudDocRef = db.doc(`artifacts/${appId}/users/${firebaseUser.uid}/students/${code}`);
                         try {
@@ -2914,7 +2965,6 @@
                         }
                     }
 
-                    // Nếu xóa đúng tài khoản đang dùng
                     if (appState.username === code) {
                         appState = { ...DEFAULT_STATE };
                         localStorage.removeItem(`tienganh3_state_${code}`);
@@ -2928,7 +2978,6 @@
             );
         }
 
-        // HIỂN THỊ DANH SÁCH LÊN KHUNG QUẢN TRỊ ADMIN
         function renderAdminStudentList() {
             const listContainer = document.getElementById('admin-student-table-list');
             if (!listContainer) return;
@@ -3110,7 +3159,6 @@
             );
         }
 
-        // Hộp thông báo Toast nhanh gọn
         function showToast(text, iconClass = "fa-circle-check", color = "emerald") {
             const toast = document.getElementById('toast-message');
             const toastText = document.getElementById('toast-text');
