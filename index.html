@@ -723,6 +723,49 @@
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6">
+                <!-- PHẦN MỚI: QUẢN LÝ THÔNG TIN ĐĂNG NHẬP & TÀI KHOẢN HỌC SINH -->
+                <div class="p-4 bg-purple-50/60 rounded-2xl border border-purple-100 space-y-3">
+                    <h4 class="font-bold text-purple-950 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear text-purple-600"></i> Quản lý & Thay đổi Thông tin Học sinh
+                    </h4>
+                    
+                    <!-- Form tạo mới / chỉnh sửa thông tin -->
+                    <div class="bg-white p-3.5 rounded-xl border border-purple-100 space-y-2.5 text-left">
+                        <div class="flex items-center justify-between">
+                            <span id="admin-form-title" class="text-xs font-black text-purple-700 uppercase tracking-wider">👥 Tạo tài khoản học sinh mới</span>
+                            <button id="admin-btn-clear-edit" onclick="clearAdminStudentForm()" class="hidden px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-[10px] rounded-md transition-all">Hủy sửa</button>
+                        </div>
+                        
+                        <input type="hidden" id="admin-editing-old-code" value="">
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <div>
+                                <label class="block text-[9px] font-black text-slate-400 uppercase mb-0.5">Mã học sinh mới</label>
+                                <input type="text" id="admin-student-code" placeholder="Ví dụ: LANANH3" class="w-full px-2.5 py-2 border-2 border-purple-100 rounded-lg text-xs font-black uppercase text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-black text-slate-400 uppercase mb-0.5">Điểm số XP</label>
+                                <input type="number" id="admin-student-xp" placeholder="150" class="w-full px-2.5 py-2 border-2 border-purple-100 rounded-lg text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-black text-slate-400 uppercase mb-0.5">Streak (Tuần)</label>
+                                <input type="number" id="admin-student-streak" placeholder="1" class="w-full px-2.5 py-2 border-2 border-purple-100 rounded-lg text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                            </div>
+                        </div>
+                        <button onclick="adminSaveStudentAccount()" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-black font-kids text-xs rounded-xl transition-all shadow-md active:scale-[0.98]">
+                            💾 Lưu Thông Tin Học Sinh
+                        </button>
+                    </div>
+
+                    <!-- Danh sách học sinh quản lý -->
+                    <div class="space-y-1.5 text-left">
+                        <p class="text-[10px] font-black text-purple-900 uppercase tracking-wider">📋 Danh sách học sinh trên máy này:</p>
+                        <div id="admin-student-table-list" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                            <!-- JS tự động render danh sách học sinh -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Features -->
                 <div class="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 space-y-3">
                     <h4 class="font-bold text-indigo-950 text-sm flex items-center gap-2">
@@ -2584,6 +2627,9 @@
             const unlockToggle = document.getElementById('admin-unlock-toggle');
             if (unlockToggle) unlockToggle.checked = !!appState.adminUnlockAll;
 
+            // Render danh sách học sinh cho admin quản lý
+            renderAdminStudentList();
+
             safeRemoveClass('admin-panel-modal', 'hidden');
             setTimeout(() => {
                 const box = document.getElementById('admin-panel-box');
@@ -2604,7 +2650,258 @@
                 safeAddClass('admin-panel-modal', 'hidden');
                 updateDashboardStats();
                 renderWeeksSyllabus();
+                loadAllProfilesFromLocal(); // Cập nhật lại màn hình login ngoài
             }, 250);
+        }
+
+        // HÀM QUẢN TRỊ VIÊN LƯU HOẶC SỬA TÀI KHOẢN HỌC SINH
+        async function adminSaveStudentAccount() {
+            const codeInput = document.getElementById('admin-student-code');
+            const xpInput = document.getElementById('admin-student-xp');
+            const streakInput = document.getElementById('admin-student-streak');
+            const editingOldCode = document.getElementById('admin-editing-old-code').value;
+
+            const code = codeInput ? codeInput.value.trim().toUpperCase().replace(/[^A-Z0-9]/gi, '') : "";
+            const xp = xpInput && xpInput.value ? parseInt(xpInput.value, 10) : 150;
+            const streak = streakInput && streakInput.value ? parseInt(streakInput.value, 10) : 1;
+
+            if (!code) {
+                showToast("Vui lòng nhập Mã học sinh hợp lệ!", "fa-circle-exclamation", "amber");
+                return;
+            }
+
+            let targetState = { ...DEFAULT_STATE };
+
+            if (editingOldCode) {
+                // ĐANG TRONG CHẾ ĐỘ CHỈNH SỬA TÀI KHOẢN CÓ SẴN
+                const oldKey = `tienganh3_state_${editingOldCode}`;
+                const localData = localStorage.getItem(oldKey);
+                if (localData) {
+                    try {
+                        targetState = JSON.parse(localData);
+                    } catch (e) {
+                        targetState = { ...DEFAULT_STATE };
+                    }
+                }
+
+                targetState.username = code;
+                targetState.points = xp;
+                targetState.streak = streak;
+
+                // Nếu giáo viên thay đổi luôn Mã học sinh (Rename)
+                if (editingOldCode !== code) {
+                    localStorage.removeItem(oldKey); // Xóa key cũ
+                    
+                    // Cập nhật danh sách hồ sơ học sinh cục bộ
+                    const profilesJson = localStorage.getItem('tienganh3_profiles_list');
+                    if (profilesJson) {
+                        try {
+                            let profiles = JSON.parse(profilesJson);
+                            profiles = profiles.filter(p => p.code !== editingOldCode);
+                            localStorage.setItem('tienganh3_profiles_list', JSON.stringify(profiles));
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+
+                    // Đồng thời cập nhật trạng thái hoạt động hiện tại nếu admin đang sửa đúng tài khoản đang đăng nhập
+                    if (appState.username === editingOldCode) {
+                        appState.username = code;
+                        appState.points = xp;
+                        appState.streak = streak;
+                    }
+                }
+
+                showToast(`Đã thay đổi thông tin học sinh ${code}! ✏️`, "fa-user-pen", "emerald");
+            } else {
+                // CHẾ ĐỘ TẠO MỚI TÀI KHOẢN THỦ CÔNG
+                const existingKey = `tienganh3_state_${code}`;
+                if (localStorage.getItem(existingKey)) {
+                    showToast("Mã học sinh này đã tồn tại trên thiết bị!", "fa-circle-exclamation", "amber");
+                    return;
+                }
+
+                targetState.isLoggedIn = true;
+                targetState.username = code;
+                targetState.points = xp;
+                targetState.streak = streak;
+
+                showToast(`Đã tạo tài khoản học sinh ${code} thành công! 👥`, "fa-user-plus", "emerald");
+            }
+
+            // Lưu dữ liệu của học sinh mục tiêu vào localStorage cục bộ
+            const targetKey = `tienganh3_state_${code}`;
+            localStorage.setItem(targetKey, JSON.stringify(targetState));
+
+            // Cập nhật lại hồ sơ nhanh trong danh sách thiết bị
+            const profilesJson = localStorage.getItem('tienganh3_profiles_list') || "[]";
+            let profiles = [];
+            try {
+                profiles = JSON.parse(profilesJson);
+            } catch (e) {
+                profiles = [];
+            }
+            const existingIdx = profiles.findIndex(p => p.code === code);
+            const profData = {
+                code: code,
+                points: xp,
+                streak: streak,
+                lastUpdated: new Date().getTime()
+            };
+            if (existingIdx >= 0) {
+                profiles[existingIdx] = profData;
+            } else {
+                profiles.push(profData);
+            }
+            localStorage.setItem('tienganh3_profiles_list', JSON.stringify(profiles));
+
+            // Đồng bộ trực tiếp lên Cloud nếu thiết bị đang có mạng và tài khoản Firebase hoạt động
+            if (firebaseUser) {
+                const cloudDocRef = db.doc(`artifacts/${appId}/users/${firebaseUser.uid}/students/${code}`);
+                try {
+                    await cloudDocRef.set(targetState, { merge: true });
+                } catch (err) {
+                    console.warn("Lỗi đồng bộ mây khi admin lưu hồ sơ học sinh:", err);
+                }
+            }
+
+            // Nếu đang sửa chính tài khoản đang đăng nhập, nạp lại dữ liệu hiển thị chính
+            if (appState.username === code || appState.username === editingOldCode) {
+                appState = { ...targetState };
+                checkLoginState();
+            }
+
+            clearAdminStudentForm();
+            renderAdminStudentList();
+            loadAllProfilesFromLocal();
+        }
+
+        // ĐIỀN THÔNG TIN ĐỂ CHỈNH SỬA HỌC SINH
+        function adminEditStudent(code, xp, streak) {
+            playSound('click');
+            safeUpdateText('admin-form-title', `✏️ Sửa thông tin: ${code}`);
+            
+            const codeInput = document.getElementById('admin-student-code');
+            const xpInput = document.getElementById('admin-student-xp');
+            const streakInput = document.getElementById('admin-student-streak');
+            const editingOldCode = document.getElementById('admin-editing-old-code');
+
+            if (codeInput) codeInput.value = code;
+            if (xpInput) xpInput.value = xp;
+            if (streakInput) streakInput.value = streak;
+            if (editingOldCode) editingOldCode.value = code;
+
+            safeRemoveClass('admin-btn-clear-edit', 'hidden');
+        }
+
+        // HỦY TRẠNG THÁI CHỈNH SỬA VỀ TẠO MỚI
+        function clearAdminStudentForm() {
+            safeUpdateText('admin-form-title', `👥 Tạo tài khoản học sinh mới`);
+            
+            const codeInput = document.getElementById('admin-student-code');
+            const xpInput = document.getElementById('admin-student-xp');
+            const streakInput = document.getElementById('admin-student-streak');
+            const editingOldCode = document.getElementById('admin-editing-old-code');
+
+            if (codeInput) codeInput.value = "";
+            if (xpInput) xpInput.value = "";
+            if (streakInput) streakInput.value = "";
+            if (editingOldCode) editingOldCode.value = "";
+
+            safeAddClass('admin-btn-clear-edit', 'hidden');
+        }
+
+        // XÓA HỒ SƠ HỌC SINH TRÊN TRÌNH DUYỆT ADMIN
+        function adminDeleteStudent(code) {
+            playSound('wrong');
+            showCustomConfirm(
+                "Xóa vĩnh viễn tài khoản?",
+                `Thầy/Cô có chắc muốn xóa sạch toàn bộ hồ sơ và lộ trình học tập của học sinh "${code}" không? Hành động này không thể hoàn tác.`,
+                "🗑️",
+                async () => {
+                    // Xóa localStorage
+                    localStorage.removeItem(`tienganh3_state_${code}`);
+
+                    // Xóa khỏi danh sách nhanh
+                    const profilesJson = localStorage.getItem('tienganh3_profiles_list');
+                    if (profilesJson) {
+                        try {
+                            let profiles = JSON.parse(profilesJson);
+                            profiles = profiles.filter(p => p.code !== code);
+                            localStorage.setItem('tienganh3_profiles_list', JSON.stringify(profiles));
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+
+                    // Xóa trên Firebase Cloud nếu có
+                    if (firebaseUser) {
+                        const cloudDocRef = db.doc(`artifacts/${appId}/users/${firebaseUser.uid}/students/${code}`);
+                        try {
+                            await cloudDocRef.delete();
+                        } catch (err) {
+                            console.warn(err);
+                        }
+                    }
+
+                    // Nếu xóa đúng tài khoản đang dùng
+                    if (appState.username === code) {
+                        appState = { ...DEFAULT_STATE };
+                        localStorage.removeItem(`tienganh3_state_${code}`);
+                        window.location.reload();
+                    } else {
+                        renderAdminStudentList();
+                        loadAllProfilesFromLocal();
+                        showToast(`Đã xóa thành công học sinh ${code}!`, "fa-trash-can", "amber");
+                    }
+                }
+            );
+        }
+
+        // HIỂN THỊ DANH SÁCH LÊN KHUNG QUẢN TRỊ ADMIN
+        function renderAdminStudentList() {
+            const listContainer = document.getElementById('admin-student-table-list');
+            if (!listContainer) return;
+
+            listContainer.innerHTML = "";
+            const profilesJson = localStorage.getItem('tienganh3_profiles_list');
+            let profiles = [];
+            try {
+                if (profilesJson) profiles = JSON.parse(profilesJson);
+            } catch (e) {
+                profiles = [];
+            }
+
+            if (profiles.length > 0) {
+                profiles.forEach(prof => {
+                    const studentHtml = `
+                        <div class="flex items-center justify-between p-2.5 bg-white border border-purple-100 rounded-xl hover:shadow-sm transition-all">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">👦</span>
+                                <div>
+                                    <p class="text-xs font-black text-purple-950 uppercase leading-none">${prof.code}</p>
+                                    <p class="text-[9px] text-slate-500 mt-1">⭐ ${prof.points} XP • 🔥 ${prof.streak} Tuần</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button onclick="adminEditStudent('${prof.code}', ${prof.points}, ${prof.streak})" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-extrabold text-[10px] rounded-lg transition-all flex items-center gap-1">
+                                    <i class="fa-solid fa-user-pen"></i> Sửa
+                                </button>
+                                <button onclick="adminDeleteStudent('${prof.code}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-extrabold text-[10px] rounded-lg transition-all flex items-center gap-1">
+                                    <i class="fa-solid fa-trash"></i> Xóa
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    listContainer.insertAdjacentHTML('beforeend', studentHtml);
+                });
+            } else {
+                listContainer.innerHTML = `
+                    <div class="text-center py-4 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                        <p class="text-[11px] font-bold text-slate-400">Chưa có dữ liệu học sinh nào đăng ký.</p>
+                    </div>
+                `;
+            }
         }
 
         function toggleAdminUnlockAll() {
