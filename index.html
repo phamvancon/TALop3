@@ -762,7 +762,44 @@
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6">
-                <!-- PHẦN MỚI: QUẢN LÝ THÔNG TIN ĐĂNG NHẬP & TÀI KHOẢN HỌC SINH -->
+                <!-- CẤU HÌNH API GIỌNG NÓI (GOOGLE & GEMINI) - TÍNH NĂNG MỚI ĐƯỢC NÂNG CẤP -->
+                <div class="p-4 bg-amber-50/60 rounded-2xl border border-amber-200 space-y-3">
+                    <h4 class="font-bold text-amber-950 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-gears text-amber-600"></i> Cấu hình API Giọng nói (Google & Gemini)
+                    </h4>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">Tùy chỉnh các mã Token kết nối dịch vụ giọng đọc AI để luôn đảm bảo tính liên tục và mượt mà cho các con học tập.</p>
+                    
+                    <div class="space-y-3.5 text-left bg-white p-3.5 rounded-xl border border-amber-100">
+                        <!-- Cấu hình Google Cloud Token -->
+                        <div>
+                            <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Google Cloud TTS Token (Neural2)</label>
+                            <div class="relative">
+                                <input type="password" id="admin-google-token" placeholder="Dán Google Premium Token vào đây..." class="w-full pl-3 pr-10 py-2.5 border-2 border-amber-100 rounded-lg text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all">
+                                <button type="button" onclick="toggleInputVisibility('admin-google-token')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600" title="Ẩn/Hiện Token">
+                                    <i class="fa-solid fa-eye text-xs" id="eye-google"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Cấu hình Gemini API Key -->
+                        <div>
+                            <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Gemini API Key (Dùng cho Puck, Leda, Callirrhoe)</label>
+                            <div class="relative">
+                                <input type="password" id="admin-gemini-key" placeholder="Nhập khóa API Gemini của thầy/cô..." class="w-full pl-3 pr-10 py-2.5 border-2 border-amber-100 rounded-lg text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all">
+                                <button type="button" onclick="toggleInputVisibility('admin-gemini-key')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600" title="Ẩn/Hiện Key">
+                                    <i class="fa-solid fa-eye text-xs" id="eye-gemini"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Nút lưu cài đặt giọng nói -->
+                        <button onclick="adminSaveVoiceSettings()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-black font-kids text-xs rounded-xl transition-all shadow-md active:scale-[0.98] flex items-center justify-center gap-1.5 border-b-2 border-amber-700">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Lưu cấu hình API Giọng nói
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PHẦN CŨ: QUẢN LÝ THÔNG TIN ĐĂNG NHẬP & TÀI KHOẢN HỌC SINH -->
                 <div class="p-4 bg-purple-50/60 rounded-2xl border border-purple-100 space-y-3">
                     <h4 class="font-bold text-purple-950 text-sm flex items-center gap-2">
                         <i class="fa-solid fa-user-gear text-purple-600"></i> Quản lý & Thay đổi Thông tin Học sinh
@@ -879,7 +916,7 @@
         const db = firebase.firestore();
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'tieng-anh-lop-3-69257';
 
-        // TOKEN GIỌNG NÓI GOOGLE CLOUD TTS CỦA NGƯỜI DÙNG CẤP
+        // TOKEN GIỌNG NÓI GOOGLE CLOUD TTS CỦA NGƯỜI DÙNG CẤP MẶC ĐỊNH
         const googleTTSToken = "AQ.Ab8RN6KPTaKHXRQ56ZIVhNuPgkTjmlP_6xtUWd_-B4He8rZKIQ";
 
         // CƠ SỞ DỮ LIỆU CHUẨN 35 TUẦN HỌC (Bám sát 20 Units, Ôn tập & Kiểm tra giữa kì/cuối kì)
@@ -1348,6 +1385,7 @@
             if (el) el.style.width = widthValue;
         }
 
+        // Cải tiến kiểm tra an toàn class và thuộc tính
         function safeRemoveClass(id, className) {
             const el = document.getElementById(id);
             if (el) el.classList.remove(className);
@@ -1566,7 +1604,7 @@
             playSound('wrong');
             
             showCustomConfirm(
-                "Gỡ tài khoản khỏi danh sách?",
+                "Gỡ tài khoản khỏi máy?",
                 `Bạn có chắc muốn gỡ mã học sinh "${code}" khỏi thiết bị này? Tiến trình trên mây vẫn được giữ nguyên.`,
                 "🗑️",
                 () => {
@@ -1814,11 +1852,14 @@
             };
         }
 
-        // GOOGLE TEXT-TO-SPEECH REST API CHÍNH THỨC SỬ DỤNG TOKEN PREMIUM MỚI (LỚP ƯU TIÊN 1)
+        // GOOGLE TEXT-TO-SPEECH REST API CHÍNH THỨC SỬ DỤNG TOKEN ĐỘNG (LỚP ƯU TIÊN 1)
         async function playGoogleCloudTTS(text) {
             toggleAudioLoading(true);
             const speedSelector = document.getElementById('speech-speed-selector');
             const rateVal = speedSelector ? parseFloat(speedSelector.value) : 0.85;
+
+            // Sử dụng Token tùy chỉnh từ Admin hoặc fallback mặc định
+            const activeToken = localStorage.getItem('cfg_google_tts_token') || googleTTSToken;
 
             try {
                 // Thử gửi bằng phương pháp Bearer Authorization trước (OAuth Token)
@@ -1826,7 +1867,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${googleTTSToken}`
+                        "Authorization": `Bearer ${activeToken}`
                     },
                     body: JSON.stringify({
                         input: { text: text },
@@ -1837,7 +1878,7 @@
 
                 // Nếu Bearer không hoạt động, thử gửi token trực tiếp dưới dạng URL API Key
                 if (!response.ok) {
-                    response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${googleTTSToken}`, {
+                    response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${activeToken}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -1882,11 +1923,11 @@
             });
         }
 
-        // PHÁT GIỌNG ĐỌC AI GEMINI (DÀNH CHO CÁC LỰA CHỌN PHỤ)
+        // PHÁT GIỌNG ĐỌC AI GEMINI (TÍCH HỢP GEMINI KEY ĐỘNG TỪ ADMIN)
         async function playGeminiTTS(text, voiceName) {
             toggleAudioLoading(true);
-            const apiKey = ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            const activeGeminiKey = localStorage.getItem('cfg_gemini_api_key') || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${activeGeminiKey}`;
 
             const payload = {
                 contents: [{
@@ -1915,6 +1956,7 @@
             }
 
             if (!response || !response.ok) {
+                console.warn("Gemini API lỗi hoặc chưa cấu hình API Key. Đang chuyển dự phòng sang Google Cloud TTS.");
                 playGoogleCloudTTS(text); 
                 return;
             }
@@ -2678,6 +2720,7 @@
             if (question) speakWord(question.targetWord);
         }
 
+        // ĐỐI CHIẾU TRẮC NGHIỆM
         function handleSelectQuizOption(selectedOpt) {
             const question = quizQuestions[deckPointer];
             if (quizAnswers[deckPointer]) return;
@@ -2844,6 +2887,15 @@
             if (unlockToggle) unlockToggle.checked = !!appState.adminUnlockAll;
             renderAdminStudentList();
 
+            // ĐỒNG BỘ HIỂN THỊ CÀI ĐẶT API GIỌNG NÓI TỪ LOCALSTORAGE VÀO INPUTS
+            const savedGoogleToken = localStorage.getItem('cfg_google_tts_token') || googleTTSToken;
+            const savedGeminiKey = localStorage.getItem('cfg_gemini_api_key') || "";
+            
+            const googleInput = document.getElementById('admin-google-token');
+            const geminiInput = document.getElementById('admin-gemini-key');
+            if (googleInput) googleInput.value = savedGoogleToken;
+            if (geminiInput) geminiInput.value = savedGeminiKey;
+
             safeRemoveClass('admin-panel-modal', 'hidden');
             setTimeout(() => {
                 const box = document.getElementById('admin-panel-box');
@@ -2866,6 +2918,38 @@
                 renderWeeksSyllabus();
                 loadAllProfilesFromLocal(); 
             }, 250);
+        }
+
+        // TÍNH NĂNG ẨN/HIỆN MẬT KHẨU HOẶC KEY NHẠY CẢM TRÊN ADMIN PANEL
+        function toggleInputVisibility(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const eyeIcon = id === 'admin-google-token' ? document.getElementById('eye-google') : document.getElementById('eye-gemini');
+            if (el.type === 'password') {
+                el.type = 'text';
+                if (eyeIcon) {
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                }
+            } else {
+                el.type = 'password';
+                if (eyeIcon) {
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            }
+        }
+
+        // LƯU CẤU HÌNH API GIỌNG NÓI AN TOÀN TRÊN TRÌNH DUYỆT
+        function adminSaveVoiceSettings() {
+            playSound('click');
+            const googleTokenVal = document.getElementById('admin-google-token')?.value.trim() || "";
+            const geminiKeyVal = document.getElementById('admin-gemini-key')?.value.trim() || "";
+            
+            localStorage.setItem('cfg_google_tts_token', googleTokenVal);
+            localStorage.setItem('cfg_gemini_api_key', geminiKeyVal);
+            
+            showToast("Đã lưu cấu hình API giọng nói thành công! 🎤", "fa-circle-check", "emerald");
         }
 
         async function adminSaveStudentAccount() {
