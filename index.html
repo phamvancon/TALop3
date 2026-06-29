@@ -879,6 +879,9 @@
         const db = firebase.firestore();
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'tieng-anh-lop-3-69257';
 
+        // TOKEN GIỌNG NÓI GOOGLE CLOUD TTS CỦA NGƯỜI DÙNG CẤP
+        const googleTTSToken = "AQ.Ab8RN6KPTaKHXRQ56ZIVhNuPgkTjmlP_6xtUWd_-B4He8rZKIQ";
+
         // CƠ SỞ DỮ LIỆU CHUẨN 35 TUẦN HỌC (Bám sát 20 Units, Ôn tập & Kiểm tra giữa kì/cuối kì)
         const EnglishSyllabus35Weeks = [
             {
@@ -1069,7 +1072,7 @@
                 title: "Week 16: Unit 8 - My School Things (Lesson 2 & 3)",
                 desc: "Thước kẻ và sách vở.",
                 words: [
-                    { word: "Ruler", ipa: "/ˈruːlər/", type: "Noun", vietnamese: "Thước kẻ", exEn: "This is my ruler.", exVi: "Đây là thước kẻ của tớ.", tipVi: "Đọc là 'Ru-lờ'. Con nhớ chu môi tạo âm 'r' thật rõ ràng nhé." },
+                    { word: "Ruler", ipa: "/ˈruːlər/", type: "Noun", vietnamese: "Thước kẻ", exEn: "This is my ruler.", exVi: "Đây là thước kẻ của tớ.", tipVi: "Đọc là 'Ru-lờ'. Con nhớ chu môi tạo âm 'r' thật rõ ràng nhé!" },
                     { word: "Book", ipa: "/bʊk/", type: "Noun", vietnamese: "Sách học", exEn: "Open your book.", exVi: "Mở sách của em ra.", tipVi: "Đọc dứt khoát là 'Búc' và bật nhẹ âm 'k' ở cuống họng." }
                 ]
             },
@@ -1622,6 +1625,7 @@
             if (loginInput) loginInput.value = code;
         }
 
+        // TẠO MÃ ĐĂNG NHẬP NGẪU NHIÊN CHỨA TIỀN TỐ ECO VÀ 3 SỐ
         function generateRandomEcoCode() {
             playSound('click');
             const randomNum = Math.floor(Math.random() * 999 + 1).toString().padStart(3, '0');
@@ -1674,7 +1678,7 @@
         }
 
         // ==========================================
-        // 3. NÂNG CẤP HỆ THỐNG PHÁT ÂM TIẾNG VIỆT VIETTEL AI VÀ TIẾNG ANH
+        // 3. NÂNG CẤP HỆ THỐNG PHÁT ÂM TIẾNG VIỆT VIETTEL AI VÀ TIẾNG ANH GOOGLE PREMIUM
         // ==========================================
         let browserBestEnglishVoice = null;
 
@@ -1784,6 +1788,7 @@
             }
         }
 
+        // GOOGLE TRANSLATE TTS (DỰ PHÒNG THỨ 2)
         function playGoogleTranslateTTS(text) {
             toggleAudioLoading(true);
             const encodedText = encodeURIComponent(text);
@@ -1804,11 +1809,80 @@
                 });
             };
             audio.onerror = () => {
-                console.warn("Google Cloud TTS fail, fallback to Offline TTS");
+                console.warn("Google Translate TTS fail, fallback to Offline TTS");
                 playBrowserFallbackTTS(text);
             };
         }
 
+        // GOOGLE TEXT-TO-SPEECH REST API CHÍNH THỨC SỬ DỤNG TOKEN PREMIUM MỚI (LỚP ƯU TIÊN 1)
+        async function playGoogleCloudTTS(text) {
+            toggleAudioLoading(true);
+            const speedSelector = document.getElementById('speech-speed-selector');
+            const rateVal = speedSelector ? parseFloat(speedSelector.value) : 0.85;
+
+            try {
+                // Thử gửi bằng phương pháp Bearer Authorization trước (OAuth Token)
+                let response = await fetch("https://texttospeech.googleapis.com/v1/text:synthesize", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${googleTTSToken}`
+                    },
+                    body: JSON.stringify({
+                        input: { text: text },
+                        voice: { languageCode: "en-US", name: "en-US-Neural2-F" },
+                        audioConfig: { audioEncoding: "MP3", speakingRate: rateVal }
+                    })
+                });
+
+                // Nếu Bearer không hoạt động, thử gửi token trực tiếp dưới dạng URL API Key
+                if (!response.ok) {
+                    response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${googleTTSToken}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            input: { text: text },
+                            voice: { languageCode: "en-US", name: "en-US-Neural2-F" },
+                            audioConfig: { audioEncoding: "MP3", speakingRate: rateVal }
+                        })
+                    });
+                }
+
+                if (!response.ok) {
+                    throw new Error("Google Cloud Premium TTS API lỗi phản hồi: " + response.status);
+                }
+
+                const data = await response.json();
+                if (data.audioContent) {
+                    playBase64Mp3(data.audioContent);
+                } else {
+                    throw new Error("Không có dữ liệu audioContent từ Google Cloud!");
+                }
+            } catch (err) {
+                console.warn("Google Premium Cloud TTS lỗi hoặc token chưa kích hoạt. Đang chuyển dự phòng:", err);
+                playGoogleTranslateTTS(text); // Tự động chuyển lớp dự phòng 2
+            }
+        }
+
+        // Hàm phát âm từ chuỗi Base64
+        function playBase64Mp3(base64Data) {
+            if (!base64Data) {
+                toggleAudioLoading(false);
+                return;
+            }
+            const audioUrl = `data:audio/mp3;base64,${base64Data}`;
+            const audio = new Audio(audioUrl);
+            audio.onended = () => toggleAudioLoading(false);
+            audio.onerror = () => toggleAudioLoading(false);
+            audio.play().catch(e => {
+                console.error("Lỗi phát âm Base64:", e);
+                toggleAudioLoading(false);
+            });
+        }
+
+        // PHÁT GIỌNG ĐỌC AI GEMINI (DÀNH CHO CÁC LỰA CHỌN PHỤ)
         async function playGeminiTTS(text, voiceName) {
             toggleAudioLoading(true);
             const apiKey = ""; 
@@ -1841,7 +1915,7 @@
             }
 
             if (!response || !response.ok) {
-                playGoogleTranslateTTS(text); 
+                playGoogleCloudTTS(text); 
                 return;
             }
 
@@ -1862,10 +1936,10 @@
                     audio.onended = () => toggleAudioLoading(false);
                     await audio.play();
                 } else {
-                    playGoogleTranslateTTS(text);
+                    playGoogleCloudTTS(text);
                 }
             } catch (err) {
-                playGoogleTranslateTTS(text);
+                playGoogleCloudTTS(text);
             }
         }
 
@@ -1906,6 +1980,7 @@
             return new Blob([view], { type: 'audio/wav' });
         }
 
+        // HÀM ĐIỀU PHỐI GIỌNG NÓI CHÍNH
         async function speakWord(text) {
             const voiceSelector = document.getElementById('voice-selector');
             const selectedVoice = voiceSelector ? voiceSelector.value : 'GoogleTTS';
@@ -1913,7 +1988,7 @@
             if (selectedVoice === 'OfflineFast') {
                 playBrowserFallbackTTS(text);
             } else if (selectedVoice === 'GoogleTTS') {
-                playGoogleTranslateTTS(text);
+                await playGoogleCloudTTS(text); // Ưu tiên gọi Premium Google TTS mới
             } else {
                 await playGeminiTTS(text, selectedVoice);
             }
