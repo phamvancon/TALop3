@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Capriola&display=swap" rel="stylesheet">
     
+    <!-- Firebase SDK Compat -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -387,15 +388,15 @@
                             </div>
                         </div>
 
-                        <!-- Trợ lý Giọng nói (Sử dụng Smart TTS Hub chuẩn Viettel AI & WebSpeech) -->
+                        <!-- Trợ lý Giọng nói (Sử dụng Smart Voice Engine chuẩn Viettel AI & WebSpeech) -->
                         <div class="bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6 space-y-4">
                             <div class="flex items-center justify-between">
                                 <h4 class="font-black font-kids text-indigo-900 flex items-center gap-2">
-                                    <span class="text-xl">🔊</span> Trợ lý Giọng nói (Smart TTS Hub)
+                                    <span class="text-xl">🔊</span> Trợ lý Giọng nói AI (Instant Playback Engine)
                                 </h4>
                                 <span class="text-[9px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-100 font-bold uppercase tracking-wider">Môi trường APK & Web</span>
                             </div>
-                            <p class="text-xs text-slate-500 leading-relaxed">Nhập văn bản Tiếng Việt hoặc Tiếng Anh bên dưới để trải nghiệm phát âm tinh chỉnh chất lượng cao:</p>
+                            <p class="text-xs text-slate-500 leading-relaxed">Nhập văn bản bất kỳ bên dưới để trải nghiệm phát âm tinh chỉnh chất lượng cao:</p>
                             
                             <div class="relative">
                                 <textarea id="text-speech-input" rows="3" class="w-full p-4 border-2 border-indigo-100 rounded-2xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all" placeholder="Gõ câu văn bất kỳ vào đây để nghe cô giáo AI đọc...">Xin chào! Đây là ứng dụng BabyTalk & EduKids Smart. Hello everyone!</textarea>
@@ -505,10 +506,11 @@
                     TỪ SỐ <span id="deck-current-index" class="text-indigo-600">1</span>/<span id="deck-total-count">5</span>
                 </div>
 
+                <!-- Interface Flashcard -->
                 <div id="interface-flashcard" class="w-full flex flex-col items-center">
                     <div class="perspective-1000 w-full max-w-md h-72 cursor-pointer group" onclick="flipActiveCard()">
                         <div id="flashcard-inner" class="preserve-3d duration-500 relative w-full h-full rounded-3xl shadow-md border-2 border-indigo-100 transition-all">
-                            <!-- MẶT TRƯỚC (TIẾNG ANH - SỬ DỤNG GIỌNG ĐỌC MÁY CHUẨN) -->
+                            <!-- MẶT TRƯỚC (TIẾNG ANH - OFFLINE NATIVE UTTERANCE) -->
                             <div class="backface-hidden absolute inset-0 w-full h-full bg-white flex flex-col items-center justify-between p-6 rounded-3xl bg-gradient-to-br from-white to-indigo-50/20">
                                 <div class="self-end flex items-center gap-2">
                                     <button id="speaker-btn-front" onclick="triggerVoiceFromCard(event, this)" class="w-14 h-14 rounded-2xl bg-indigo-50 hover:bg-indigo-100 active:scale-90 text-indigo-600 flex items-center justify-center transition-all shadow-sm border border-indigo-100 relative overflow-visible" title="Phát âm">
@@ -559,6 +561,7 @@
                     </div>
                 </div>
 
+                <!-- Interface Speaking -->
                 <div id="interface-speaking" class="w-full flex flex-col items-center hidden relative">
                     <div id="local-confetti-holder" class="absolute inset-0 pointer-events-none overflow-hidden z-20 rounded-3xl"></div>
 
@@ -601,6 +604,7 @@
                     </div>
                 </div>
 
+                <!-- Interface Quiz -->
                 <div id="interface-quiz" class="w-full flex flex-col items-center hidden max-w-md">
                     <div class="bg-gradient-to-tr from-indigo-50 to-indigo-100/50 border-2 border-indigo-100 rounded-3xl p-6 w-full text-center relative overflow-hidden shadow-sm mb-6">
                         <span class="absolute top-3 left-3 bg-indigo-200 text-indigo-800 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">Câu hỏi kiểm tra</span>
@@ -633,11 +637,13 @@
         </div>
     </div>
 
+    <!-- Toast message overlay -->
     <div id="toast-message" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-[250] bg-slate-900 text-white text-xs sm:text-sm font-bold px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 opacity-0 pointer-events-none transition-all duration-300">
         <span id="toast-icon" class="text-emerald-400"><i class="fa-solid fa-circle-check animate-bounce"></i></span>
         <span id="toast-text">Lưu thành công!</span>
     </div>
 
+    <!-- Celebration Screen overlay -->
     <div id="celebration-overlay" class="fixed inset-0 z-50 bg-indigo-950/80 backdrop-blur-md hidden flex flex-col items-center justify-center p-6 text-center">
         <div class="relative w-full max-w-sm bg-white rounded-3xl border-4 border-yellow-300 shadow-2xl p-8 transform scale-95 duration-300 opacity-0" id="celebration-box">
             <div id="confetti-container" class="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl"></div>
@@ -654,6 +660,7 @@
         </div>
     </div>
 
+    <!-- Custom Dialog box instead of Native Alerts -->
     <div id="custom-confirm-modal" class="fixed inset-0 z-[300] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 border-4 border-yellow-400 text-center transform scale-95 transition-all duration-200 opacity-0" id="custom-confirm-box">
             <div class="text-5xl mb-3">🤔</div>
@@ -666,6 +673,7 @@
         </div>
     </div>
 
+    <!-- Admin password modal -->
     <div id="admin-pass-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 border-4 border-indigo-400 text-center transform scale-95 transition-all duration-300 opacity-0" id="admin-pass-box">
             <div class="text-4xl mb-3">🔑</div>
@@ -680,7 +688,7 @@
         </div>
     </div>
 
-    <!-- Sổ Sĩ số / Quản lý học viên -->
+    <!-- Sổ Sĩ số / Quản lý học viên / Bảng điều khiển admin -->
     <div id="admin-panel-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[90vh] border-4 border-indigo-400 transform scale-95 transition-all duration-300 opacity-0" id="admin-panel-box">
             <div class="px-6 py-4 bg-indigo-50 border-b border-indigo-100 flex items-center justify-between">
@@ -788,7 +796,7 @@
     </div>
 
     <script>
-        // Hàm Toast định nghĩa sớm ở đầu script để tránh lỗi ReferenceError
+        // Hàm Toast hiển thị sớm nhất
         function showToast(text) {
             const toast = document.getElementById('toast-message');
             const toastText = document.getElementById('toast-text');
@@ -798,6 +806,13 @@
                 setTimeout(() => {
                     toast.classList.add('opacity-0', 'pointer-events-none');
                 }, 3000);
+            }
+        }
+
+        // Haptic Feedback rung xúc giác trên điện thoại
+        function triggerHapticFeedback() {
+            if (navigator.vibrate) {
+                navigator.vibrate(45);
             }
         }
 
@@ -820,7 +835,7 @@
 
         const viettelDefaultToken = "395f6b744a34ff3eb6e042656cde6ffe";
 
-        // BỘ ĐỆM ẨN TIẾNG VIỆT (PREFETCH CACHE) - ĐẢM BẢO NHẤN VÀO PHÁT RA TIẾNG LIỀN
+        // BỘ NHỚ ĐỆM TIẾNG VIỆT (PREFETCH AUDIO CACHE) - ĐẢM BẢO PHÁT RA TIẾNG NGAY
         let viettelAudioCache = {}; 
 
         // GIÁO TRÌNH SÁCH GIÁO KHOA TIẾNG ANH LỚP 3 (20 UNIT CHUẨN)
@@ -906,8 +921,237 @@
         let activeBookHalf = 1;
         let activeStudentCode = "eco001";
         let suggestedCode = "";
-
         let confirmPromiseResolver = null;
+
+        const VoiceEngine = {
+            currentAudio: null,
+            activeButton: null,
+
+            stopAll() {
+                if (this.currentAudio) {
+                    this.currentAudio.pause();
+                    this.currentAudio.currentTime = 0;
+                }
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                }
+                this.resetActiveButtonState();
+            },
+
+            resetActiveButtonState() {
+                if (this.activeButton) {
+                    setButtonVisualState(this.activeButton, 'idle');
+                    this.activeButton = null;
+                }
+            },
+
+            // PHÁT TIẾNG ANH (Offline Native Utterance - Chuẩn bản xứ en-US, 0ms latency)
+            speakEnglish(text, btnElement = null) {
+                this.stopAll();
+                if (btnElement) {
+                    this.activeButton = btnElement;
+                    setButtonVisualState(btnElement, 'playing');
+                }
+                triggerHapticFeedback();
+
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    
+                    const speedSelect = document.getElementById('reading-speed');
+                    const rate = speedSelect ? parseFloat(speedSelect.value) : (appState.readingSpeed || 0.8);
+                    utterance.rate = rate;
+
+                    const voices = window.speechSynthesis.getVoices();
+                    const preferredGender = appState.defaultEnVoiceGender || 'female';
+                    let voice = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes(preferredGender));
+                    if (!voice) {
+                        voice = voices.find(v => v.lang.startsWith('en'));
+                    }
+                    if (voice) utterance.voice = voice;
+
+                    utterance.onend = () => this.resetActiveButtonState();
+                    utterance.onerror = () => this.resetActiveButtonState();
+
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    this.resetActiveButtonState();
+                }
+            },
+
+            // PHÁT TIẾNG VIỆT (Viettel AI Cloud có Caching & Prefetching cục bộ)
+            speakVietnamese(text, btnElement = null) {
+                this.stopAll();
+                if (btnElement) {
+                    this.activeButton = btnElement;
+                    setButtonVisualState(btnElement, 'playing');
+                }
+                triggerHapticFeedback();
+
+                // 1. Kiểm tra cache tức thì
+                if (viettelAudioCache[text]) {
+                    this.playAudioUrl(viettelAudioCache[text], () => this.resetActiveButtonState());
+                    return;
+                }
+
+                // 2. Chế độ ngoại tuyến
+                if (!navigator.onLine) {
+                    this.speakVietnameseOffline(text);
+                    return;
+                }
+
+                // 3. Tải và giải mã luồng từ máy chủ Viettel AI
+                if (btnElement) {
+                    setButtonVisualState(btnElement, 'loading');
+                }
+
+                const activeViettelToken = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
+                const activeVoice = document.getElementById('voice-selector').value || "hcm-diemmy";
+                
+                const speedSelect = document.getElementById('reading-speed');
+                const rate = speedSelect ? parseFloat(speedSelect.value) : (appState.readingSpeed || 0.8);
+
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 1200);
+
+                fetch("https://viettelai.vn/tts/speech_synthesis", {
+                    method: "POST",
+                    headers: {
+                        "accept": "*/*",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        text: text,
+                        voice: activeVoice,
+                        speed: rate,
+                        tts_return_option: 3,
+                        token: activeViettelToken,
+                        without_filter: false
+                    }),
+                    signal: controller.signal
+                })
+                .then(res => {
+                    clearTimeout(timeoutId);
+                    if (!res.ok) throw new Error("Viettel AI Server Error");
+                    return res.blob();
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    viettelAudioCache[text] = url; // Lưu đệm
+                    
+                    if (btnElement) {
+                        setButtonVisualState(btnElement, 'playing');
+                    }
+                    this.playAudioUrl(url, () => this.resetActiveButtonState());
+                })
+                .catch(err => {
+                    console.warn("Viettel Cloud API Error, fallback to Offline WebSpeech", err);
+                    this.speakVietnameseOffline(text);
+                });
+            },
+
+            speakVietnameseOffline(text) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'vi-VN';
+                    
+                    const speedSelect = document.getElementById('reading-speed');
+                    const rate = speedSelect ? parseFloat(speedSelect.value) : (appState.readingSpeed || 0.8);
+                    utterance.rate = rate;
+
+                    const voices = window.speechSynthesis.getVoices();
+                    const preferredGender = appState.defaultViVoiceGender || 'female';
+                    let voice = voices.find(v => v.lang.startsWith('vi') && v.name.toLowerCase().includes(preferredGender));
+                    if (!voice) {
+                        voice = voices.find(v => v.lang.startsWith('vi'));
+                    }
+                    if (voice) utterance.voice = voice;
+
+                    utterance.onend = () => this.resetActiveButtonState();
+                    utterance.onerror = () => this.resetActiveButtonState();
+
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    this.resetActiveButtonState();
+                }
+            },
+
+            playAudioUrl(url, onEndedCallback) {
+                this.currentAudio = new Audio(url);
+                this.currentAudio.play()
+                    .then(() => {
+                        this.currentAudio.onended = onEndedCallback;
+                        this.currentAudio.onerror = onEndedCallback;
+                    })
+                    .catch(err => {
+                        console.warn("Audio Context Error blocked by safety parameters:", err);
+                        onEndedCallback();
+                    });
+            }
+        };
+
+        // Đồng bộ trạng thái giao diện nút Loa
+        function setButtonVisualState(btn, state) {
+            if (!btn) return;
+            if (!btn.dataset.originalHtml) {
+                btn.dataset.originalHtml = btn.innerHTML;
+            }
+
+            if (state === 'loading') {
+                btn.disabled = true;
+                btn.className = btn.className.replace('sound-wave-active', '').trim() + ' opacity-75';
+                btn.innerHTML = `<div class="flex items-center justify-center gap-1.5"><div class="loader-spinner"></div></div>`;
+            } else if (state === 'playing') {
+                btn.disabled = false;
+                btn.className = btn.className.replace('opacity-75', '').trim() + ' sound-wave-active';
+                const icon = btn.querySelector('i');
+                if (icon) {
+                    icon.className = "fa-solid fa-volume-high animate-bounce text-emerald-500 relative z-10";
+                }
+            } else {
+                btn.disabled = false;
+                btn.className = btn.className.replace('opacity-75', '').replace('sound-wave-active', '').trim();
+                btn.innerHTML = btn.dataset.originalHtml;
+            }
+        }
+
+        // Tải trước tài nguyên âm thanh (Prefetching)
+        async function prefetchVietnameseAudio(words) {
+            const activeViettelToken = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
+            const activeVoice = document.getElementById('voice-selector').value || "hcm-diemmy";
+            const speedSelect = document.getElementById('reading-speed');
+            const rate = speedSelect ? parseFloat(speedSelect.value) : (appState.readingSpeed || 0.8);
+
+            words.forEach(async (item) => {
+                const text = item.vietnamese;
+                if (viettelAudioCache[text]) return;
+
+                try {
+                    const response = await fetch("https://viettelai.vn/tts/speech_synthesis", {
+                        method: "POST",
+                        headers: {
+                            "accept": "*/*",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            text: text,
+                            voice: activeVoice,
+                            speed: rate,
+                            tts_return_option: 3,
+                            token: activeViettelToken,
+                            without_filter: false
+                        })
+                    });
+                    if (response.ok) {
+                        const audioBlob = await response.blob();
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        viettelAudioCache[text] = audioUrl;
+                    }
+                } catch(e) {
+                    console.warn(`Prefetch audio failed for text: ${text}`, e);
+                }
+            });
+        }
 
         window.addEventListener('DOMContentLoaded', async () => {
             fixAndroidAudioAutoPlay();
@@ -918,11 +1162,10 @@
             detectApkEnvironment();
             setupVoiceSpeedFromLocalStorage();
 
-            // Xóa cache khi đổi giáo viên
             const voiceSel = document.getElementById('voice-selector');
             if (voiceSel) {
                 voiceSel.addEventListener('change', () => {
-                    viettelAudioCache = {};
+                    viettelAudioCache = {}; // Xóa đệm khi đổi cô giáo
                     if (deckWords && deckWords.length > 0) {
                         prefetchVietnameseAudio(deckWords);
                     }
@@ -944,11 +1187,11 @@
             if (speedSelect) {
                 appState.readingSpeed = parseFloat(speedSelect.value);
                 saveAppState();
-                viettelAudioCache = {}; // Clear cache khi đổi tốc độ đọc
+                viettelAudioCache = {}; // Xóa đệm cũ
                 if (deckWords && deckWords.length > 0) {
                     prefetchVietnameseAudio(deckWords);
                 }
-                showToast(`Đã thay đổi tốc độ thành ${speedSelect.value}x!`);
+                showToast(`Đã thay đổi tốc độ đọc: ${speedSelect.value}x!`);
             }
         }
 
@@ -975,7 +1218,7 @@
                     stream.getTracks().forEach(track => track.stop());
                 })
                 .catch(err => {
-                    console.warn("Chưa cấp quyền ghi âm:", err);
+                    console.warn("Microphone permission was not granted by device policy:", err);
                 });
             }
         }
@@ -1028,7 +1271,7 @@
             if (auth.currentUser) {
                 db.collection('artifacts').doc(appId).collection('users').doc(appState.username).set({
                     progressData: appState
-                }, { merge: true }).catch(e => console.warn("Firebase Sync skipped. Working local mode."));
+                }, { merge: true }).catch(e => console.warn("Firebase Sync skipped. Working offline."));
             }
         }
 
@@ -1078,7 +1321,7 @@
                             }
                         }
                     } catch (e) {
-                        console.warn("Firestore lookup failed, relying on local storage", e);
+                        console.warn("Cloud login check failed, using local backup state", e);
                     }
                 }
 
@@ -1103,7 +1346,6 @@
             }
 
             let codeExists = false;
-
             if (navigator.onLine) {
                 try {
                     const doc = await db.collection('artifacts').doc(appId).collection('users').doc(cleanCode).get();
@@ -1120,7 +1362,7 @@
             }
 
             if (codeExists) {
-                showToast("Mã học viên này đã có bạn sử dụng rồi. Bé hãy chọn mã khác nha!");
+                showToast("Mã học viên này đã được sử dụng. Bé hãy chọn mã khác nhé!");
                 return;
             }
 
@@ -1217,7 +1459,7 @@
             document.getElementById('modal-unit-title').textContent = currentUnit.title;
             resetSpeakingStars();
 
-            // CHỦ ĐỘNG TẢI TRƯỚC ÂM THANH TIẾNG VIỆT (VIETTEL AI) CHO TOÀN BỘ UNIT ĐỂ NHẤN LÀ PHÁT RA TIẾNG LIỀN
+            // CHỦ ĐỘNG TẢI TRƯỚC TIẾNG VIỆT CHO TOÀN BỘ DECK ĐỂ TRÁNH TRỄ MẠNG
             prefetchVietnameseAudio(deckWords);
 
             if (lessonType === 1) {
@@ -1250,45 +1492,11 @@
             }, 50);
 
             if (lessonType !== 3) {
-                setTimeout(() => speakCurrentWord(document.getElementById(lessonType === 1 ? 'speaker-btn-front' : 'speaker-btn-speak')), 400);
+                setTimeout(() => {
+                    const playBtn = document.getElementById(lessonType === 1 ? 'speaker-btn-front' : 'speaker-btn-speak');
+                    speakCurrentWord(playBtn);
+                }, 400);
             }
-        }
-
-        // TẢI TRƯỚC ÂM THANH TRONG BACKGROUND ĐỂ CHỐNG TRỄ TRÊN THIẾT BỊ DI ĐỘNG
-        async function prefetchVietnameseAudio(words) {
-            const activeViettelToken = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
-            const activeVoice = document.getElementById('voice-selector').value || "hcm-diemmy";
-            const speed = appState.readingSpeed || 0.8;
-
-            words.forEach(async (item) => {
-                const text = item.vietnamese;
-                if (viettelAudioCache[text]) return; // Đã nằm trong cache thì bỏ qua
-
-                try {
-                    const response = await fetch("https://viettelai.vn/tts/speech_synthesis", {
-                        method: "POST",
-                        headers: {
-                            "accept": "*/*",
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            text: text,
-                            voice: activeVoice,
-                            speed: speed,
-                            tts_return_option: 3,
-                            token: activeViettelToken,
-                            without_filter: false
-                        })
-                    });
-                    if (response.ok) {
-                        const audioBlob = await response.blob();
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        viettelAudioCache[text] = audioUrl;
-                    }
-                } catch(e) {
-                    console.warn(`Không thể pre-fetch âm thanh: ${text}`, e);
-                }
-            });
         }
 
         function renderDeckData() {
@@ -1340,7 +1548,50 @@
         }
 
         function speakCurrentTarget(btn) {
-            speakCurrentWord(btn);
+            if (deckWords[deckPointer]) {
+                VoiceEngine.speakEnglish(deckWords[deckPointer].word, btn);
+            }
+        }
+
+        function speakCurrentWord(btn = null) {
+            if (deckWords[deckPointer]) {
+                VoiceEngine.speakEnglish(deckWords[deckPointer].word, btn);
+            }
+        }
+
+        function speakVietnameseTextOnCard(event, btn) {
+            event.stopPropagation();
+            const currentData = deckWords[deckPointer];
+            if (currentData) {
+                VoiceEngine.speakVietnamese(currentData.vietnamese, btn);
+            }
+        }
+
+        function readCustomTextVi(btn) {
+            const textVal = document.getElementById('text-speech-input').value.trim();
+            if (!textVal) {
+                showToast("Vui lòng nhập văn bản tiếng Việt trước!");
+                return;
+            }
+            VoiceEngine.speakVietnamese(textVal, btn);
+        }
+
+        function readCustomTextEn(btn) {
+            const textVal = document.getElementById('text-speech-input').value.trim();
+            if (!textVal) {
+                showToast("Vui lòng nhập văn bản tiếng Anh trước!");
+                return;
+            }
+            VoiceEngine.speakEnglish(textVal, btn);
+        }
+
+        function testVoice(btn) {
+            const btnText = document.getElementById('test-btn-text');
+            if (btnText) btnText.textContent = "Đang nói thử...";
+            VoiceEngine.speakEnglish("Welcome to English 3 Success Academy!", btn);
+            setTimeout(() => {
+                if (btnText) btnText.textContent = "Nghe thử giọng";
+            }, 3000);
         }
 
         function navigateDeck(dir) {
@@ -1353,7 +1604,10 @@
             if (next >= 0 && next < deckWords.length) {
                 deckPointer = next;
                 renderDeckData();
-                setTimeout(() => speakCurrentWord(document.getElementById(currentLessonType === 1 ? 'speaker-btn-front' : 'speaker-btn-speak')), 300);
+                setTimeout(() => {
+                    const playBtn = document.getElementById(currentLessonType === 1 ? 'speaker-btn-front' : 'speaker-btn-speak');
+                    speakCurrentWord(playBtn);
+                }, 300);
             } else if (next >= deckWords.length) {
                 completeLessonSuccess();
             }
@@ -1381,214 +1635,6 @@
             triggerCelebrationLayout(5, 5, "Chúc mừng bé yêu đã vượt qua bài học xuất sắc!");
         }
 
-        // HỆ THỐNG TRUYỀN DẪN VÀ BỘ ĐỆM PHÁT ÂM HOÀN TOÀN KHÔNG TRỄ (ZERO-DELAY PLAYBACK)
-        const SmartAudioPlayer = {
-            currentAudio: null,
-            activeButton: null,
-
-            stopAll() {
-                if (this.currentAudio) {
-                    this.currentAudio.pause();
-                    this.currentAudio.currentTime = 0;
-                }
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                }
-                this.resetActiveButton();
-            },
-
-            resetActiveButton() {
-                if (this.activeButton) {
-                    setButtonState(this.activeButton, 'idle');
-                    this.activeButton = null;
-                }
-            },
-
-            playVietnamese(text, btn = null) {
-                this.stopAll();
-                if (btn) {
-                    this.activeButton = btn;
-                    setButtonState(btn, 'playing');
-                }
-
-                // 1. Nếu từ này đã nằm sẵn trong bộ đệm prefetch thì phát ngay lập tức (0ms delay)
-                if (viettelAudioCache[text]) {
-                    this.playAudioUrl(viettelAudioCache[text], () => {
-                        this.resetActiveButton();
-                    });
-                    return;
-                }
-
-                // 2. Nếu chưa được tải trước, thực hiện nạp trực tuyến với Fast-Timeout (1.2 giây) để tránh đơ
-                if (btn) setButtonState(btn, 'loading');
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => {
-                    controller.abort();
-                }, 1200);
-
-                const activeViettelToken = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
-                const activeVoice = document.getElementById('voice-selector').value || "hcm-diemmy";
-                const speed = appState.readingSpeed || 0.8;
-
-                fetch("https://viettelai.vn/tts/speech_synthesis", {
-                    method: "POST",
-                    headers: {
-                        "accept": "*/*",
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        text: text,
-                        voice: activeVoice,
-                        speed: speed,
-                        tts_return_option: 3,
-                        token: activeViettelToken,
-                        without_filter: false
-                    }),
-                    signal: controller.signal
-                })
-                .then(res => {
-                    clearTimeout(timeoutId);
-                    if (!res.ok) throw new Error("Viettel AI error");
-                    return res.blob();
-                })
-                .then(blob => {
-                    const url = URL.createObjectURL(blob);
-                    viettelAudioCache[text] = url; // Lưu vào cache
-                    if (btn) setButtonState(btn, 'playing');
-                    this.playAudioUrl(url, () => {
-                        this.resetActiveButton();
-                    });
-                })
-                .catch(() => {
-                    // Chuyển sang cơ chế ngoại tuyến Offline WebSpeech cực kỳ chính xác nếu mạng yếu
-                    if (btn) setButtonState(btn, 'playing');
-                    this.playOfflineSpeech(text, 'vi-VN', () => {
-                        this.resetActiveButton();
-                    });
-                });
-            },
-
-            playEnglish(text, btn = null) {
-                this.stopAll();
-                if (btn) {
-                    this.activeButton = btn;
-                    setButtonState(btn, 'playing');
-                }
-                // Phát âm tiếng Anh (Chuẩn Mỹ) bằng SpeechSynthesis nội tuyến siêu nhanh
-                this.playOfflineSpeech(text, 'en-US', () => {
-                    this.resetActiveButton();
-                });
-            },
-
-            playAudioUrl(url, onEnded) {
-                this.currentAudio = new Audio(url);
-                this.currentAudio.play()
-                    .then(() => {
-                        this.currentAudio.onended = onEnded;
-                        this.currentAudio.onerror = onEnded;
-                    })
-                    .catch(e => {
-                        console.warn("Lỗi phát audio, kích hoạt WebSpeech dự phòng", e);
-                        onEnded();
-                    });
-            },
-
-            playOfflineSpeech(text, langCode, onEnded) {
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = langCode;
-                    utterance.rate = appState.readingSpeed || 0.8;
-
-                    const voices = window.speechSynthesis.getVoices();
-                    let chosenVoice = voices.find(v => v.lang.startsWith(langCode));
-                    
-                    // Ưu tiên chọn đúng giới tính Nam/Nữ đã thiết lập của Admin
-                    const genderTarget = langCode.startsWith('vi') ? (appState.defaultViVoiceGender || 'female') : (appState.defaultEnVoiceGender || 'female');
-                    const filteredVoice = voices.find(v => v.lang.startsWith(langCode) && v.name.toLowerCase().includes(genderTarget));
-                    if (filteredVoice) {
-                        chosenVoice = filteredVoice;
-                    }
-
-                    if (chosenVoice) {
-                        utterance.voice = chosenVoice;
-                    }
-
-                    utterance.onend = onEnded;
-                    utterance.onerror = onEnded;
-                    window.speechSynthesis.speak(utterance);
-                } else {
-                    onEnded();
-                }
-            }
-        };
-
-        function setButtonState(btn, state) {
-            if (!btn) return;
-            if (!btn.dataset.originalHtml) {
-                btn.dataset.originalHtml = btn.innerHTML;
-            }
-
-            if (state === 'loading') {
-                btn.disabled = true;
-                btn.className = btn.className.replace('sound-wave-active', '').trim() + ' opacity-75';
-                btn.innerHTML = `<div class="flex items-center justify-center gap-1.5"><div class="loader-spinner"></div></div>`;
-            } else if (state === 'playing') {
-                btn.disabled = false;
-                btn.className = btn.className.replace('opacity-75', '').trim() + ' sound-wave-active';
-                const icon = btn.querySelector('i');
-                if (icon) {
-                    icon.className = "fa-solid fa-volume-high animate-bounce text-emerald-500 relative z-10";
-                }
-            } else {
-                btn.disabled = false;
-                btn.className = btn.className.replace('opacity-75', '').replace('sound-wave-active', '').trim();
-                btn.innerHTML = btn.dataset.originalHtml;
-            }
-        }
-
-        function speakCurrentWord(btn = null) {
-            if (deckWords[deckPointer]) {
-                const wordText = deckWords[deckPointer].word;
-                SmartAudioPlayer.playEnglish(wordText, btn);
-            }
-        }
-
-        function speakVietnameseTextOnCard(event, btn) {
-            event.stopPropagation();
-            const currentData = deckWords[deckPointer];
-            if (currentData) {
-                SmartAudioPlayer.playVietnamese(currentData.vietnamese, btn);
-            }
-        }
-
-        function readCustomTextVi(btn) {
-            const textVal = document.getElementById('text-speech-input').value.trim();
-            if (!textVal) {
-                showToast("Vui lòng nhập văn bản tiếng Việt trước!");
-                return;
-            }
-            SmartAudioPlayer.playVietnamese(textVal, btn);
-        }
-
-        function readCustomTextEn(btn) {
-            const textVal = document.getElementById('text-speech-input').value.trim();
-            if (!textVal) {
-                showToast("Vui lòng nhập văn bản tiếng Anh trước!");
-                return;
-            }
-            SmartAudioPlayer.playEnglish(textVal, btn);
-        }
-
-        function testVoice(btn) {
-            const btnText = document.getElementById('test-btn-text');
-            if (btnText) btnText.textContent = "Đang nói thử...";
-            SmartAudioPlayer.playEnglish("Welcome to English 3 Success Academy!", btn);
-            setTimeout(() => {
-                if (btnText) btnText.textContent = "Nghe thử giọng";
-            }, 3000);
-        }
-
         let recognitionInstance = null;
         let isRecActive = false;
         let micAudioContext = null;
@@ -1597,9 +1643,7 @@
         let micAnimationId = null;
 
         function toggleSpeech() {
-            if (navigator.vibrate) {
-                navigator.vibrate(50); 
-            }
+            triggerHapticFeedback();
 
             const SpeechEngine = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechEngine) {
@@ -1621,7 +1665,7 @@
                 };
 
                 recognitionInstance.onerror = (e) => {
-                    console.error("Lỗi Micro: ", e);
+                    console.error("Lỗi Microphone:", e);
                     showToast("Bé hãy đọc to và rõ hơn nhé!");
                     isRecActive = false;
                     updateMicUIState(false);
@@ -1686,7 +1730,7 @@
                     updatePulse();
                 })
                 .catch(err => {
-                    console.warn("Không kết nối được bộ theo dõi volume trực tiếp:", err);
+                    console.warn("Could not initiate actual mic visualizer feedback:", err);
                 });
             }
         }
@@ -1757,7 +1801,7 @@
                 score = 100;
             } else {
                 const maxLen = Math.max(target.length, userSpeech.length);
-                let dist = levenshtein(target, userSpeech);
+                let dist = LevenshteinMetric(target, userSpeech);
                 score = Math.round(((maxLen - dist) / maxLen) * 100);
             }
 
@@ -1864,7 +1908,7 @@
             setTimeout(() => { holder.innerHTML = ""; }, 2000);
         }
 
-        function levenshtein(a, b) {
+        function LevenshteinMetric(a, b) {
             const tmp = [];
             for (let i = 0; i <= a.length; i++) {
                 tmp[i] = [i];
@@ -1925,7 +1969,7 @@
 
         function playQuizAudio(btn) {
             if (localQuizQuestions[deckPointer]) {
-                SmartAudioPlayer.playEnglish(localQuizQuestions[deckPointer].word, btn);
+                VoiceEngine.speakEnglish(localQuizQuestions[deckPointer].word, btn);
             }
         }
 
@@ -1969,7 +2013,7 @@
         }
 
         function closeLesson() {
-            SmartAudioPlayer.stopAll();
+            VoiceEngine.stopAll();
             if (isRecActive && recognitionInstance) {
                 recognitionInstance.stop();
             }
@@ -2014,7 +2058,7 @@
             }, 200);
         }
 
-        // LOẠI BỎ TOÀN BỘ DIALOG HỆ THỐNG ĐỂ TRÁNH LỖI ĐƠ GIÊU DIỆN TRÊN WEBVIEW
+        // Custom Dialog popup instead of native browser prompts
         function askCustomConfirm(title, desc) {
             document.getElementById('confirm-title').textContent = title;
             document.getElementById('confirm-desc').textContent = desc;
@@ -2248,7 +2292,7 @@
             }
         }
 
-        // IDENTIFY APP ENVIRONMENT
+        // IDENTIFY APP ENVIRONMENT FOR APK STABILITY
         function detectApkEnvironment() {
             const isLocalFile = window.location.protocol === 'file:';
             const isAndroidSystem = /Android/i.test(navigator.userAgent);
