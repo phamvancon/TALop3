@@ -139,7 +139,7 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-400">
                                 <i class="fa-solid fa-user-astronaut"></i>
                             </div>
-                            <input type="text" id="login-code" value="eco001" placeholder="Nhập mã (ECOxxx hoặc mã VIP)..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
+                            <input type="text" id="login-code" value="" placeholder="Nhập mã (ECOxxx hoặc mã VIP)..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
                         </div>
                     </div>
 
@@ -158,7 +158,7 @@
                     </button>
                     
                     <div class="text-center text-[10px] font-bold text-slate-400">
-                        Học thử miễn phí bằng mã mặc định <span class="text-indigo-600 underline">eco001</span>.
+                        Học thử miễn phí bằng mã mặc định <span class="text-indigo-600 underline">eco</span>.
                     </div>
                 </div>
 
@@ -305,7 +305,7 @@
                         <div>
                             <span class="bg-yellow-400 text-indigo-900 text-xs font-black px-3.5 py-1.5 rounded-full uppercase tracking-widest shadow-md inline-flex items-center gap-1.5">
                                 <span id="vip-indicator-crown" class="vip-crown-bounce hidden">👑</span>
-                                Học viên: <span id="welcome-user-code" class="font-extrabold">ECO001</span>
+                                Học viên: <span id="welcome-user-code" class="font-extrabold">ECO</span>
                                 <span id="vip-badge-label" class="hidden text-[9px] bg-indigo-900 text-yellow-400 px-1.5 py-0.5 rounded font-black tracking-wide">VIP</span>
                                 <button onclick="toggleUsernameMask(event)" class="text-indigo-950 hover:text-pink-600 transition-all flex items-center justify-center focus:outline-none ml-1" id="btn-toggle-mask">
                                     <i class="fa-solid fa-eye-slash text-xs"></i>
@@ -847,7 +847,7 @@
                 <!-- CONTAINER FORM SỬA THÔNG TIN HỌC SINH -->
                 <div id="admin-student-edit-box" class="bg-slate-50 border-2 border-slate-200 p-4 rounded-2xl space-y-3 hidden">
                     <h4 class="font-black text-xs text-slate-700 flex items-center justify-between">
-                        <span>✏️ Chỉnh sửa thông tin: <span id="edit-lbl-code" class="text-indigo-600 uppercase">ECO001</span></span>
+                        <span>✏️ Chỉnh sửa thông tin: <span id="edit-lbl-code" class="text-indigo-600 uppercase">ECO</span></span>
                         <button onclick="closeEditStudentBox()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
                     </h4>
                     <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
@@ -1107,7 +1107,7 @@
 
         let appState = { ...DEFAULT_STATE };
         let activeBookHalf = 1;
-        let activeStudentCode = "eco001";
+        let activeStudentCode = "eco";
         let suggestedCode = "";
         let confirmPromiseResolver = null;
         let selectedEditStudentCode = null;
