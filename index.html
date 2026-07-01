@@ -103,11 +103,19 @@
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-4px) rotate(8deg); }
         }
+
+        /* Hiệu ứng lấp lánh vàng Gold cho VIP */
+        @keyframes sparkle-animation {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        .sparkle-gold {
+            animation: sparkle-animation 1.5s ease-in-out infinite;
+        }
     </style>
 </head>
 <body class="h-full font-sans text-slate-800 antialiased flex flex-col bg-amber-50/20 select-none">
 
-    <!-- MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÝ MỚI -->
     <div id="login-screen" class="fixed inset-0 z-50 bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 sm:p-8 text-center border-4 border-yellow-300 relative my-auto">
             <div class="absolute -top-10 -left-10 w-32 h-32 bg-yellow-100 rounded-full opacity-30"></div>
@@ -121,7 +129,7 @@
                 <h1 class="text-2xl font-black font-kids text-indigo-900 leading-tight">ENGLISH 3</h1>
                 <p class="text-pink-500 font-black tracking-widest text-xs uppercase mt-0.5">SUCCESS ACADEMY</p>
                 
-                <!-- Tab điều hướng -->
+                <!-- Tab điều hướng Đăng nhập / Đăng ký -->
                 <div class="flex rounded-2xl bg-slate-100 p-1 my-5">
                     <button id="tab-auth-login" onclick="switchAuthTab('login')" class="flex-1 py-2.5 text-xs font-black font-kids rounded-xl transition-all bg-white text-indigo-900 shadow-sm">
                         🔑 Đăng Nhập
@@ -131,7 +139,7 @@
                     </button>
                 </div>
 
-                <!-- FORM ĐĂNG NHẬP -->
+                <!-- FORM ĐĂNG NHẬP (TRỐNG HOÀN TOÀN, BẮT BUỘC NHẬP) -->
                 <div id="auth-panel-login" class="space-y-4 text-left">
                     <div>
                         <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mã học viên lớp 3</label>
@@ -139,33 +147,29 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-400">
                                 <i class="fa-solid fa-user-astronaut"></i>
                             </div>
-                            <input type="text" id="login-code" value="" placeholder="Nhập mã (ECOxxx hoặc mã VIP)..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
+                            <input type="text" id="login-code" placeholder="Nhập mã học viên của con..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
                         </div>
                     </div>
 
                     <div id="login-password-container">
-                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mật khẩu (Chỉ dùng cho VIP / Tài khoản có bảo mật)</label>
+                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mật khẩu (Nhập mật khẩu của con nếu là tài khoản VIP)</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-400">
                                 <i class="fa-solid fa-lock"></i>
                             </div>
-                            <input type="password" id="login-password" placeholder="Bỏ trống nếu là tài khoản thường..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
+                            <input type="password" id="login-password" placeholder="Bỏ trống nếu là tài khoản thường không cài mật khẩu..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
                         </div>
                     </div>
                     
                     <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black font-kids tracking-wide py-3 px-6 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-emerald-700">
                         Bắt đầu học ngay! 🚀
                     </button>
-                    
-                    <div class="text-center text-[10px] font-bold text-slate-400">
-                        Học thử miễn phí bằng mã mặc định <span class="text-indigo-600 underline">eco</span>.
-                    </div>
                 </div>
 
-                <!-- FORM ĐĂNG KÝ (SINH ECOXXX TỰ ĐỘNG) -->
+                <!-- FORM ĐĂNG KÝ (SINH ECOXXX NGẪU HỨNG VÀ DUY NHẤT) -->
                 <div id="auth-panel-register" class="space-y-4 text-left hidden">
                     <div>
-                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mã học viên ngẫu hứng của con</label>
+                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mã học viên ngẫu hứng dạng ECOxxx</label>
                         <div class="flex gap-2">
                             <div class="relative flex-1">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-pink-400">
@@ -174,29 +178,29 @@
                                 <input type="text" id="register-code" readonly class="block w-full pl-9 pr-3 py-2.5 bg-slate-50 border-2 border-pink-100 rounded-2xl text-pink-600 font-black uppercase tracking-wider focus:outline-none shadow-sm">
                             </div>
                             
-                            <button onclick="refreshSuggestedCode()" class="px-3 bg-pink-50 hover:bg-pink-100 border-2 border-pink-100 rounded-2xl text-pink-500 font-extrabold text-xs transition-all flex items-center gap-1 active:scale-95 shadow-sm" title="Đổi mã ngẫu nhiên khác">
-                                <i class="fa-solid fa-arrows-rotate animate-spin-slow"></i> Đổi mã
+                            <button onclick="refreshSuggestedCode()" class="px-3 bg-pink-50 hover:bg-pink-100 border-2 border-pink-100 rounded-2xl text-pink-500 font-extrabold text-xs transition-all flex items-center gap-1 active:scale-95 shadow-sm" title="Đổi mã ngẫu hứng khác">
+                                <i class="fa-solid fa-arrows-rotate"></i> Đổi mã
                             </button>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Họ tên của học viên (Có thể thay đổi)</label>
+                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Họ tên của học viên lớp 3</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-400">
                                 <i class="fa-solid fa-signature"></i>
                             </div>
-                            <input type="text" id="register-name" placeholder="Ví dụ: Minh Anh..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
+                            <input type="text" id="register-name" placeholder="Ví dụ: Minh Anh, Khánh Vy..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mật khẩu bảo vệ tài khoản của con</label>
+                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mật khẩu bảo vệ tài khoản</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-400">
                                 <i class="fa-solid fa-key"></i>
                             </div>
-                            <input type="password" id="register-password" placeholder="Nhập mật khẩu tự chọn..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
+                            <input type="password" id="register-password" placeholder="Tự đặt mật khẩu dễ nhớ để đăng nhập lần sau..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
                         </div>
                     </div>
                     
@@ -205,6 +209,36 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="vip-welcome-overlay" class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md hidden flex flex-col items-center justify-center text-center p-6">
+        <div class="relative max-w-sm w-full p-8 rounded-3xl border-4 border-yellow-400 bg-gradient-to-b from-slate-900 to-indigo-950 text-white shadow-2xl overflow-hidden">
+            <div class="absolute -inset-10 bg-yellow-400/10 blur-3xl rounded-full"></div>
+            <!-- Mưa sao lấp lánh dạng emoji -->
+            <div class="absolute top-4 left-6 text-xl sparkle-gold">⭐</div>
+            <div class="absolute top-12 right-8 text-2xl sparkle-gold">✨</div>
+            <div class="absolute bottom-8 left-12 text-lg sparkle-gold">🌟</div>
+            
+            <div class="vip-crown-bounce text-7xl mb-4">👑</div>
+            <h2 class="text-2xl font-black font-kids text-yellow-400 tracking-wide uppercase">Tài Khoản VIP</h2>
+            <p class="text-[10px] font-bold text-slate-300 tracking-widest uppercase mt-0.5">English 3 Success Academy</p>
+            
+            <div class="my-6 py-4 px-6 rounded-2xl bg-white/5 border border-yellow-400/30">
+                <p class="text-xs text-yellow-100 font-bold">Chào mừng thành viên danh giá:</p>
+                <h3 id="vip-welcome-name" class="text-lg font-black font-kids text-yellow-400 mt-1">HỌC SINH VIP</h3>
+                <span id="vip-welcome-code" class="inline-block mt-1.5 text-[10px] bg-yellow-400 text-slate-950 px-2 py-0.5 rounded font-black">MÃ: VIP001</span>
+            </div>
+
+            <div class="space-y-2 text-left text-[11px] text-slate-300 bg-black/30 p-4 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2"><i class="fa-solid fa-check text-yellow-400"></i> Mở khóa trọn bộ 20 Unit học</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-check text-yellow-400"></i> Trợ lý Giọng nói AI chuyên sâu</div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-check text-yellow-400"></i> Nhận x2 điểm thưởng XP vàng</div>
+            </div>
+
+            <button onclick="dismissVipWelcome()" class="mt-6 w-full py-3.5 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-slate-950 font-black font-kids text-sm rounded-xl shadow-lg border-b-4 border-amber-600 active:scale-95 transition-all">
+                Vào Lớp Học Hoàng Gia 🚀
+            </button>
         </div>
     </div>
 
@@ -305,7 +339,7 @@
                         <div>
                             <span class="bg-yellow-400 text-indigo-900 text-xs font-black px-3.5 py-1.5 rounded-full uppercase tracking-widest shadow-md inline-flex items-center gap-1.5">
                                 <span id="vip-indicator-crown" class="vip-crown-bounce hidden">👑</span>
-                                Học viên: <span id="welcome-user-code" class="font-extrabold">ECO</span>
+                                Học viên: <span id="welcome-user-code" class="font-extrabold">ECO001</span>
                                 <span id="vip-badge-label" class="hidden text-[9px] bg-indigo-900 text-yellow-400 px-1.5 py-0.5 rounded font-black tracking-wide">VIP</span>
                                 <button onclick="toggleUsernameMask(event)" class="text-indigo-950 hover:text-pink-600 transition-all flex items-center justify-center focus:outline-none ml-1" id="btn-toggle-mask">
                                     <i class="fa-solid fa-eye-slash text-xs"></i>
@@ -439,7 +473,6 @@
                         </div>
                     </div>
 
-                    <!-- KHU VỰC HUY HIỆU & DONATE (NẾU ADMIN BẬT) -->
                     <div class="flex flex-col gap-6">
                         <!-- BIỂU TƯỢNG HUY HIỆU -->
                         <div class="bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6">
@@ -522,7 +555,6 @@
         </main>
     </div>
 
-    <!-- MODAL STUDY: BÀI HỌC FLASHCARD / PHÁT ÂM CHẤM ĐIỂM / TRẮC NGHIỆM QUIZ -->
     <div id="study-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[92vh] md:max-h-[95vh] transform transition-all duration-300 scale-95 opacity-0" id="study-modal-container">
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
@@ -743,6 +775,9 @@
                 <button onclick="switchAdminTab('donate')" id="admin-tab-btn-donate" class="flex-1 py-2 text-xs font-black rounded-lg transition-all text-slate-600 hover:bg-white">
                     ☕ Cấu hình Quyên góp
                 </button>
+                <button onclick="switchAdminTab('system')" id="admin-tab-btn-system" class="flex-1 py-2 text-xs font-black rounded-lg transition-all text-slate-600 hover:bg-white">
+                    💻 Hệ thống
+                </button>
             </div>
 
             <!-- PANEL 1: Cấu hình giọng đọc & API -->
@@ -784,16 +819,6 @@
                         </button>
                     </div>
                 </div>
-
-                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
-                    <h4 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-                        <i class="fa-solid fa-clipboard-list text-slate-600"></i> Tiến trình khóa học (Học thử nhanh)
-                    </h4>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="adminCompleteAll()" class="py-2 px-3 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-extrabold text-xs rounded-xl transition-all"> Mở tất cả 20 Unit </button>
-                        <button onclick="adminResetAllProgress()" class="py-2 px-3 bg-rose-100 hover:bg-rose-200 text-rose-700 font-extrabold text-xs rounded-xl transition-all"> Reset Về 0 </button>
-                    </div>
-                </div>
             </div>
 
             <!-- PANEL 2: Sổ sĩ số, tìm kiếm, chỉnh sửa & tạo tài khoản VIP chuyên sâu -->
@@ -801,12 +826,12 @@
                 <!-- FORM TẠO HỌC VIÊN VIP -->
                 <div class="bg-yellow-50/50 border-2 border-yellow-200 p-4 rounded-2xl space-y-3">
                     <h4 class="font-black text-xs text-yellow-800 flex items-center gap-1.5">
-                        <i class="fa-solid fa-crown text-yellow-500"></i> Tạo mới Tài khoản Học viên VIP
+                        <i class="fa-solid fa-crown text-yellow-500"></i> Tạo mới Tài khoản Học viên VIP chuyên sâu
                     </h4>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                         <input type="text" id="admin-vip-code" placeholder="Mã (VIP001, ECO...)" class="p-2 border border-yellow-200 rounded-xl text-xs font-bold uppercase text-indigo-900 focus:outline-none focus:ring-1 focus:ring-yellow-400">
-                        <input type="text" id="admin-vip-name" placeholder="Họ và tên..." class="p-2 border border-yellow-200 rounded-xl text-xs font-bold text-indigo-900 focus:outline-none focus:ring-1 focus:ring-yellow-400">
-                        <input type="password" id="admin-vip-pass" placeholder="Mật khẩu..." class="p-2 border border-yellow-200 rounded-xl text-xs font-bold text-indigo-900 focus:outline-none focus:ring-1 focus:ring-yellow-400">
+                        <input type="text" id="admin-vip-name" placeholder="Họ và tên thực tế..." class="p-2 border border-yellow-200 rounded-xl text-xs font-bold text-indigo-900 focus:outline-none focus:ring-1 focus:ring-yellow-400">
+                        <input type="password" id="admin-vip-pass" placeholder="Mật khẩu đăng nhập..." class="p-2 border border-yellow-200 rounded-xl text-xs font-bold text-indigo-900 focus:outline-none focus:ring-1 focus:ring-yellow-400">
                     </div>
                     <button onclick="adminCreateVipAccount()" class="w-full py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-black text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 border-b-2 border-yellow-700 shadow-sm">
                         <i class="fa-solid fa-plus"></i> Khởi tạo & Đồng bộ tài khoản VIP
@@ -847,7 +872,7 @@
                 <!-- CONTAINER FORM SỬA THÔNG TIN HỌC SINH -->
                 <div id="admin-student-edit-box" class="bg-slate-50 border-2 border-slate-200 p-4 rounded-2xl space-y-3 hidden">
                     <h4 class="font-black text-xs text-slate-700 flex items-center justify-between">
-                        <span>✏️ Chỉnh sửa thông tin: <span id="edit-lbl-code" class="text-indigo-600 uppercase">ECO</span></span>
+                        <span>✏️ Chỉnh sửa thông tin: <span id="edit-lbl-code" class="text-indigo-600 uppercase">ECO001</span></span>
                         <button onclick="closeEditStudentBox()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
                     </h4>
                     <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
@@ -928,6 +953,29 @@
                 </div>
             </div>
 
+            <!-- PANEL 4: Hệ thống -->
+            <div class="p-6 overflow-y-auto space-y-4 flex-1 hidden" id="admin-panel-system">
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+                    <h4 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-list text-slate-600"></i> Tiến trình khóa học (Học thử nhanh)
+                    </h4>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="adminCompleteAll()" class="py-2 px-3 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-extrabold text-xs rounded-xl transition-all"> Mở tất cả 20 Unit </button>
+                        <button onclick="adminResetAllProgress()" class="py-2 px-3 bg-rose-100 hover:bg-rose-200 text-rose-700 font-extrabold text-xs rounded-xl transition-all"> Reset Về 0 </button>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-red-50 rounded-2xl border-2 border-dashed border-red-200 space-y-3">
+                    <h4 class="font-bold text-red-900 text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-red-600"></i> Vùng nguy hiểm
+                    </h4>
+                    <p class="text-[10px] text-red-700">Thao tác này sẽ xóa sạch tất cả học viên đang lưu trên thiết bị cũng như đồng bộ đám mây.</p>
+                    <button onclick="adminHardWipeSystem()" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white font-black text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 border-b-2 border-red-800">
+                        <i class="fa-solid fa-trash-can"></i> XÓA TRẮNG TOÀN BỘ TÀI KHOẢN HỌC VIÊN
+                    </button>
+                </div>
+            </div>
+
             <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
                 <button onclick="closeAdminPanel()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-black text-xs rounded-xl transition-all"> Hoàn tất thiết lập </button>
             </div>
@@ -951,12 +999,24 @@
         </div>
     </div>
 
-
     <script>
         // Hàm Toast hiển thị sớm nhất
         function showToast(text) {
-            const toast = document.getElementById('toast-message');
-            const toastText = document.getElementById('toast-text');
+            // Check if there is an existing toast box
+            let toast = document.getElementById('toast-message');
+            let toastText = document.getElementById('toast-text');
+            
+            if (!toast) {
+                // Tạo động hộp Toast nếu chưa tồn tại trong HTML
+                const tb = document.createElement('div');
+                tb.id = "toast-message";
+                tb.className = "fixed bottom-5 left-1/2 transform -translate-x-1/2 z-[500] bg-slate-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-xl transition-all duration-300 opacity-0 pointer-events-none border border-slate-700/50 flex items-center gap-2.5 text-xs font-bold";
+                tb.innerHTML = `<span class="text-yellow-400">💡</span> <span id="toast-text"></span>`;
+                document.body.appendChild(tb);
+                toast = tb;
+                toastText = document.getElementById('toast-text');
+            }
+
             if (toast && toastText) {
                 toastText.textContent = text;
                 toast.classList.remove('opacity-0', 'pointer-events-none');
@@ -998,21 +1058,19 @@
         }
         const appId = 'tieng-anh-lop-3-69257';
 
-        // Hàm bổ sung giải quyết lỗi Unhandled Rejection ReferenceError
         async function initFirebaseAuth() {
             return new Promise((resolve) => {
                 if (typeof firebase !== 'undefined' && auth) {
                     auth.signInAnonymously()
                         .then((userCredential) => {
-                            console.log("Firebase đăng nhập ẩn danh thành công:", userCredential.user.uid);
+                            console.log("Firebase đăng nhập thành công");
                             resolve(userCredential);
                         })
                         .catch((error) => {
-                            console.warn("Lỗi đăng nhập Firebase ẩn danh, chuyển sang học Offline:", error);
+                            console.warn("Lỗi đăng nhập Firebase:", error);
                             resolve(null);
                         });
                 } else {
-                    console.warn("Không tìm thấy thư viện Firebase, chạy hoàn toàn ngoại tuyến.");
                     resolve(null);
                 }
             });
@@ -1020,10 +1078,9 @@
 
         const viettelDefaultToken = "395f6b744a34ff3eb6e042656cde6ffe";
 
-        // BỘ NHỚ ĐỆM TIẾNG VIỆT (PREFETCH AUDIO CACHE) - ĐẢM BẢO PHÁT RA TIẾNG NGAY
+        // BỘ NHỚ ĐỆM TIẾNG VIỆT (PREFETCH AUDIO CACHE)
         let viettelAudioCache = {}; 
 
-        // GIÁO TRÌNH SÁCH GIÁO KHOA TIẾNG ANH LỚP 3 (20 UNIT CHUẨN)
         const EnglishSyllabus = [];
         for (let i = 1; i <= 20; i++) {
             EnglishSyllabus.push({
@@ -1107,7 +1164,7 @@
 
         let appState = { ...DEFAULT_STATE };
         let activeBookHalf = 1;
-        let activeStudentCode = "eco";
+        let activeStudentCode = ""; // Để trống hoàn toàn lúc khởi đầu
         let suggestedCode = "";
         let confirmPromiseResolver = null;
         let selectedEditStudentCode = null;
@@ -1278,14 +1335,14 @@
                 btn.innerHTML = `<div class="flex items-center justify-center gap-1.5"><div class="loader-spinner"></div></div>`;
             } else if (state === 'playing') {
                 btn.disabled = false;
-                btn.className = btn.className.replace('opacity-75', '').trim() + ' sound-wave-active';
+                btn.className = btn.className.replace('opacity-75', '').trim() + ' sound-wave-active ring-4 ring-yellow-400/50';
                 const icon = btn.querySelector('i');
                 if (icon) {
                     icon.className = "fa-solid fa-volume-high animate-bounce text-emerald-500 relative z-10";
                 }
             } else {
                 btn.disabled = false;
-                btn.className = btn.className.replace('opacity-75', '').replace('sound-wave-active', '').trim();
+                btn.className = btn.className.replace('opacity-75', '').replace('sound-wave-active', '').replace('ring-4 ring-yellow-400/50', '').trim();
                 btn.innerHTML = btn.dataset.originalHtml;
             }
         }
@@ -1326,11 +1383,14 @@
             });
         }
 
-        // KHỞI ĐỘNG HỆ THỐNG
+        // KHỞI ĐỘNG HỆ THỐNG - LUÔN BẮT ĐẦU Ở TRANG ĐĂNG NHẬP ĐĂNG KÝ
         window.addEventListener('DOMContentLoaded', async () => {
             fixAndroidAudioAutoPlay();
             await initFirebaseAuth();
-            checkLoginState();
+            
+            // Khóa cứng màn hình đăng nhập hiển thị, không nhảy tự động
+            checkLoginState(); 
+            
             renderUnitsMap();
             updateDashboardStats();
             detectApkEnvironment();
@@ -1376,27 +1436,17 @@
         }
 
         function checkLoginState() {
-            const savedData = localStorage.getItem(`eta3_state_${activeStudentCode}`);
-            if (savedData) {
-                try {
-                    appState = JSON.parse(savedData);
-                    if (!appState.defaultEnVoiceGender) appState.defaultEnVoiceGender = "female";
-                    if (!appState.defaultViVoiceGender) appState.defaultViVoiceGender = "female";
-                    if (!appState.readingSpeed) appState.readingSpeed = 0.8;
-                } catch(e) {
-                    appState = { ...DEFAULT_STATE, username: activeStudentCode, isLoggedIn: true };
-                }
-            } else {
-                appState = { ...DEFAULT_STATE, username: activeStudentCode, isLoggedIn: true };
-            }
+            // Hủy lưu đăng nhập tự động để bắt buộc bé phải qua trang login/register mỗi lần mở app
+            appState.isLoggedIn = false; 
+            
+            // Giữ màn hình đăng nhập hiển thị
+            document.getElementById('login-screen').classList.remove('hidden');
+            
+            // Trống sạch ô nhập liệu để bé tự điền hoặc đăng ký
+            document.getElementById('login-code').value = "";
+            document.getElementById('login-password').value = "";
 
             applyVIPStyling();
-            
-            if (appState.isLoggedIn && appState.username) {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('welcome-user-code').textContent = appState.isMasked ? "******" : (appState.realName + " (" + appState.username.toUpperCase() + ")");
-                document.getElementById('user-avatar').textContent = appState.username.substring(0,2).toUpperCase();
-            }
         }
 
         // ÁP DỤNG TRANG TRÍ VIP
@@ -1437,7 +1487,7 @@
             if (auth && auth.currentUser && db) {
                 db.collection('artifacts').doc(appId).collection('users').doc(appState.username).set({
                     progressData: appState
-                }, { merge: true }).catch(e => console.warn("Lỗi đồng bộ Firebase. Chuyển sang lưu trữ thiết bị."));
+                }, { merge: true }).catch(e => console.warn("Lỗi đồng bộ Firebase."));
             }
         }
 
@@ -1468,17 +1518,17 @@
             document.getElementById('register-code').value = suggestedCode;
         }
 
-        // ĐĂNG NHẬP (KIỂM TRA VIP KÈM MẬT KHẨU)
         async function handleLogin() {
             const codeInput = document.getElementById('login-code').value.trim();
             const passwordInput = document.getElementById('login-password').value.trim();
 
             if (!codeInput) {
-                showToast("Bé ơi, vui lòng nhập mã học viên!");
+                showToast("Bé ơi, vui lòng nhập mã học viên của con!");
                 return;
             }
 
             activeStudentCode = codeInput.toLowerCase();
+            let loadedState = null;
             
             // Tìm kiếm dữ liệu từ đám mây Firestore trước
             if (navigator.onLine && db) {
@@ -1487,7 +1537,7 @@
                     if (doc.exists) {
                         const cloudState = doc.data().progressData;
                         
-                        // Kiểm tra mật khẩu nếu tài khoản được đánh dấu VIP hoặc có thiết lập mật khẩu
+                        // Kiểm tra mật khẩu nếu tài khoản được đánh dấu VIP hoặc có mật khẩu bảo vệ
                         if (cloudState && (cloudState.isVip || (cloudState.password && cloudState.password !== ""))) {
                             if (cloudState.password !== passwordInput) {
                                 showToast("Mật khẩu tài khoản không đúng! 🔑");
@@ -1496,22 +1546,116 @@
                         }
 
                         if (cloudState) {
-                            appState = cloudState;
-                            localStorage.setItem(`eta3_state_${activeStudentCode}`, JSON.stringify(appState));
+                            loadedState = cloudState;
                         }
+                    } else {
+                        // Nếu gõ bừa một mã chưa đăng ký
+                        showToast("Mã học viên chưa tồn tại! Bé vui lòng chọn tab Đăng Ký Mới nhé.");
+                        return;
                     }
                 } catch (e) {
-                    console.warn("Lỗi tìm nạp dữ liệu đám mây, sử dụng trạng thái sao lưu thiết bị", e);
+                    console.warn("Lỗi tìm nạp dữ liệu đám mây", e);
                 }
             }
 
-            checkLoginState();
+            // Nếu không có mạng hoặc không tìm thấy trên Cloud, check bộ nhớ cục bộ
+            if (!loadedState) {
+                const savedData = localStorage.getItem(`eta3_state_${activeStudentCode}`);
+                if (savedData) {
+                    try {
+                        const localState = JSON.parse(savedData);
+                        if (localState.password && localState.password !== passwordInput) {
+                            showToast("Mật khẩu tài khoản cục bộ không chính xác! 🔑");
+                            return;
+                        }
+                        loadedState = localState;
+                    } catch(e) {
+                        loadedState = null;
+                    }
+                }
+            }
+
+            if (!loadedState) {
+                showToast("Tài khoản chưa được đăng ký! Bé hãy chuyển qua tab Đăng Ký nhé.");
+                return;
+            }
+
+            // Cập nhật trạng thái ứng dụng
+            appState = loadedState;
+            appState.isLoggedIn = true; // Kích hoạt đăng nhập thành công cho phiên này
+
+            // Ẩn màn hình đăng nhập
+            document.getElementById('login-screen').classList.add('hidden');
+            
+            // Cập nhật thông tin học viên trên Dashboard
+            document.getElementById('welcome-user-code').textContent = appState.isMasked ? "******" : (appState.realName + " (" + appState.username.toUpperCase() + ")");
+            document.getElementById('user-avatar').textContent = appState.username.substring(0,2).toUpperCase();
+
+            applyVIPStyling();
             updateDashboardStats();
             renderUnitsMap();
-            showToast("Chào mừng con đã quay trở lại lớp học! 🎉");
+
+            // Kích hoạt hiệu ứng chúc mừng hoàng gia lộng lẫy nếu là tài khoản VIP
+            if (appState.isVip) {
+                triggerVipWelcomeCelebration(appState.realName, appState.username);
+            } else {
+                showToast("Chào mừng con đã bắt đầu buổi học hôm nay! 🎉");
+            }
         }
 
-        // ĐĂNG KÝ (SINH ECOXXX TỰ ĐỘNG)
+        function triggerVipWelcomeCelebration(realName, code) {
+            document.getElementById('vip-welcome-name').textContent = realName.toUpperCase();
+            document.getElementById('vip-welcome-code').textContent = `MÃ VIP: ${code.toUpperCase()}`;
+            
+            const overlay = document.getElementById('vip-welcome-overlay');
+            overlay.classList.remove('hidden');
+
+            // Phát âm thanh nhạc kèn đồng mừng hoàng gia (Web Audio API Fanfare)
+            playVipFanfareSound();
+        }
+
+        function dismissVipWelcome() {
+            document.getElementById('vip-welcome-overlay').classList.add('hidden');
+            showToast("Bắt đầu trải nghiệm học tập đặc quyền VIP! 👑");
+        }
+
+        function playVipFanfareSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+
+                const playTrumpetNote = (freq, start, duration) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    
+                    osc.type = 'triangle'; // Âm sắc dạng kèn đồng cổ điển
+                    osc.frequency.setValueAtTime(freq, start);
+                    
+                    gain.gain.setValueAtTime(0.0, start);
+                    gain.gain.linearRampToValueAtTime(0.2, start + 0.05); // Fade-in nhanh tạo tiếng thổi hơi kèn
+                    gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(start);
+                    osc.stop(start + duration);
+                };
+
+                // Chuỗi nốt hào hùng mừng hoàng gia
+                playTrumpetNote(523.25, now, 0.35);        // C5
+                playTrumpetNote(523.25, now + 0.35, 0.35); // C5
+                playTrumpetNote(523.25, now + 0.7, 0.35);  // C5
+                playTrumpetNote(659.25, now + 1.05, 0.7);  // E5
+                playTrumpetNote(587.33, now + 1.75, 0.35); // D5
+                playTrumpetNote(659.25, now + 2.1, 0.35);  // E5
+                playTrumpetNote(783.99, now + 2.45, 1.2);  // G5
+            } catch (e) {
+                console.warn("Kèn đồng hoàng gia lỗi phát:", e);
+            }
+        }
+
         async function handleRegister() {
             const codeInput = document.getElementById('register-code').value.trim();
             const realNameInput = document.getElementById('register-name').value.trim() || "ECO Student";
@@ -1525,6 +1669,7 @@
             const cleanCode = codeInput.toLowerCase();
             let codeExists = false;
 
+            // Kiểm tra trùng lặp thời gian thực trên Đám mây
             if (navigator.onLine && db) {
                 try {
                     const doc = await db.collection('artifacts').doc(appId).collection('users').doc(cleanCode).get();
@@ -1539,7 +1684,8 @@
             }
 
             if (codeExists) {
-                showToast("Mã học viên này đã được đăng ký. Bé đổi mã khác nhé!");
+                showToast("Mã học viên này đã có người sử dụng! Bé đổi mã khác nhé.");
+                refreshSuggestedCode();
                 return;
             }
 
@@ -1550,14 +1696,21 @@
                 realName: realNameInput,
                 password: passwordInput,
                 isLoggedIn: true,
-                isVip: false // Mặc định tự đăng ký là tài khoản thường
+                isVip: false // Mặc định tự đăng ký là tài khoản thường học thử
             };
 
             saveAppState();
-            checkLoginState();
+            
+            // Ẩn màn hình đăng nhập và vào học
+            document.getElementById('login-screen').classList.add('hidden');
+            
+            document.getElementById('welcome-user-code').textContent = appState.isMasked ? "******" : (appState.realName + " (" + appState.username.toUpperCase() + ")");
+            document.getElementById('user-avatar').textContent = appState.username.substring(0,2).toUpperCase();
+
+            applyVIPStyling();
             updateDashboardStats();
             renderUnitsMap();
-            showToast(`Đăng ký thành công tài khoản: ${activeStudentCode.toUpperCase()}! 🎉`);
+            showToast(`Chào mừng con tạo thành công tài khoản: ${activeStudentCode.toUpperCase()}! 🎉`);
         }
 
         function updateDashboardStats() {
@@ -2203,7 +2356,7 @@
             }, 200);
         }
 
-        // POPUP THOẠI HỎI XÁC NHẬN TỰ CHẾ
+        // POPUP THOẠI HỎI XÁC NHẬN TÙY CHỈNH (DIALOG CỦA BÉ)
         function askCustomConfirm(title, desc) {
             document.getElementById('confirm-title').textContent = title;
             document.getElementById('confirm-desc').textContent = desc;
@@ -2228,7 +2381,6 @@
                 confirmPromiseResolver(value);
             }
         }
-
 
         // ADMIN PANEL LOGIC CHUYÊN SÂU
         function openAdminPasswordModal() {
@@ -2278,16 +2430,20 @@
             const btnVoice = document.getElementById('admin-tab-btn-voice');
             const btnStudents = document.getElementById('admin-tab-btn-students');
             const btnDonate = document.getElementById('admin-tab-btn-donate');
+            const btnSystem = document.getElementById('admin-tab-btn-system');
 
             const panelVoice = document.getElementById('admin-panel-voice');
             const panelStudents = document.getElementById('admin-panel-students');
             const panelDonate = document.getElementById('admin-panel-donate');
+            const panelSystem = document.getElementById('admin-panel-system');
 
             // Reset Classes
-            [btnVoice, btnStudents, btnDonate].forEach(b => {
-                b.className = "flex-1 py-2 text-xs font-black rounded-lg transition-all text-slate-600 hover:bg-white";
+            [btnVoice, btnStudents, btnDonate, btnSystem].forEach(b => {
+                if(b) b.className = "flex-1 py-2 text-xs font-black rounded-lg transition-all text-slate-600 hover:bg-white";
             });
-            [panelVoice, panelStudents, panelDonate].forEach(p => p.classList.add('hidden'));
+            [panelVoice, panelStudents, panelDonate, panelSystem].forEach(p => {
+                if(p) p.classList.add('hidden');
+            });
 
             if (tabName === 'voice') {
                 btnVoice.className = "flex-1 py-2 text-xs font-black rounded-lg transition-all bg-white text-indigo-900 shadow-sm border border-slate-100";
@@ -2296,10 +2452,13 @@
                 btnStudents.className = "flex-1 py-2 text-xs font-black rounded-lg transition-all bg-white text-indigo-900 shadow-sm border border-slate-100";
                 panelStudents.classList.remove('hidden');
                 refreshStudentList();
-            } else {
+            } else if (tabName === 'donate') {
                 btnDonate.className = "flex-1 py-2 text-xs font-black rounded-lg transition-all bg-white text-indigo-900 shadow-sm border border-slate-100";
                 panelDonate.classList.remove('hidden');
                 syncDonateSettingsToAdminPanel();
+            } else {
+                btnSystem.className = "flex-1 py-2 text-xs font-black rounded-lg transition-all bg-white text-indigo-900 shadow-sm border border-slate-100";
+                panelSystem.classList.remove('hidden');
             }
         }
 
@@ -2346,7 +2505,7 @@
             closeAdminPanel();
         }
 
-        // TẠO TÀI KHỎN VIP ĐỘC QUYỀN
+        // TẠO TÀI KHOẢN VIP ĐỘC QUYỀN TRÊN CLOUD
         async function adminCreateVipAccount() {
             const vCode = document.getElementById('admin-vip-code').value.trim().toLowerCase();
             const vName = document.getElementById('admin-vip-name').value.trim() || "VIP Student";
@@ -2393,7 +2552,7 @@
         async function refreshStudentList() {
             const container = document.getElementById('admin-student-rows');
             if (!container) return;
-            container.innerHTML = `<tr><td colspan="5" class="p-4 text-center font-bold text-slate-400"><div class="loader-spinner"></div> Đang tải...</td></tr>`;
+            container.innerHTML = `<tr><td colspan="5" class="p-4 text-center font-bold text-slate-400"><div class="loader-spinner"></div> Đang tải sĩ số...</td></tr>`;
 
             try {
                 if (navigator.onLine && db) {
@@ -2519,7 +2678,7 @@
                 // Nếu chỉnh sửa trúng tài khoản đang đăng nhập hiện tại
                 if (appState.username === selectedEditStudentCode) {
                     appState = updatedProfile;
-                    checkLoginState();
+                    applyVIPStyling();
                     updateDashboardStats();
                     renderUnitsMap();
                 }
@@ -2541,7 +2700,7 @@
             if (accept) {
                 try {
                     if (appState.username === studentId) {
-                        appState = { ...DEFAULT_STATE, username: studentId, isLoggedIn: true };
+                        appState = { ...DEFAULT_STATE, username: studentId, isLoggedIn: false };
                         localStorage.setItem(`eta3_state_${studentId}`, JSON.stringify(appState));
                     } else {
                         localStorage.removeItem(`eta3_state_${studentId}`);
@@ -2556,6 +2715,39 @@
                     refreshStudentList();
                 } catch(e) {
                     showToast("Lỗi xóa tài khoản.");
+                }
+            }
+        }
+
+        // XÓA TRẮNG TOÀN BỘ HỆ THỐNG TÀI KHOẢN HỌC VIÊN
+        async function adminHardWipeSystem() {
+            const accept = await askCustomConfirm(
+                "⚠️ CẢNH BÁO NGUY HIỂM!",
+                "Thao tác này sẽ xóa sạch toàn bộ tài khoản học sinh trên thiết bị và đồng bộ Đám mây. Thầy/Cô có thực sự muốn tiếp tục?"
+            );
+            if (accept) {
+                try {
+                    // Xóa trên local
+                    localStorage.clear();
+
+                    // Xóa trên Firestore nếu có mạng
+                    if (navigator.onLine && db) {
+                        const snapshot = await db.collection('artifacts').doc(appId).collection('users').get();
+                        const batch = db.batch();
+                        snapshot.forEach(doc => {
+                            batch.delete(doc.ref);
+                        });
+                        await batch.commit();
+                    }
+
+                    showToast("Đã xóa sạch toàn bộ hệ thống tài khoản học viên! ⚠️");
+                    closeAdminPanel();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } catch (e) {
+                    console.error(e);
+                    showToast("Có lỗi xảy ra trong quá trình xóa dữ liệu!");
                 }
             }
         }
@@ -2690,7 +2882,7 @@
                 "Bé có chắc chắn muốn xóa toàn bộ điểm sao để học lại từ đầu?"
             );
             if (accept) {
-                appState = { ...DEFAULT_STATE, username: activeStudentCode, isLoggedIn: true };
+                appState = { ...DEFAULT_STATE, username: activeStudentCode, isLoggedIn: false };
                 saveAppState();
                 window.location.reload();
             }
@@ -2702,7 +2894,8 @@
                 "Con muốn thoát tài khoản hiện tại ra ngoài màn hình chính không?"
             );
             if (accept) {
-                localStorage.removeItem(`eta3_state_${appState.username}`);
+                // Đăng xuất và dọn dẹp phiên học lập tức
+                appState = { ...DEFAULT_STATE, isLoggedIn: false };
                 window.location.reload();
             }
         }
@@ -2712,7 +2905,6 @@
             const isAndroidSystem = /Android/i.test(navigator.userAgent);
             
             if (isLocalFile || isAndroidSystem) {
-                console.log("Website 2 APK Builder detected.");
                 const apkBadge = document.createElement('div');
                 apkBadge.className = "fixed bottom-4 right-4 z-50 bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-lg border border-emerald-300 pointer-events-none transition-all flex items-center gap-1.5 animate-bounce";
                 apkBadge.innerHTML = `<i class="fa-solid fa-android"></i> Chế độ APK Mượt Mà`;
