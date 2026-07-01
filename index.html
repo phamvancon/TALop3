@@ -6,7 +6,7 @@
     <title>E-Learning English 3 Success - Học nói & Bài kiểm tra chuẩn lớp 3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Capriola&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&family=Capriola&display=swap" rel="stylesheet">
     
     <!-- Firebase SDK Compat -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -88,134 +88,103 @@
             100% { transform: translateY(-90px) scale(0.8); opacity: 0; }
         }
         .score-reward-anim {
-            animation: score-up 1.8s ease-out forwards;
+            animation: score-up 1.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
         }
 
-        /* Viền Neon VIP lấp lánh */
+        /* VIP Styling */
         .vip-gold-glow {
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
-            border: 3px solid #f59e0b !important;
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.45);
+            border: 4px solid #fbbf24;
+        }
+        @keyframes crown-bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.1); }
         }
         .vip-crown-bounce {
-            animation: crown-float 2s ease-in-out infinite;
+            animation: crown-bounce 2s ease-in-out infinite;
         }
-        @keyframes crown-float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-4px) rotate(8deg); }
-        }
-
-        /* Hiệu ứng lấp lánh vàng Gold cho VIP */
-        @keyframes sparkle-animation {
-            0%, 100% { transform: scale(0.8); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 1; }
+        @keyframes sparkle-anim {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
         .sparkle-gold {
-            animation: sparkle-animation 1.5s ease-in-out infinite;
+            animation: sparkle-anim 1.5s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="h-full font-sans text-slate-800 antialiased flex flex-col bg-amber-50/20 select-none">
+<body class="h-full flex flex-col font-sans text-slate-700 antialiased overflow-x-hidden">
 
-    <div id="login-screen" class="fixed inset-0 z-50 bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 sm:p-8 text-center border-4 border-yellow-300 relative my-auto">
-            <div class="absolute -top-10 -left-10 w-32 h-32 bg-yellow-100 rounded-full opacity-30"></div>
-            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-pink-100 rounded-full opacity-30"></div>
+    <!-- MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÝ BẮT BUỘC -->
+    <div id="login-screen" class="fixed inset-0 z-50 bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-950 flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-2xl border-4 border-indigo-200 text-center relative overflow-hidden transition-all">
+            <!-- Decorative elements -->
+            <div class="absolute -right-12 -top-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-xl"></div>
+            <div class="absolute -left-12 -bottom-12 w-32 h-32 bg-pink-500/10 rounded-full blur-xl"></div>
             
-            <div class="relative z-10">
-                <div class="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-yellow-400 to-orange-500 text-white shadow-xl mb-4 transform hover:scale-110 transition-transform">
-                    <i class="fa-solid fa-face-laugh-beam text-3xl animate-bounce"></i>
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-gradient-to-tr from-indigo-500 to-pink-500 text-white rounded-2xl flex items-center justify-center shadow-lg text-2xl mb-4 animate-bounce">
+                    🚀
                 </div>
-                
-                <h1 class="text-2xl font-black font-kids text-indigo-900 leading-tight">ENGLISH 3</h1>
-                <p class="text-pink-500 font-black tracking-widest text-xs uppercase mt-0.5">SUCCESS ACADEMY</p>
-                
-                <!-- Tab điều hướng Đăng nhập / Đăng ký -->
-                <div class="flex rounded-2xl bg-slate-100 p-1 my-5">
-                    <button id="tab-auth-login" onclick="switchAuthTab('login')" class="flex-1 py-2.5 text-xs font-black font-kids rounded-xl transition-all bg-white text-indigo-900 shadow-sm">
-                        🔑 Đăng Nhập
-                    </button>
-                    <button id="tab-auth-register" onclick="switchAuthTab('register')" class="flex-1 py-2.5 text-xs font-black font-kids rounded-xl transition-all text-slate-500 hover:text-indigo-950">
-                        ✨ Đăng Ký Mới
-                    </button>
+                <h2 class="text-xl sm:text-2xl font-black font-kids text-indigo-950 leading-tight">Vào Lớp Học Tiếng Anh</h2>
+                <p class="text-xs font-bold text-slate-500 mt-1">Học nói và làm bài kiểm tra chuẩn Bộ GD&ĐT</p>
+            </div>
+
+            <!-- Tab điều hướng Đăng nhập / Đăng ký -->
+            <div class="flex rounded-2xl bg-slate-100 p-1 my-5">
+                <button id="tab-auth-login" onclick="switchAuthTab('login')" class="flex-1 py-2.5 text-xs font-black font-kids rounded-xl transition-all bg-white text-indigo-900 shadow-sm">
+                    🔑 Đăng Nhập
+                </button>
+                <button id="tab-auth-register" onclick="switchAuthTab('register')" class="flex-1 py-2.5 text-xs font-black font-kids rounded-xl transition-all text-slate-500 hover:text-indigo-950">
+                    ✨ Đăng Ký Mới
+                </button>
+            </div>
+
+            <!-- PANEL ĐĂNG NHẬP -->
+            <div id="auth-panel-login" class="space-y-4">
+                <div class="space-y-2">
+                    <label class="block text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Mã học viên</label>
+                    <input type="text" id="login-code" placeholder="Nhập mã học viên của con..." class="w-full px-4 py-3 border-2 border-indigo-100 rounded-2xl text-center font-bold text-sm uppercase tracking-wider text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
                 </div>
-
-                <!-- FORM ĐĂNG NHẬP (TRỐNG HOÀN TOÀN, BẮT BUỘC NHẬP) -->
-                <div id="auth-panel-login" class="space-y-4 text-left">
-                    <div>
-                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mã học viên lớp 3</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-400">
-                                <i class="fa-solid fa-user-astronaut"></i>
-                            </div>
-                            <input type="text" id="login-code" placeholder="Nhập mã học viên của con..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
-                        </div>
-                    </div>
-
-                    <div id="login-password-container">
-                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mật khẩu (Nhập mật khẩu của con nếu là tài khoản VIP)</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-400">
-                                <i class="fa-solid fa-lock"></i>
-                            </div>
-                            <input type="password" id="login-password" placeholder="Bỏ trống nếu là tài khoản thường không cài mật khẩu..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
-                        </div>
-                    </div>
-                    
-                    <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black font-kids tracking-wide py-3 px-6 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-emerald-700">
-                        Bắt đầu học ngay! 🚀
-                    </button>
+                <div class="space-y-2">
+                    <label class="block text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Mật khẩu (nếu có)</label>
+                    <input type="password" id="login-password" placeholder="Mật khẩu tài khoản (nếu có)..." class="w-full px-4 py-3 border-2 border-indigo-100 rounded-2xl text-center font-bold text-sm text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
                 </div>
+                <button onclick="handleLogin()" class="w-full mt-2 py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 text-white font-black font-kids text-sm rounded-2xl shadow-lg border-b-4 border-indigo-700 active:scale-95 transition-all cursor-pointer">
+                    Bắt đầu học ngay! 🚀
+                </button>
+            </div>
 
-                <!-- FORM ĐĂNG KÝ (SINH ECOXXX NGẪU HỨNG VÀ DUY NHẤT) -->
-                <div id="auth-panel-register" class="space-y-4 text-left hidden">
-                    <div>
-                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mã học viên ngẫu hứng dạng ECOxxx</label>
-                        <div class="flex gap-2">
-                            <div class="relative flex-1">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-pink-400">
-                                    <i class="fa-solid fa-sparkles"></i>
-                                </div>
-                                <input type="text" id="register-code" readonly class="block w-full pl-9 pr-3 py-2.5 bg-slate-50 border-2 border-pink-100 rounded-2xl text-pink-600 font-black uppercase tracking-wider focus:outline-none shadow-sm">
-                            </div>
-                            
-                            <button onclick="refreshSuggestedCode()" class="px-3 bg-pink-50 hover:bg-pink-100 border-2 border-pink-100 rounded-2xl text-pink-500 font-extrabold text-xs transition-all flex items-center gap-1 active:scale-95 shadow-sm" title="Đổi mã ngẫu hứng khác">
-                                <i class="fa-solid fa-arrows-rotate"></i> Đổi mã
-                            </button>
-                        </div>
+            <!-- PANEL ĐĂNG KÝ -->
+            <div id="auth-panel-register" class="space-y-4 hidden">
+                <div class="space-y-2">
+                    <label class="block text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Mã học viên gợi ý</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="register-code" placeholder="ECOxxx" class="flex-1 px-4 py-3 border-2 border-indigo-100 rounded-2xl text-center font-bold text-sm uppercase tracking-wider text-indigo-900 bg-indigo-50/50" readonly>
+                        <button onclick="refreshSuggestedCode()" class="px-4 py-3 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-extrabold text-xs rounded-2xl transition-all border border-indigo-200 whitespace-nowrap">
+                            🔄 Mã khác
+                        </button>
                     </div>
-
-                    <div>
-                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Họ tên của học viên lớp 3</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-400">
-                                <i class="fa-solid fa-signature"></i>
-                            </div>
-                            <input type="text" id="register-name" placeholder="Ví dụ: Minh Anh, Khánh Vy..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-[10px] font-black text-indigo-950 uppercase tracking-wider mb-1">Mật khẩu bảo vệ tài khoản</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-indigo-400">
-                                <i class="fa-solid fa-key"></i>
-                            </div>
-                            <input type="password" id="register-password" placeholder="Tự đặt mật khẩu dễ nhớ để đăng nhập lần sau..." class="block w-full pl-9 pr-3 py-2.5 border-2 border-indigo-100 rounded-2xl text-slate-700 font-extrabold focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-sm">
-                        </div>
-                    </div>
-                    
-                    <button onclick="handleRegister()" class="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-black font-kids tracking-wide py-3 px-6 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-pink-700">
-                        Tạo Tài Khoản & Học Ngay 🎉
-                    </button>
                 </div>
+                <div class="space-y-2">
+                    <label class="block text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Họ và tên của con</label>
+                    <input type="text" id="register-name" placeholder="Ví dụ: Nguyễn Minh Thư..." class="w-full px-4 py-3 border-2 border-indigo-100 rounded-2xl text-center font-bold text-sm text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Tạo mật khẩu đăng ký</label>
+                    <input type="password" id="register-password" placeholder="Tự tạo mật khẩu bảo vệ..." class="w-full px-4 py-3 border-2 border-indigo-100 rounded-2xl text-center font-bold text-sm text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                </div>
+                <button onclick="handleRegister()" class="w-full mt-2 py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 text-white font-black font-kids text-sm rounded-2xl shadow-lg border-b-4 border-emerald-700 active:scale-95 transition-all cursor-pointer">
+                    Tạo Tài Khoản & Học Ngay 🎉
+                </button>
             </div>
         </div>
     </div>
 
-    <div id="vip-welcome-overlay" class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md hidden flex flex-col items-center justify-center text-center p-6">
+    <!-- OVERLAY HOÀNG GIA CHÀO MỪNG VIP ĐỘC QUYỀN -->
+    <div id="vip-welcome-overlay" class="fixed inset-0 z-[100] bg-slate-950/98 flex flex-col items-center justify-center text-center p-6 hidden">
         <div class="relative max-w-sm w-full p-8 rounded-3xl border-4 border-yellow-400 bg-gradient-to-b from-slate-900 to-indigo-950 text-white shadow-2xl overflow-hidden">
             <div class="absolute -inset-10 bg-yellow-400/10 blur-3xl rounded-full"></div>
-            <!-- Mưa sao lấp lánh dạng emoji -->
+            <!-- Mưa sao lấp lánh -->
             <div class="absolute top-4 left-6 text-xl sparkle-gold">⭐</div>
             <div class="absolute top-12 right-8 text-2xl sparkle-gold">✨</div>
             <div class="absolute bottom-8 left-12 text-lg sparkle-gold">🌟</div>
@@ -236,7 +205,7 @@
                 <div class="flex items-center gap-2"><i class="fa-solid fa-check text-yellow-400"></i> Nhận x2 điểm thưởng XP vàng</div>
             </div>
 
-            <button onclick="dismissVipWelcome()" class="mt-6 w-full py-3.5 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-slate-950 font-black font-kids text-sm rounded-xl shadow-lg border-b-4 border-amber-600 active:scale-95 transition-all">
+            <button onclick="dismissVipWelcome(event)" ontouchstart="dismissVipWelcome(event)" class="mt-6 w-full py-3.5 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-500 hover:to-amber-500 text-slate-950 font-black font-kids text-sm rounded-xl shadow-lg border-b-4 border-amber-600 active:scale-95 transition-all cursor-pointer">
                 Vào Lớp Học Hoàng Gia 🚀
             </button>
         </div>
@@ -442,7 +411,7 @@
                         <!-- TRỢ LÝ GIỌNG NÓI (CHỈ MỞ KHÓA CHO TÀI KHOẢN VIP) -->
                         <div class="bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6 space-y-4 relative overflow-hidden" id="ai-assistant-widget">
                             <!-- Overlay chặn tài khoản thường -->
-                            <div id="ai-assistant-locked" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20 transition-all rounded-3xl hidden">
+                            <div id="ai-assistant-locked" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20 transition-all rounded-3xl">
                                 <div class="w-12 h-12 rounded-full bg-yellow-500 text-white flex items-center justify-center text-xl shadow-lg mb-2">
                                     <i class="fa-solid fa-crown vip-crown-bounce"></i>
                                 </div>
@@ -555,6 +524,7 @@
         </main>
     </div>
 
+    <!-- MODAL KHÔNG GIAN BÀI HỌC -->
     <div id="study-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[92vh] md:max-h-[95vh] transform transition-all duration-300 scale-95 opacity-0" id="study-modal-container">
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
@@ -1002,12 +972,10 @@
     <script>
         // Hàm Toast hiển thị sớm nhất
         function showToast(text) {
-            // Check if there is an existing toast box
             let toast = document.getElementById('toast-message');
             let toastText = document.getElementById('toast-text');
             
             if (!toast) {
-                // Tạo động hộp Toast nếu chưa tồn tại trong HTML
                 const tb = document.createElement('div');
                 tb.id = "toast-message";
                 tb.className = "fixed bottom-5 left-1/2 transform -translate-x-1/2 z-[500] bg-slate-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-xl transition-all duration-300 opacity-0 pointer-events-none border border-slate-700/50 flex items-center gap-2.5 text-xs font-bold";
@@ -1026,7 +994,6 @@
             }
         }
 
-        // Haptic Feedback rung xúc giác trên điện thoại
         function triggerHapticFeedback() {
             if (navigator.vibrate) {
                 navigator.vibrate(45);
@@ -1077,8 +1044,6 @@
         }
 
         const viettelDefaultToken = "395f6b744a34ff3eb6e042656cde6ffe";
-
-        // BỘ NHỚ ĐỆM TIẾNG VIỆT (PREFETCH AUDIO CACHE)
         let viettelAudioCache = {}; 
 
         const EnglishSyllabus = [];
@@ -1164,7 +1129,7 @@
 
         let appState = { ...DEFAULT_STATE };
         let activeBookHalf = 1;
-        let activeStudentCode = ""; // Để trống hoàn toàn lúc khởi đầu
+        let activeStudentCode = ""; 
         let suggestedCode = "";
         let confirmPromiseResolver = null;
         let selectedEditStudentCode = null;
@@ -1383,12 +1348,11 @@
             });
         }
 
-        // KHỞI ĐỘNG HỆ THỐNG - LUÔN BẮT ĐẦU Ở TRANG ĐĂNG NHẬP ĐĂNG KÝ
         window.addEventListener('DOMContentLoaded', async () => {
             fixAndroidAudioAutoPlay();
             await initFirebaseAuth();
             
-            // Khóa cứng màn hình đăng nhập hiển thị, không nhảy tự động
+            // Luôn luôn khởi đầu ở màn hình đăng nhập, không tự động chuyển tiếp
             checkLoginState(); 
             
             renderUnitsMap();
@@ -1436,20 +1400,14 @@
         }
 
         function checkLoginState() {
-            // Hủy lưu đăng nhập tự động để bắt buộc bé phải qua trang login/register mỗi lần mở app
             appState.isLoggedIn = false; 
-            
-            // Giữ màn hình đăng nhập hiển thị
             document.getElementById('login-screen').classList.remove('hidden');
-            
-            // Trống sạch ô nhập liệu để bé tự điền hoặc đăng ký
             document.getElementById('login-code').value = "";
             document.getElementById('login-password').value = "";
 
             applyVIPStyling();
         }
 
-        // ÁP DỤNG TRANG TRÍ VIP
         function applyVIPStyling() {
             const welcomeBanner = document.getElementById('user-welcome-banner');
             const vipCrown = document.getElementById('vip-indicator-crown');
@@ -1460,12 +1418,12 @@
                 welcomeBanner.classList.add('vip-gold-glow');
                 vipCrown.classList.remove('hidden');
                 vipBadge.classList.remove('hidden');
-                if (aiLocked) aiLocked.classList.add('hidden'); // Mở khóa Trợ lý AI cho VIP
+                if (aiLocked) aiLocked.classList.add('hidden'); 
             } else {
                 welcomeBanner.classList.remove('vip-gold-glow');
                 vipCrown.classList.add('hidden');
                 vipBadge.classList.add('hidden');
-                if (aiLocked) aiLocked.classList.remove('hidden'); // Khóa Trợ lý AI cho người thường
+                if (aiLocked) aiLocked.classList.remove('hidden'); 
             }
         }
 
@@ -1530,14 +1488,12 @@
             activeStudentCode = codeInput.toLowerCase();
             let loadedState = null;
             
-            // Tìm kiếm dữ liệu từ đám mây Firestore trước
             if (navigator.onLine && db) {
                 try {
                     const doc = await db.collection('artifacts').doc(appId).collection('users').doc(activeStudentCode).get();
                     if (doc.exists) {
                         const cloudState = doc.data().progressData;
                         
-                        // Kiểm tra mật khẩu nếu tài khoản được đánh dấu VIP hoặc có mật khẩu bảo vệ
                         if (cloudState && (cloudState.isVip || (cloudState.password && cloudState.password !== ""))) {
                             if (cloudState.password !== passwordInput) {
                                 showToast("Mật khẩu tài khoản không đúng! 🔑");
@@ -1549,7 +1505,6 @@
                             loadedState = cloudState;
                         }
                     } else {
-                        // Nếu gõ bừa một mã chưa đăng ký
                         showToast("Mã học viên chưa tồn tại! Bé vui lòng chọn tab Đăng Ký Mới nhé.");
                         return;
                     }
@@ -1558,7 +1513,6 @@
                 }
             }
 
-            // Nếu không có mạng hoặc không tìm thấy trên Cloud, check bộ nhớ cục bộ
             if (!loadedState) {
                 const savedData = localStorage.getItem(`eta3_state_${activeStudentCode}`);
                 if (savedData) {
@@ -1580,14 +1534,11 @@
                 return;
             }
 
-            // Cập nhật trạng thái ứng dụng
             appState = loadedState;
-            appState.isLoggedIn = true; // Kích hoạt đăng nhập thành công cho phiên này
+            appState.isLoggedIn = true; 
 
-            // Ẩn màn hình đăng nhập
             document.getElementById('login-screen').classList.add('hidden');
             
-            // Cập nhật thông tin học viên trên Dashboard
             document.getElementById('welcome-user-code').textContent = appState.isMasked ? "******" : (appState.realName + " (" + appState.username.toUpperCase() + ")");
             document.getElementById('user-avatar').textContent = appState.username.substring(0,2).toUpperCase();
 
@@ -1595,7 +1546,6 @@
             updateDashboardStats();
             renderUnitsMap();
 
-            // Kích hoạt hiệu ứng chúc mừng hoàng gia lộng lẫy nếu là tài khoản VIP
             if (appState.isVip) {
                 triggerVipWelcomeCelebration(appState.realName, appState.username);
             } else {
@@ -1603,20 +1553,52 @@
             }
         }
 
-        function triggerVipWelcomeCelebration(realName, code) {
-            document.getElementById('vip-welcome-name').textContent = realName.toUpperCase();
-            document.getElementById('vip-welcome-code').textContent = `MÃ VIP: ${code.toUpperCase()}`;
-            
-            const overlay = document.getElementById('vip-welcome-overlay');
-            overlay.classList.remove('hidden');
+        let isDismissingVip = false;
+        function dismissVipWelcome(event) {
+            if (event) {
+                event.stopPropagation();
+                if (event.type === 'touchstart') {
+                    event.preventDefault();
+                }
+            }
+            if (isDismissingVip) return;
+            isDismissingVip = true;
 
-            // Phát âm thanh nhạc kèn đồng mừng hoàng gia (Web Audio API Fanfare)
-            playVipFanfareSound();
+            // Xóa bộ hẹn giờ tự động ẩn nếu người dùng nhấp tay trước
+            if (window.vipWelcomeTimeout) {
+                clearTimeout(window.vipWelcomeTimeout);
+                window.vipWelcomeTimeout = null;
+            }
+
+            const overlay = document.getElementById('vip-welcome-overlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+            }
+            showToast("Bắt đầu trải nghiệm học tập đặc quyền VIP! 👑");
+            triggerHapticFeedback();
+            
+            setTimeout(() => {
+                isDismissingVip = false;
+            }, 500);
         }
 
-        function dismissVipWelcome() {
-            document.getElementById('vip-welcome-overlay').classList.add('hidden');
-            showToast("Bắt đầu trải nghiệm học tập đặc quyền VIP! 👑");
+        function triggerVipWelcomeCelebration(realName, code) {
+            const overlay = document.getElementById('vip-welcome-overlay');
+            if (!overlay) return;
+
+            document.getElementById('vip-welcome-name').textContent = realName.toUpperCase();
+            document.getElementById('vip-welcome-code').textContent = `MÃ: ${code.toUpperCase()}`;
+            overlay.classList.remove('hidden');
+
+            playVipFanfareSound();
+
+            // Tự động đóng bảng VIP Hoàng gia sau 2 giây (2000ms) mượt mà
+            if (window.vipWelcomeTimeout) {
+                clearTimeout(window.vipWelcomeTimeout);
+            }
+            window.vipWelcomeTimeout = setTimeout(() => {
+                dismissVipWelcome();
+            }, 2000);
         }
 
         function playVipFanfareSound() {
@@ -1630,11 +1612,11 @@
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     
-                    osc.type = 'triangle'; // Âm sắc dạng kèn đồng cổ điển
+                    osc.type = 'triangle'; 
                     osc.frequency.setValueAtTime(freq, start);
                     
                     gain.gain.setValueAtTime(0.0, start);
-                    gain.gain.linearRampToValueAtTime(0.2, start + 0.05); // Fade-in nhanh tạo tiếng thổi hơi kèn
+                    gain.gain.linearRampToValueAtTime(0.2, start + 0.05); 
                     gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
                     
                     osc.connect(gain);
@@ -1643,14 +1625,13 @@
                     osc.stop(start + duration);
                 };
 
-                // Chuỗi nốt hào hùng mừng hoàng gia
-                playTrumpetNote(523.25, now, 0.35);        // C5
-                playTrumpetNote(523.25, now + 0.35, 0.35); // C5
-                playTrumpetNote(523.25, now + 0.7, 0.35);  // C5
-                playTrumpetNote(659.25, now + 1.05, 0.7);  // E5
-                playTrumpetNote(587.33, now + 1.75, 0.35); // D5
-                playTrumpetNote(659.25, now + 2.1, 0.35);  // E5
-                playTrumpetNote(783.99, now + 2.45, 1.2);  // G5
+                playTrumpetNote(523.25, now, 0.35);        
+                playTrumpetNote(523.25, now + 0.35, 0.35); 
+                playTrumpetNote(523.25, now + 0.7, 0.35);  
+                playTrumpetNote(659.25, now + 1.05, 0.7);  
+                playTrumpetNote(587.33, now + 1.75, 0.35); 
+                playTrumpetNote(659.25, now + 2.1, 0.35);  
+                playTrumpetNote(783.99, now + 2.45, 1.2);  
             } catch (e) {
                 console.warn("Kèn đồng hoàng gia lỗi phát:", e);
             }
@@ -1669,7 +1650,6 @@
             const cleanCode = codeInput.toLowerCase();
             let codeExists = false;
 
-            // Kiểm tra trùng lặp thời gian thực trên Đám mây
             if (navigator.onLine && db) {
                 try {
                     const doc = await db.collection('artifacts').doc(appId).collection('users').doc(cleanCode).get();
@@ -1696,12 +1676,11 @@
                 realName: realNameInput,
                 password: passwordInput,
                 isLoggedIn: true,
-                isVip: false // Mặc định tự đăng ký là tài khoản thường học thử
+                isVip: false 
             };
 
             saveAppState();
             
-            // Ẩn màn hình đăng nhập và vào học
             document.getElementById('login-screen').classList.add('hidden');
             
             document.getElementById('welcome-user-code').textContent = appState.isMasked ? "******" : (appState.realName + " (" + appState.username.toUpperCase() + ")");
@@ -1730,7 +1709,6 @@
             if (appState.completedLessons && appState.completedLessons.length >= 1) document.getElementById('badge-quiz').classList.remove('opacity-40');
         }
 
-        // TẠO BẢN ĐỒ UNIT (KHÓA UNIT CHUYÊN SÂU NẾU LÀ TÀI KHOẢN THƯỜNG)
         function renderUnitsMap() {
             const container = document.getElementById('units-list-container');
             if (!container) return;
@@ -1739,7 +1717,7 @@
             const items = EnglishSyllabus.filter(u => u.bookHalf === activeBookHalf);
             items.forEach(unit => {
                 let lessonsHtml = "";
-                const isUnitLocked = !appState.isVip && unit.unitNumber > 5; // Tài khoản thường chỉ học được Unit 1 - 5
+                const isUnitLocked = !appState.isVip && unit.unitNumber > 5; 
 
                 for (let l = 1; l <= 3; l++) {
                     const lessonKey = `${unit.id}-L${l}`;
@@ -1968,7 +1946,7 @@
 
         function markCardStatus(isGood) {
             const word = deckWords[deckPointer].word;
-            let xpReward = appState.isVip ? 10 : 5; // VIP được x2 XP
+            let xpReward = appState.isVip ? 10 : 5; 
 
             if (isGood) {
                 if (!appState.masteredWords.includes(word)) appState.masteredWords.push(word);
@@ -1981,7 +1959,7 @@
 
         function completeLessonSuccess() {
             const lessonKey = `${currentUnit.id}-L` + currentLessonType;
-            let completionReward = appState.isVip ? 40 : 20; // VIP nhân đôi điểm hoàn thành
+            let completionReward = appState.isVip ? 40 : 20; 
 
             if (!appState.completedLessons.includes(lessonKey)) {
                 appState.completedLessons.push(lessonKey);
@@ -2106,7 +2084,7 @@
                 document.getElementById('star-1').className = "fa-solid fa-star text-yellow-400 scale-120 transition-all";
                 document.getElementById('star-2').className = "fa-solid fa-star text-yellow-400 scale-120 transition-all duration-500";
                 
-                let bonusXp = appState.isVip ? 20 : 10; // VIP nhân đôi điểm phát âm chuẩn
+                let bonusXp = appState.isVip ? 20 : 10; 
 
                 if (score >= 85) {
                     document.getElementById('star-3').className = "fa-solid fa-star text-yellow-400 scale-120 transition-all duration-700";
@@ -2275,7 +2253,7 @@
             const desc = document.getElementById('quiz-feedback-desc');
             
             box.classList.remove('hidden');
-            let rewardPoints = appState.isVip ? 20 : 10; // VIP nhân đôi điểm trắc nghiệm
+            let rewardPoints = appState.isVip ? 20 : 10; 
 
             if (ans === q.correct) {
                 quizScore++;
@@ -2323,7 +2301,7 @@
         }
 
         function triggerCelebrationLayout(score, total, msg) {
-            let bonusAmount = score * (appState.isVip ? 30 : 15); // Nhân đôi điểm khi nhận cúp hoàn thành
+            let bonusAmount = score * (appState.isVip ? 30 : 15); 
             document.getElementById('celebration-desc').textContent = msg;
             document.getElementById('celebration-xp-score').textContent = `+${bonusAmount} XP ⭐`;
             document.getElementById('celebration-overlay').classList.remove('hidden');
@@ -2356,7 +2334,6 @@
             }, 200);
         }
 
-        // POPUP THOẠI HỎI XÁC NHẬN TÙY CHỈNH (DIALOG CỦA BÉ)
         function askCustomConfirm(title, desc) {
             document.getElementById('confirm-title').textContent = title;
             document.getElementById('confirm-desc').textContent = desc;
@@ -2382,7 +2359,6 @@
             }
         }
 
-        // ADMIN PANEL LOGIC CHUYÊN SÂU
         function openAdminPasswordModal() {
             document.getElementById('admin-password-input').value = "";
             document.getElementById('admin-pass-error').classList.add('hidden');
@@ -2437,7 +2413,6 @@
             const panelDonate = document.getElementById('admin-panel-donate');
             const panelSystem = document.getElementById('admin-panel-system');
 
-            // Reset Classes
             [btnVoice, btnStudents, btnDonate, btnSystem].forEach(b => {
                 if(b) b.className = "flex-1 py-2 text-xs font-black rounded-lg transition-all text-slate-600 hover:bg-white";
             });
@@ -2505,7 +2480,6 @@
             closeAdminPanel();
         }
 
-        // TẠO TÀI KHOẢN VIP ĐỘC QUYỀN TRÊN CLOUD
         async function adminCreateVipAccount() {
             const vCode = document.getElementById('admin-vip-code').value.trim().toLowerCase();
             const vName = document.getElementById('admin-vip-name').value.trim() || "VIP Student";
@@ -2522,7 +2496,7 @@
                 realName: vName,
                 password: vPass,
                 isVip: true,
-                points: 200 // Khởi tạo 200 XP mặc định cho tài khoản VIP
+                points: 200 
             };
 
             try {
@@ -2534,7 +2508,6 @@
                 localStorage.setItem(`eta3_state_${vCode}`, JSON.stringify(vipState));
                 showToast(`Khởi tạo tài khoản VIP ${vCode.toUpperCase()} thành công! 👑`);
                 
-                // Reset form
                 document.getElementById('admin-vip-code').value = "";
                 document.getElementById('admin-vip-name').value = "";
                 document.getElementById('admin-vip-pass').value = "";
@@ -2546,7 +2519,6 @@
             }
         }
 
-        // QUẢN LÝ DANH SÁCH SĨ SỐ, TÌM KIẾM HỌC SINH
         let allStudentsCache = [];
 
         async function refreshStudentList() {
@@ -2625,7 +2597,6 @@
             });
         }
 
-        // MỞ KHUNG CHỈNH SỬA THÔNG TIN CHI TIẾT
         function openEditStudentBox(code) {
             const student = allStudentsCache.find(s => s.username === code);
             if (!student) return;
@@ -2645,7 +2616,6 @@
             selectedEditStudentCode = null;
         }
 
-        // LƯU CHỈNH SỬA TỪ ADMIN
         async function adminSaveSingleStudentEdit() {
             if (!selectedEditStudentCode) return;
 
@@ -2654,7 +2624,6 @@
             const points = parseInt(document.getElementById('edit-student-points').value) || 0;
             const isVip = document.getElementById('edit-student-vip').value === "true";
 
-            // Lấy profile hiện tại để tránh mất completedLessons
             let currentProfile = allStudentsCache.find(s => s.username === selectedEditStudentCode);
             if (!currentProfile) return;
 
@@ -2675,7 +2644,6 @@
                 
                 localStorage.setItem(`eta3_state_${selectedEditStudentCode}`, JSON.stringify(updatedProfile));
                 
-                // Nếu chỉnh sửa trúng tài khoản đang đăng nhập hiện tại
                 if (appState.username === selectedEditStudentCode) {
                     appState = updatedProfile;
                     applyVIPStyling();
@@ -2719,7 +2687,6 @@
             }
         }
 
-        // XÓA TRẮNG TOÀN BỘ HỆ THỐNG TÀI KHOẢN HỌC VIÊN
         async function adminHardWipeSystem() {
             const accept = await askCustomConfirm(
                 "⚠️ CẢNH BÁO NGUY HIỂM!",
@@ -2727,10 +2694,8 @@
             );
             if (accept) {
                 try {
-                    // Xóa trên local
                     localStorage.clear();
 
-                    // Xóa trên Firestore nếu có mạng
                     if (navigator.onLine && db) {
                         const snapshot = await db.collection('artifacts').doc(appId).collection('users').get();
                         const batch = db.batch();
@@ -2801,7 +2766,6 @@
                 localStorage.setItem('cfg_donate_qr_base64', tempBase64QrImage);
             }
 
-            // Đồng bộ lên Cloud Firestore để học sinh nhận cấu hình Donate thời gian thực
             if (navigator.onLine && db) {
                 db.collection('artifacts').doc(appId).collection('config').doc('donate_settings').set({
                     active: active,
@@ -2822,13 +2786,11 @@
             const dDesc = document.getElementById('donate-box-desc');
             const dQr = document.getElementById('donate-box-qr-img');
 
-            // Lấy từ LocalStorage trước
             let active = localStorage.getItem('cfg_donate_active') === "true";
             let title = localStorage.getItem('cfg_donate_title') || "Mua trà sữa cho cô Diễm My";
             let desc = localStorage.getItem('cfg_donate_desc') || "Sự ủng hộ của bạn giúp chúng tôi phát triển.";
             let qr = localStorage.getItem('cfg_donate_qr_base64') || "";
 
-            // Lấy từ Firestore
             if (navigator.onLine && db) {
                 try {
                     const doc = await db.collection('artifacts').doc(appId).collection('config').doc('donate_settings').get();
@@ -2839,7 +2801,6 @@
                         desc = data.desc;
                         qr = data.qrBase64 || "";
 
-                        // Lưu dự phòng cục bộ
                         localStorage.setItem('cfg_donate_active', active);
                         localStorage.setItem('cfg_donate_title', title);
                         localStorage.setItem('cfg_donate_desc', desc);
@@ -2868,12 +2829,26 @@
             }
         }
 
-        // CHUYỂN TAB CHÍNH
         function switchTab(id) {
             document.getElementById('view-dashboard').classList.toggle('hidden', id !== 'dashboard');
             document.getElementById('view-units').classList.toggle('hidden', id !== 'units');
             document.getElementById('btn-tab-dashboard').className = id === 'dashboard' ? "flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-2xl text-sm font-extrabold tracking-wide transition-all bg-indigo-600 text-white shadow-lg" : "flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-2xl text-sm font-extrabold tracking-wide transition-all text-indigo-900 hover:bg-indigo-50";
             document.getElementById('btn-tab-units').className = id === 'units' ? "flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-2xl text-sm font-extrabold tracking-wide transition-all bg-indigo-600 text-white shadow-lg" : "flex-1 md:flex-initial flex items-center justify-center md:justify-start gap-3 px-4 py-3 rounded-2xl text-sm font-extrabold tracking-wide transition-all text-indigo-900 hover:bg-indigo-50";
+        }
+
+        function toggleBookHalf(half) {
+            activeBookHalf = half;
+            const btn1 = document.getElementById('btn-book-1');
+            const btn2 = document.getElementById('btn-book-2');
+
+            if (half === 1) {
+                btn1.className = "flex-1 py-2.5 text-center text-sm font-black font-kids rounded-xl transition-all bg-white text-indigo-900 shadow-sm";
+                btn2.className = "flex-1 py-2.5 text-center text-sm font-black font-kids rounded-xl transition-all text-slate-600 hover:text-indigo-900";
+            } else {
+                btn1.className = "flex-1 py-2.5 text-center text-sm font-black font-kids rounded-xl transition-all text-slate-600 hover:text-indigo-900";
+                btn2.className = "flex-1 py-2.5 text-center text-sm font-black font-kids rounded-xl transition-all bg-white text-indigo-900 shadow-sm";
+            }
+            renderUnitsMap();
         }
 
         async function confirmReset() {
@@ -2894,7 +2869,6 @@
                 "Con muốn thoát tài khoản hiện tại ra ngoài màn hình chính không?"
             );
             if (accept) {
-                // Đăng xuất và dọn dẹp phiên học lập tức
                 appState = { ...DEFAULT_STATE, isLoggedIn: false };
                 window.location.reload();
             }
