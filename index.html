@@ -3372,7 +3372,15 @@
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) throw new Error("Gemini API Error");
+                if (!response.ok) {
+                    if (response.status === 429) {
+                        throw new Error("Gemini API đã hết quota. Vui lòng kiểm tra Billing.");
+                    } else if (response.status === 404) {
+                        throw new Error("Model Gemini không còn được hỗ trợ.");
+                    } else {
+                        throw new Error(`Lỗi kết nối Gemini API (HTTP ${response.status})`);
+                    }
+                }
 
                 const result = await response.json();
                 const replyText = result.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -3380,10 +3388,17 @@
                 if (replyText) {
                     animateClaraMouthTalkingAndSpeak(replyText);
                 } else {
-                    throw new Error("Empty Response");
+                    throw new Error("Không nhận được phản hồi từ AI");
                 }
             } catch (err) {
                 console.warn("Live Call online connection failed, using fallback Clara:", err);
+                
+                // Hiển thị thông báo Toast nhanh cho người dùng
+                showToast(err.message);
+                
+                // Cập nhật phụ đề trên cuộc gọi để người dùng thấy rõ lỗi thật
+                document.getElementById('call-live-translation').textContent = `(${err.message})`;
+                
                 const fallbackReply = getLocalClaraResponse(messageText);
                 animateClaraMouthTalkingAndSpeak(fallbackReply);
             }
@@ -3530,10 +3545,10 @@
                 return;
             }
 
-            // Nâng cấp sử dụng các model thế hệ mới nhanh vượt trội như gemini-2.5-flash
-            const models = ["gemini-2.5-flash", "gemini-1.5-flash"];
+            const models = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
             let replyText = "";
             let apiErrorDetail = "";
+            let specificError = "";
 
             for (const model of models) {
                 try {
@@ -3557,8 +3572,13 @@
                     });
 
                     if (!response.ok) {
+                        if (response.status === 429) {
+                            specificError = "Gemini API đã hết quota. Vui lòng kiểm tra Billing.";
+                        } else if (response.status === 404) {
+                            specificError = "Model Gemini không còn được hỗ trợ.";
+                        }
                         const errorJson = await response.json().catch(() => ({}));
-                        apiErrorDetail = `HTTP ${response.status}: ${errorJson.error?.message || response.statusText}`;
+                        apiErrorDetail = specificError || `HTTP ${response.status}: ${errorJson.error?.message || response.statusText}`;
                         console.warn(`Thử model ${model} thất bại. Chi tiết:`, apiErrorDetail);
                         continue; 
                     }
@@ -3585,10 +3605,17 @@
                 removeChatMessage(loadingId);
                 
                 const fallbackReply = getLocalClaraResponse(messageText);
-                appendChatMessage("Clara", `${fallbackReply} \n\n<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30 font-bold tracking-wide flex items-center gap-1 mt-1"><i class="fa-solid fa-cloud-slash"></i> Đang chạy ở chế độ AI Ngoại tuyến do lỗi kết nối (${apiErrorDetail})</span>`, "text-indigo-200");
+                let displayError = specificError ? specificError : `Đang chạy ở chế độ AI Ngoại tuyến do lỗi kết nối (${apiErrorDetail})`;
+                
+                appendChatMessage("Clara", `${fallbackReply} \n\n<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30 font-bold tracking-wide flex items-center gap-1 mt-1"><i class="fa-solid fa-triangle-exclamation"></i> ${displayError}</span>`, "text-indigo-200");
                 
                 const speakTextOnly = fallbackReply.replace(/\(.*?\)/g, '');
                 VoiceEngine.speakEnglish(speakTextOnly);
+                
+                // Hiển thị một Toast cảnh báo trực quan cho người dùng dễ thấy
+                if (specificError) {
+                    showToast(specificError);
+                }
             }
         }
 
