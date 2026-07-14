@@ -332,7 +332,7 @@
                         <div>
                             <span class="bg-yellow-400 text-indigo-900 text-xs font-black px-3.5 py-1.5 rounded-full uppercase tracking-widest shadow-md inline-flex items-center gap-1.5">
                                 <span id="vip-indicator-crown" class="vip-crown-bounce hidden">👑</span>
-                                Học viên: <span id="welcome-user-code" class="font-extrabold">215151365</span>
+                                Học viên: <span id="welcome-user-code" class="font-extrabold">ECO001</span>
                                 <span id="vip-badge-label" class="hidden text-[9px] bg-indigo-900 text-yellow-400 px-1.5 py-0.5 rounded font-black tracking-wide">VIP</span>
                                 <button onclick="toggleUsernameMask(event)" class="text-indigo-950 hover:text-pink-600 transition-all flex items-center justify-center focus:outline-none ml-1" id="btn-toggle-mask">
                                     <i class="fa-solid fa-eye-slash text-xs"></i>
@@ -794,7 +794,7 @@
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 border-4 border-yellow-400 text-center transform scale-95 transition-all duration-200 opacity-0" id="vip-upgrade-box">
             <div class="text-5xl mb-3">👑</div>
             <h4 class="text-xl font-black font-kids text-indigo-950">Đặc quyền Tài khoản VIP</h4>
-            <p class="text-xs text-slate-500 leading-relaxed mt-2">Bé đang sử dụng tài khoản thường, chỉ được học thử 5 Unit đầu tiên. Hãy liên hệ với Thầy/Cô giáo hoặc đăng nhập bằng mã **215151365** để được mở khóa VIP Hoàng gia nhé!</p>
+            <p class="text-xs text-slate-500 leading-relaxed mt-2">Bé đang sử dụng tài khoản thường, chỉ được học thử 5 Unit đầu tiên. Hãy liên hệ với Thầy/Cô giáo hoặc đăng nhập bằng mã **ECO001** để được mở khóa VIP Hoàng gia nhé!</p>
             <div class="mt-6">
                 <button onclick="closeVipUpgradeModal()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm rounded-2xl shadow-md transition-all">Đã hiểu ạ 🚀</button>
             </div>
@@ -1621,7 +1621,7 @@
         function checkLoginState() {
             appState.isLoggedIn = false; 
             document.getElementById('login-screen').classList.remove('hidden');
-            document.getElementById('login-code').value = "215151365";
+            document.getElementById('login-code').value = "eco001";
             document.getElementById('login-password').value = "123456";
             applyVIPStyling();
         }
@@ -1704,12 +1704,12 @@
 
             activeStudentCode = codeInput.toLowerCase();
 
-            if (activeStudentCode === "215151365") {
-                const hasLocal = localStorage.getItem("eta3_state_215151365");
+            if (activeStudentCode === "eco001") {
+                const hasLocal = localStorage.getItem("eta3_state_eco001");
                 if (!hasLocal) {
                     const prebuiltVip = {
                         ...DEFAULT_STATE,
-                        username: "215151365",
+                        username: "eco001",
                         realName: "Học Viên VIP",
                         password: "123456",
                         isLoggedIn: true,
@@ -1717,10 +1717,10 @@
                         points: 500,
                         completedLessons: ["unit-1-L1", "unit-1-L2", "unit-1-L3"]
                     };
-                    localStorage.setItem("eta3_state_215151365", JSON.stringify(prebuiltVip));
+                    localStorage.setItem("eta3_state_eco001", JSON.stringify(prebuiltVip));
                     
                     if (navigator.onLine && db) {
-                        db.collection('artifacts').doc(appId).collection('users').doc("215151365").set({
+                        db.collection('artifacts').doc(appId).collection('users').doc("eco001").set({
                             progressData: prebuiltVip
                         }, { merge: true }).catch(err => console.warn(err));
                     }
@@ -1745,7 +1745,7 @@
                         if (cloudState) {
                             loadedState = cloudState;
                         }
-                    } else if (activeStudentCode !== "215151365") {
+                    } else if (activeStudentCode !== "eco001") {
                         showToast("Mã học viên chưa tồn tại! Bé vui lòng chọn tab Đăng Ký Mới nhé.");
                         return;
                     }
@@ -2608,8 +2608,8 @@
         }
 
         function submitAdminPassword() {
-            const pass = document.getElementById('admin-password-input').value.trim();
-            if (pass === "215151365") {
+            const pass = document.getElementById('admin-password-input').value.trim().toLowerCase();
+            if (pass === "eco001") {
                 closeAdminPasswordModal();
                 setTimeout(() => openAdminPanel(), 300);
             } else {
