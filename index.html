@@ -110,6 +110,32 @@
         .sparkle-gold {
             animation: sparkle-anim 1.5s ease-in-out infinite;
         }
+
+        /* Hiệu ứng nhịp tim mượt mà cho cuộc gọi AI */
+        @keyframes avatar-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+        }
+        .ai-active-call-pulse {
+            animation: avatar-pulse 2s infinite ease-in-out;
+        }
+        /* Hiệu ứng chớp mắt cho nhân vật AI */
+        @keyframes blink-animation {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+        .clara-eye-blink {
+            animation: blink-animation 4s infinite;
+            transform-origin: center;
+        }
+        /* Hiệu ứng mồm cử động nói của Clara */
+        @keyframes talk-animation {
+            0%, 100% { height: 6px; }
+            50% { height: 18px; }
+        }
+        .clara-mouth-talking {
+            animation: talk-animation 0.18s infinite ease-in-out;
+        }
     </style>
 </head>
 <body class="h-full flex flex-col font-sans text-slate-700 antialiased overflow-x-hidden">
@@ -406,7 +432,7 @@
                             </div>
                         </div>
 
-                        <!-- PHÒNG ĐÀM THOẠI TIẾNG ANH MISS CLARA (GEMINI) -->
+                        <!-- PHÒNG ĐÀM THOẠI TIẾNG ANH MISS CLARA NÂNG CẤP TRỰC TIẾP -->
                         <div class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-indigo-900 rounded-3xl p-6 text-white shadow-xl border-4 border-indigo-400 relative overflow-hidden" id="ai-assistant-widget">
                             <!-- Overlay chặn tài khoản thường -->
                             <div id="ai-assistant-locked" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20 transition-all rounded-3xl">
@@ -417,7 +443,7 @@
                                 <p class="text-xs text-white/95 max-w-xs mt-1">Vui lòng đăng nhập bằng **Tài khoản VIP** để đàm thoại Tiếng Anh trực tiếp với Cô Clara!</p>
                             </div>
 
-                            <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                            <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
                                 <div class="flex items-center gap-3">
                                     <div class="w-12 h-12 rounded-full bg-indigo-500 flex items-center justify-center text-2xl border-2 border-indigo-300">
                                         👩‍🏫
@@ -426,26 +452,100 @@
                                         <h4 class="font-black font-kids text-indigo-100 text-sm flex items-center gap-1.5">
                                             Cô Clara AI <span class="h-2.5 w-2.5 bg-emerald-400 rounded-full animate-ping"></span>
                                         </h4>
-                                        <span class="text-[9px] text-indigo-300 font-bold uppercase tracking-wider">Trợ lý học Tiếng Anh Bản Xứ lớp 3</span>
+                                        <span class="text-[9px] text-indigo-300 font-bold uppercase tracking-wider">Học trực tuyến chuẩn bản xứ lớp 3</span>
                                     </div>
                                 </div>
-                                <span class="text-[9px] bg-amber-500 text-slate-900 px-2.5 py-1 rounded-full font-black uppercase">Đặc quyền VIP</span>
+                                <!-- Bộ lọc chế độ đàm thoại nâng cấp -->
+                                <div class="flex rounded-xl bg-indigo-950/80 p-1 border border-indigo-700/50 w-full sm:w-auto">
+                                    <button onclick="switchClaraMode('chat')" id="btn-clara-mode-chat" class="flex-1 sm:flex-initial text-center px-3.5 py-1.5 text-[10px] font-black font-kids rounded-lg transition-all bg-indigo-600 text-white">
+                                        💬 Trò Chuyện Chữ
+                                    </button>
+                                    <button onclick="switchClaraMode('call')" id="btn-clara-mode-call" class="flex-1 sm:flex-initial text-center px-3.5 py-1.5 text-[10px] font-black font-kids rounded-lg transition-all text-indigo-300 hover:text-white flex items-center justify-center gap-1">
+                                        <span>🔴 Gọi Trực Tiếp AI</span>
+                                    </button>
+                                </div>
                             </div>
 
-                            <!-- Chat Area -->
-                            <div class="my-4 h-36 bg-black/20 rounded-2xl p-3 overflow-y-auto text-xs space-y-2" id="ai-chat-history">
-                                <div class="text-indigo-200"><strong>Clara:</strong> Hello! I am Clara, your English teacher. How are you today? (Xin chào! Cô là Clara, giáo viên tiếng Anh của em. Hôm nay em thế nào?)</div>
+                            <!-- KHUNG CHẾ ĐỘ CHAT CHỮ (TRUYỀN THỐNG) -->
+                            <div id="clara-chat-panel" class="space-y-4">
+                                <!-- Chat Area -->
+                                <div class="my-4 h-36 bg-black/20 rounded-2xl p-3 overflow-y-auto text-xs space-y-2" id="ai-chat-history">
+                                    <div class="text-indigo-200"><strong>Clara:</strong> Hello! I am Clara, your English teacher. How are you today? (Xin chào! Cô là Clara, giáo viên tiếng Anh của em. Hôm nay em thế nào?)</div>
+                                </div>
+
+                                <!-- Input Area -->
+                                <div class="flex items-center gap-2 mt-2">
+                                    <input type="text" id="ai-chat-input" class="flex-1 px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-white/40" placeholder="Gửi tin nhắn hoặc đàm thoại...">
+                                    <button onclick="triggerAiChatMic()" class="w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow transition-all active:scale-95 border border-indigo-400" id="btn-ai-chat-mic">
+                                        <i class="fa-solid fa-microphone text-sm"></i>
+                                    </button>
+                                    <button onclick="sendAiChatMessage()" class="px-4 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-black font-kids text-xs rounded-xl shadow transition-all active:scale-95 flex items-center gap-1">
+                                        Gửi <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                                    </button>
+                                </div>
                             </div>
 
-                            <!-- Input Area -->
-                            <div class="flex items-center gap-2 mt-2">
-                                <input type="text" id="ai-chat-input" class="flex-1 px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-white/40" placeholder="Gửi tin nhắn hoặc đàm thoại...">
-                                <button onclick="triggerAiChatMic()" class="w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow transition-all active:scale-95 border border-indigo-400" id="btn-ai-chat-mic">
-                                    <i class="fa-solid fa-microphone text-sm"></i>
-                                </button>
-                                <button onclick="sendAiChatMessage()" class="px-4 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-black font-kids text-xs rounded-xl shadow transition-all active:scale-95 flex items-center gap-1">
-                                    Gửi <i class="fa-solid fa-paper-plane text-[10px]"></i>
-                                </button>
+                            <!-- KHUNG CHẾ ĐỘ CUỘC GỌI TRỰC TIẾP (LIVE CALL) NÂNG CẤP -->
+                            <div id="clara-call-panel" class="hidden py-6 flex flex-col items-center justify-center text-center relative">
+                                <div class="absolute inset-0 bg-indigo-950/20 rounded-3xl pointer-events-none"></div>
+                                
+                                <!-- Khung hình ảnh động avatar cô Clara SVG -->
+                                <div class="relative mb-4 z-10">
+                                    <div id="clara-avatar-container" class="w-28 h-28 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 border-4 border-indigo-300 flex items-center justify-center shadow-2xl transition-all duration-300">
+                                        <!-- SVG Cô Clara chuyển động mắt/miệng cực nét -->
+                                        <svg class="w-20 h-20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <!-- Mái tóc -->
+                                            <path d="M15 65C15 35 30 15 50 15C70 15 85 35 85 65C85 67 84 75 80 75C75 75 70 55 50 55C30 55 25 75 20 75C16 75 15 67 15 65Z" fill="#4F46E5"/>
+                                            <!-- Khuôn mặt -->
+                                            <circle cx="50" cy="50" r="30" fill="#FEE2E2"/>
+                                            <!-- Cặp mắt chớp động -->
+                                            <g class="clara-eye-blink">
+                                                <circle cx="40" cy="46" r="3.5" fill="#1E1B4B"/>
+                                                <circle cx="60" cy="46" r="3.5" fill="#1E1B4B"/>
+                                                <circle cx="38" cy="44" r="1.5" fill="white"/>
+                                                <circle cx="58" cy="44" r="1.5" fill="white"/>
+                                            </g>
+                                            <!-- Cặp má hồng đào dễ thương -->
+                                            <circle cx="34" cy="54" r="3" fill="#FCA5A5" opacity="0.6"/>
+                                            <circle cx="66" cy="54" r="3" fill="#FCA5A5" opacity="0.6"/>
+                                            <!-- Chiếc mũi xinh -->
+                                            <path d="M49 50C49 50 50 52 51 50" stroke="#F87171" stroke-width="2" stroke-linecap="round"/>
+                                            <!-- Cái miệng nhấp nháy động cơ khi phát âm -->
+                                            <rect id="clara-mouth" x="45" y="58" width="10" height="6" rx="5" fill="#DC2626" class="transition-all duration-75"/>
+                                        </svg>
+                                    </div>
+                                    <!-- Sóng âm Visualizer bao quanh phát sáng -->
+                                    <div id="call-status-glow" class="absolute inset-0 rounded-full border border-indigo-400 opacity-0 transition-all duration-300 scale-100"></div>
+                                </div>
+
+                                <!-- Trạng thái cuộc gọi & Đàm thoại hiện tại -->
+                                <div class="z-10 space-y-1 max-w-sm">
+                                    <div id="call-status-label" class="text-xs font-black font-kids text-indigo-300 uppercase tracking-widest animate-pulse">NHẤP NÚT GỌI ĐỂ BẮT ĐẦU</div>
+                                    <p id="call-live-transcription" class="text-sm font-extrabold text-white leading-relaxed italic min-h-[40px] px-4">"Cô Clara đang đợi con nói chuyện cùng đấy!"</p>
+                                    <p id="call-live-translation" class="text-[11px] text-indigo-200 opacity-80 min-h-[16px]">(Clara is waiting to speak with you!)</p>
+                                </div>
+
+                                <!-- Hệ thống phím chức năng Call Controls -->
+                                <div class="mt-6 flex items-center gap-4 z-10">
+                                    <button id="btn-toggle-clara-call" onclick="toggleClaraLiveCall()" class="px-6 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-black font-kids text-xs rounded-2xl shadow-lg border-b-4 border-emerald-700 active:scale-95 transition-all flex items-center gap-2 cursor-pointer">
+                                        <i class="fa-solid fa-phone text-sm"></i> Bắt đầu gọi Cô
+                                    </button>
+                                    <button id="btn-mute-clara" onclick="toggleMuteClara()" class="w-12 h-12 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl flex items-center justify-center transition-all active:scale-90" title="Tắt tiếng">
+                                        <i id="btn-mute-clara-icon" class="fa-solid fa-microphone text-sm"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Biểu đồ sóng âm thanh Web Audio phản hồi thực tế -->
+                                <div class="w-48 h-8 mt-5 flex items-end justify-center gap-1 opacity-40 transition-opacity" id="call-audio-wave-bars">
+                                    <span class="w-1 bg-indigo-400 rounded-full h-1 transition-all duration-75"></span>
+                                    <span class="w-1 bg-indigo-400 rounded-full h-1 transition-all duration-75"></span>
+                                    <span class="w-1 bg-indigo-400 rounded-full h-1 transition-all duration-75"></span>
+                                    <span class="w-1 bg-indigo-400 rounded-full h-1 transition-all duration-75"></span>
+                                    <span class="w-1 bg-indigo-400 rounded-full h-1 transition-all duration-75"></span>
+                                    <span class="w-1 bg-indigo-400 rounded-full h-1 transition-all duration-75"></span>
+                                    <span class="w-1 bg-indigo-400 rounded-full h-1 transition-all duration-75"></span>
+                                    <span class="w-1 bg-indigo-400 rounded-full h-1 transition-all duration-75"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3022,6 +3122,308 @@
             }
         }
 
+        let claraLiveCallActive = false;
+        let claraCallRecognition = null;
+        let claraCallMuted = false;
+        let claraAudioCtx = null;
+        let claraAnalyser = null;
+        let claraMicrophoneStream = null;
+        let claraVisualizerInterval = null;
+
+        // Chuyển đổi qua lại giữa chế độ Chat Chữ và chế độ Gọi điện trực tuyến (Live Call)
+        function switchClaraMode(mode) {
+            triggerHapticFeedback();
+            const btnChat = document.getElementById('btn-clara-mode-chat');
+            const btnCall = document.getElementById('btn-clara-mode-call');
+            const panelChat = document.getElementById('clara-chat-panel');
+            const panelCall = document.getElementById('clara-call-panel');
+
+            // Ngừng cuộc gọi hoặc nhận dạng giọng nói cũ nếu đang hoạt động
+            if (claraLiveCallActive) {
+                stopClaraLiveCall();
+            }
+
+            if (mode === 'chat') {
+                btnChat.className = "flex-1 sm:flex-initial text-center px-3.5 py-1.5 text-[10px] font-black font-kids rounded-lg transition-all bg-indigo-600 text-white";
+                btnCall.className = "flex-1 sm:flex-initial text-center px-3.5 py-1.5 text-[10px] font-black font-kids rounded-lg transition-all text-indigo-300 hover:text-white flex items-center justify-center gap-1";
+                panelChat.classList.remove('hidden');
+                panelCall.classList.add('hidden');
+            } else {
+                btnChat.className = "flex-1 sm:flex-initial text-center px-3.5 py-1.5 text-[10px] font-black font-kids rounded-lg transition-all text-indigo-300 hover:text-white flex items-center justify-center gap-1";
+                btnCall.className = "flex-1 sm:flex-initial text-center px-3.5 py-1.5 text-[10px] font-black font-kids rounded-lg transition-all bg-indigo-600 text-white";
+                panelChat.classList.add('hidden');
+                panelCall.classList.remove('hidden');
+            }
+        }
+
+        // Bật/Tắt cuộc gọi trực tuyến với Clara
+        function toggleClaraLiveCall() {
+            triggerHapticFeedback();
+            if (claraLiveCallActive) {
+                stopClaraLiveCall();
+                showToast("Đã tắt cuộc gọi đàm thoại trực tuyến!");
+            } else {
+                startClaraLiveCall();
+            }
+        }
+
+        // Kích hoạt cuộc gọi AI Trực tuyến
+        async function startClaraLiveCall() {
+            claraLiveCallActive = true;
+            document.getElementById('btn-toggle-clara-call').innerHTML = `<i class="fa-solid fa-phone-slash text-sm"></i> Tắt Cuộc Gọi`;
+            document.getElementById('btn-toggle-clara-call').className = "px-6 py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-black font-kids text-xs rounded-2xl shadow-lg border-b-4 border-rose-700 active:scale-95 transition-all flex items-center gap-2 cursor-pointer";
+            document.getElementById('clara-avatar-container').classList.add('ai-active-call-pulse');
+            document.getElementById('call-status-glow').className = "absolute inset-0 rounded-full border border-indigo-400 opacity-50 scale-110 mic-pulse";
+            document.getElementById('call-status-label').textContent = "🔴 ĐANG TRỰC TUYẾN";
+            document.getElementById('call-status-label').className = "text-xs font-black font-kids text-emerald-400 uppercase tracking-widest";
+            
+            document.getElementById('call-live-transcription').textContent = `"Cô Clara đang lắng nghe con... Hãy nói 'Hello' để chào cô nhé!"`;
+            document.getElementById('call-live-translation').textContent = "(Miss Clara is listening... Say 'Hello' to greet her!)";
+
+            // Khởi tạo ghi âm giọng nói liên tục của cuộc gọi (Continuous Speech Recognition)
+            const SpeechEngine = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechEngine) {
+                claraCallRecognition = new SpeechEngine();
+                claraCallRecognition.continuous = true;
+                claraCallRecognition.lang = 'en-US';
+                claraCallRecognition.interimResults = false;
+                claraCallRecognition.maxAlternatives = 1;
+
+                claraCallRecognition.onstart = () => {
+                    console.log("Clara Live Call Mic Active");
+                };
+
+                claraCallRecognition.onerror = (e) => {
+                    console.warn("Live Call Speech Error:", e);
+                };
+
+                claraCallRecognition.onend = () => {
+                    // Tự động khởi động lại nếu trạng thái cuộc gọi vẫn hoạt động (Keep-Alive)
+                    if (claraLiveCallActive && !claraCallMuted) {
+                        try { claraCallRecognition.start(); } catch(e) {}
+                    }
+                };
+
+                claraCallRecognition.onresult = (event) => {
+                    const latestResultIndex = event.results.length - 1;
+                    const txt = event.results[latestResultIndex][0].transcript;
+                    
+                    document.getElementById('call-live-transcription').textContent = `Con nói: "${txt}"`;
+                    document.getElementById('call-live-translation').textContent = "...đang xử lý tiếng cô giáo...";
+                    
+                    // Gửi trực tiếp văn bản vừa nhận lên bộ não AI Gemini trực tuyến
+                    sendClaraCallVoiceMessage(txt);
+                };
+
+                try {
+                    claraCallRecognition.start();
+                } catch(e) {
+                    console.warn("Speech Recognition failed to start instantly", e);
+                }
+            } else {
+                showToast("Trình duyệt không hỗ trợ micro đàm thoại liên tục. Cô Clara sẽ trả lời qua phím gõ chữ.");
+            }
+
+            // Kích hoạt sóng âm thanh mô phỏng (Web Audio API)
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    claraAudioCtx = new AudioCtx();
+                    claraAnalyser = claraAudioCtx.createAnalyser();
+                    claraAnalyser.fftSize = 32;
+
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then(stream => {
+                            claraMicrophoneStream = stream;
+                            const source = claraAudioCtx.createMediaStreamSource(stream);
+                            source.connect(claraAnalyser);
+                            startAudioWaveVisualization();
+                        })
+                        .catch(err => {
+                            console.warn("Microphone access denied for Audio Wave:", err);
+                        });
+                }
+            } catch(e) {
+                console.warn(e);
+            }
+        }
+
+        // Tắt cuộc gọi AI Trực tuyến
+        function stopClaraLiveCall() {
+            claraLiveCallActive = false;
+            document.getElementById('btn-toggle-clara-call').innerHTML = `<i class="fa-solid fa-phone text-sm"></i> Bắt đầu gọi Cô`;
+            document.getElementById('btn-toggle-clara-call').className = "px-6 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-black font-kids text-xs rounded-2xl shadow-lg border-b-4 border-emerald-700 active:scale-95 transition-all flex items-center gap-2 cursor-pointer";
+            document.getElementById('clara-avatar-container').classList.remove('ai-active-call-pulse');
+            document.getElementById('call-status-glow').className = "absolute inset-0 rounded-full border border-indigo-400 opacity-0 scale-100";
+            document.getElementById('call-status-label').textContent = "NHẤP NÚT GỌI ĐỂ BẮT ĐẦU";
+            document.getElementById('call-status-label').className = "text-xs font-black font-kids text-indigo-300 uppercase tracking-widest animate-pulse";
+            
+            document.getElementById('call-live-transcription').textContent = `"Cuộc gọi đã kết thúc! Chào tạm biệt con."`;
+            document.getElementById('call-live-translation').textContent = "(The call has ended! Goodbye.)";
+
+            if (claraCallRecognition) {
+                claraCallRecognition.stop();
+                claraCallRecognition = null;
+            }
+
+            if (claraMicrophoneStream) {
+                claraMicrophoneStream.getTracks().forEach(track => track.stop());
+                claraMicrophoneStream = null;
+            }
+
+            if (claraVisualizerInterval) {
+                clearInterval(claraVisualizerInterval);
+                claraVisualizerInterval = null;
+            }
+
+            // Đặt lại các cột sóng âm về ban đầu
+            const waveContainer = document.getElementById('call-audio-wave-bars');
+            if (waveContainer) {
+                waveContainer.classList.add('opacity-40');
+                const bars = waveContainer.querySelectorAll('span');
+                bars.forEach(bar => bar.style.height = '4px');
+            }
+
+            VoiceEngine.stopAll();
+        }
+
+        // Tắt/Mở Micro tạm thời của bé trong cuộc gọi
+        function toggleMuteClara() {
+            triggerHapticFeedback();
+            claraCallMuted = !claraCallMuted;
+            const icon = document.getElementById('btn-mute-clara-icon');
+            const btn = document.getElementById('btn-mute-clara');
+
+            if (claraCallMuted) {
+                icon.className = "fa-solid fa-microphone-slash text-rose-400";
+                btn.classList.add('bg-red-500/10', 'border-red-500/20');
+                if (claraCallRecognition) {
+                    claraCallRecognition.stop();
+                }
+                showToast("Đã tắt tiếng Micro của bé.");
+            } else {
+                icon.className = "fa-solid fa-microphone text-white";
+                btn.classList.remove('bg-red-500/10', 'border-red-500/20');
+                if (claraCallRecognition && claraLiveCallActive) {
+                    try { claraCallRecognition.start(); } catch(e) {}
+                }
+                showToast("Đã mở lại Micro của bé.");
+            }
+        }
+
+        // Render cột sóng âm dựa trên tín hiệu Web Audio API micro thực tế của bé
+        function startAudioWaveVisualization() {
+            const waveContainer = document.getElementById('call-audio-wave-bars');
+            if (!waveContainer) return;
+            waveContainer.classList.remove('opacity-40');
+
+            const bars = waveContainer.querySelectorAll('span');
+            const dataArray = new Uint8Array(claraAnalyser.frequencyBinCount);
+
+            if (claraVisualizerInterval) clearInterval(claraVisualizerInterval);
+
+            claraVisualizerInterval = setInterval(() => {
+                if (!claraLiveCallActive || claraCallMuted) return;
+
+                claraAnalyser.getByteFrequencyData(dataArray);
+                
+                bars.forEach((bar, index) => {
+                    const value = dataArray[index % dataArray.length];
+                    const heightPercent = Math.max(4, Math.min(32, Math.round(value / 8)));
+                    bar.style.height = `${heightPercent}px`;
+                });
+            }, 80);
+        }
+
+        // Gửi giọng nói ghi âm từ cuộc gọi trực tuyến qua Gemini API và phản hồi
+        async function sendClaraCallVoiceMessage(messageText) {
+            if (!messageText) return;
+
+            const activeGeminiKey = localStorage.getItem('cfg_gemini_api_key') || GEMINI_API_KEY;
+
+            if (!activeGeminiKey) {
+                // Chế độ Clara đàm thoại dự phòng khi chưa cài đặt Key
+                const fallbackReply = getLocalClaraResponse(messageText);
+                animateClaraMouthTalkingAndSpeak(fallbackReply);
+                return;
+            }
+
+            const systemPrompt = "You are Miss Clara, a friendly and warm native English teacher conducting an interactive video call with 3rd-grade Vietnamese students. Keep your live spoken responses short, punchy, and lively (1 sentence only). Speak clearly. Always include a simple Vietnamese explanation in parentheses (...) at the end to help the child learn. Example: 'Good job! Touch your nose. (Giỏi lắm! Hãy chạm vào mũi của con đi nào!)'";
+            const model = "gemini-2.5-flash"; // Ưu tiên mô hình mới nhất, phản hồi cực kỳ nhanh cho chế độ Live Call
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeGeminiKey}`;
+
+            try {
+                // Tạm dừng micro của bé một chút để tránh nhận dạng nhầm giọng cô giáo phát âm
+                if (claraCallRecognition) claraCallRecognition.stop();
+
+                const payload = {
+                    contents: [{ parts: [{ text: messageText }] }],
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    }
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': activeGeminiKey 
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error("Gemini API Error");
+
+                const result = await response.json();
+                const replyText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (replyText) {
+                    animateClaraMouthTalkingAndSpeak(replyText);
+                } else {
+                    throw new Error("Empty Response");
+                }
+            } catch (err) {
+                console.warn("Live Call online connection failed, using fallback Clara:", err);
+                const fallbackReply = getLocalClaraResponse(messageText);
+                animateClaraMouthTalkingAndSpeak(fallbackReply);
+            }
+        }
+
+        // Đồng bộ chuyển động mồm cô Clara (Lip-syncing) và phát âm thanh
+        function animateClaraMouthTalkingAndSpeak(fullText) {
+            // Tách phần tiếng anh để đọc và hiển thị
+            const englishText = fullText.replace(/\(.*?\)/g, '').trim();
+            const translationText = fullText.match(/\((.*?)\)/)?.[0] || "";
+
+            document.getElementById('call-live-transcription').textContent = `Cô Clara: "${englishText}"`;
+            document.getElementById('call-live-translation').textContent = translationText;
+
+            // Bắt đầu nhấp nháy chuyển động môi
+            const mouth = document.getElementById('clara-mouth');
+            if (mouth) {
+                mouth.classList.add('clara-mouth-talking');
+            }
+
+            // Phát âm chuẩn tiếng Anh bản xứ
+            VoiceEngine.speakEnglish(englishText);
+
+            // Tự động tắt nhấp nháy miệng sau khi giọng đọc mẫu kết thúc
+            const wordCount = englishText.split(' ').length;
+            const estimatedSpeakingTimeMs = Math.max(1500, wordCount * 420); // Ước lượng khoảng thời gian phát âm
+
+            setTimeout(() => {
+                if (mouth) {
+                    mouth.classList.remove('clara-mouth-talking');
+                    mouth.style.height = '6px'; // Đặt lại khẩu hình mồm khép
+                }
+                
+                // Mở lại ghi âm để lắng nghe lượt nói tiếp theo của bé (nếu cuộc gọi vẫn hoạt động)
+                if (claraLiveCallActive && !claraCallMuted && claraCallRecognition) {
+                    try { claraCallRecognition.start(); } catch(e) {}
+                }
+            }, estimatedSpeakingTimeMs);
+        }
+
         let aiChatSpeechActive = false;
         let aiChatRecognition = null;
 
@@ -3128,7 +3530,8 @@
                 return;
             }
 
-            const models = ["gemini-1.5-flash", "gemini-2.5-flash"];
+            // Nâng cấp sử dụng các model thế hệ mới nhanh vượt trội như gemini-2.5-flash
+            const models = ["gemini-2.5-flash", "gemini-1.5-flash"];
             let replyText = "";
             let apiErrorDetail = "";
 
@@ -3175,7 +3578,7 @@
                 removeChatMessage(loadingId);
                 appendChatMessage("Clara", replyText, "text-indigo-200");
 
-                const speakTextOnly = replyText.replace(/\(.*?\)/g, '');
+                const speakTextOnly = replyText.replace(/\(.*?\)/g, '').trim();
                 VoiceEngine.speakEnglish(speakTextOnly);
             } else {
                 console.error("Tất cả các mô hình Gemini đều thất bại khi kết nối. Chi tiết lỗi cuối cùng:", apiErrorDetail);
