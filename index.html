@@ -316,7 +316,7 @@
                 </div>
             </div>
             
-            <button onclick="openAdminPasswordModal(215151365)" class="w-full py-3 bg-slate-100 hover:bg-indigo-100 text-slate-500 text-xs font-bold rounded-2xl flex items-center justify-center gap-2 border-2 border-dashed border-slate-300 transition-all mt-1">
+            <button onclick="openAdminPasswordModal()" class="w-full py-3 bg-slate-100 hover:bg-indigo-100 text-slate-500 text-xs font-bold rounded-2xl flex items-center justify-center gap-2 border-2 border-dashed border-slate-300 transition-all mt-1">
                 <i class="fa-solid fa-user-shield"></i>
                 <span>🔑 Quản lý Giáo viên / API Admin</span>
             </button>
@@ -2609,7 +2609,7 @@
 
         function submitAdminPassword() {
             const pass = document.getElementById('admin-password-input').value.trim().toLowerCase();
-            if (pass === "eco001") {
+            if (pass === "215151365") {
                 closeAdminPasswordModal();
                 setTimeout(() => openAdminPanel(), 300);
             } else {
