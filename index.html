@@ -117,7 +117,6 @@
     <!-- MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÝ BẮT BUỘC -->
     <div id="login-screen" class="fixed inset-0 z-50 bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-950 flex items-center justify-center p-4">
         <div class="bg-white max-w-md w-full rounded-3xl p-6 sm:p-8 shadow-2xl border-4 border-indigo-200 text-center relative overflow-hidden transition-all">
-            <!-- Decorative elements -->
             <div class="absolute -right-12 -top-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-xl"></div>
             <div class="absolute -left-12 -bottom-12 w-32 h-32 bg-pink-500/10 rounded-full blur-xl"></div>
             
@@ -146,8 +145,8 @@
                     <input type="text" id="login-code" placeholder="Nhập mã học viên của con..." class="w-full px-4 py-3 border-2 border-indigo-100 rounded-2xl text-center font-bold text-sm uppercase tracking-wider text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
                 </div>
                 <div class="space-y-2">
-                    <label class="block text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Mật khẩu (nếu có)</label>
-                    <input type="password" id="login-password" placeholder="Mật khẩu tài khoản (nếu có)..." class="w-full px-4 py-3 border-2 border-indigo-100 rounded-2xl text-center font-bold text-sm text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
+                    <label class="block text-left text-xs font-bold text-slate-500 uppercase tracking-wide">Mật khẩu</label>
+                    <input type="password" id="login-password" placeholder="Mật khẩu của con..." class="w-full px-4 py-3 border-2 border-indigo-100 rounded-2xl text-center font-bold text-sm text-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50">
                 </div>
                 <button onclick="handleLogin()" class="w-full mt-2 py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 text-white font-black font-kids text-sm rounded-2xl shadow-lg border-b-4 border-indigo-700 active:scale-95 transition-all cursor-pointer">
                     Bắt đầu học ngay! 🚀
@@ -184,7 +183,6 @@
     <div id="vip-welcome-overlay" class="fixed inset-0 z-[100] bg-slate-950/98 flex flex-col items-center justify-center text-center p-6 hidden">
         <div class="relative max-w-sm w-full p-8 rounded-3xl border-4 border-yellow-400 bg-gradient-to-b from-slate-900 to-indigo-950 text-white shadow-2xl overflow-hidden">
             <div class="absolute -inset-10 bg-yellow-400/10 blur-3xl rounded-full"></div>
-            <!-- Mưa sao lấp lánh -->
             <div class="absolute top-4 left-6 text-xl sparkle-gold">⭐</div>
             <div class="absolute top-12 right-8 text-2xl sparkle-gold">✨</div>
             <div class="absolute bottom-8 left-12 text-lg sparkle-gold">🌟</div>
@@ -308,7 +306,7 @@
                         <div>
                             <span class="bg-yellow-400 text-indigo-900 text-xs font-black px-3.5 py-1.5 rounded-full uppercase tracking-widest shadow-md inline-flex items-center gap-1.5">
                                 <span id="vip-indicator-crown" class="vip-crown-bounce hidden">👑</span>
-                                Học viên: <span id="welcome-user-code" class="font-extrabold">ECO001</span>
+                                Học viên: <span id="welcome-user-code" class="font-extrabold">215151365</span>
                                 <span id="vip-badge-label" class="hidden text-[9px] bg-indigo-900 text-yellow-400 px-1.5 py-0.5 rounded font-black tracking-wide">VIP</span>
                                 <button onclick="toggleUsernameMask(event)" class="text-indigo-950 hover:text-pink-600 transition-all flex items-center justify-center focus:outline-none ml-1" id="btn-toggle-mask">
                                     <i class="fa-solid fa-eye-slash text-xs"></i>
@@ -408,35 +406,45 @@
                             </div>
                         </div>
 
-                        <!-- TRỢ LÝ GIỌNG NÓI (CHỈ MỞ KHÓA CHO TÀI KHOẢN VIP) -->
-                        <div class="bg-white rounded-3xl border-2 border-slate-100 shadow-sm p-6 space-y-4 relative overflow-hidden" id="ai-assistant-widget">
+                        <!-- PHÒNG ĐÀM THOẠI TIẾNG ANH MISS CLARA (GEMINI) -->
+                        <div class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-indigo-900 rounded-3xl p-6 text-white shadow-xl border-4 border-indigo-400 relative overflow-hidden" id="ai-assistant-widget">
                             <!-- Overlay chặn tài khoản thường -->
-                            <div id="ai-assistant-locked" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20 transition-all rounded-3xl">
+                            <div id="ai-assistant-locked" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20 transition-all rounded-3xl">
                                 <div class="w-12 h-12 rounded-full bg-yellow-500 text-white flex items-center justify-center text-xl shadow-lg mb-2">
                                     <i class="fa-solid fa-crown vip-crown-bounce"></i>
                                 </div>
-                                <h4 class="font-black font-kids text-white text-base">Tính năng Trợ lý AI Chuyên sâu 👑</h4>
-                                <p class="text-xs text-white/95 max-w-xs mt-1">Vui lòng đăng nhập bằng **Tài khoản VIP** do Thầy/Cô cung cấp để sử dụng trợ lý giọng nói đỉnh cao!</p>
+                                <h4 class="font-black font-kids text-white text-base">Phòng Đàm Thoại AI Cô Clara 👑</h4>
+                                <p class="text-xs text-white/95 max-w-xs mt-1">Vui lòng đăng nhập bằng **Tài khoản VIP** để đàm thoại Tiếng Anh trực tiếp với Cô Clara!</p>
                             </div>
 
-                            <div class="flex items-center justify-between">
-                                <h4 class="font-black font-kids text-indigo-900 flex items-center gap-2">
-                                    <span class="text-xl">🔊</span> Trợ lý Giọng nói AI (Instant Playback Engine)
-                                </h4>
-                                <span class="text-[9px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full border border-amber-200 font-bold uppercase tracking-wider">Môi trường VIP</span>
-                            </div>
-                            <p class="text-xs text-slate-500 leading-relaxed">Nhập văn bản tiếng Việt hoặc tiếng Anh bất kỳ để trải nghiệm phát âm tinh chỉnh chất lượng cao:</p>
-                            
-                            <div class="relative">
-                                <textarea id="text-speech-input" rows="3" class="w-full p-4 border-2 border-indigo-100 rounded-2xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all" placeholder="Gõ câu văn bất kỳ vào đây để nghe cô giáo AI đọc...">Hello everyone! Đây là ứng dụng E-learning chuyên sâu.</textarea>
+                            <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-indigo-500 flex items-center justify-center text-2xl border-2 border-indigo-300">
+                                        👩‍🏫
+                                    </div>
+                                    <div>
+                                        <h4 class="font-black font-kids text-indigo-100 text-sm flex items-center gap-1.5">
+                                            Cô Clara AI <span class="h-2.5 w-2.5 bg-emerald-400 rounded-full animate-ping"></span>
+                                        </h4>
+                                        <span class="text-[9px] text-indigo-300 font-bold uppercase tracking-wider">Trợ lý học Tiếng Anh Bản Xứ lớp 3</span>
+                                    </div>
+                                </div>
+                                <span class="text-[9px] bg-amber-500 text-slate-900 px-2.5 py-1 rounded-full font-black uppercase">Đặc quyền VIP</span>
                             </div>
 
-                            <div class="flex flex-col sm:flex-row gap-2.5">
-                                <button onclick="readCustomTextVi(this)" class="flex-1 py-3 px-4 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white font-black font-kids text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 border-b-2 border-emerald-700">
-                                    <i class="fa-solid fa-microphone"></i> Đọc Tiếng Việt (Viettel AI)
+                            <!-- Chat Area -->
+                            <div class="my-4 h-36 bg-black/20 rounded-2xl p-3 overflow-y-auto text-xs space-y-2" id="ai-chat-history">
+                                <div class="text-indigo-200"><strong>Clara:</strong> Hello! I am Clara, your English teacher. How are you today? (Xin chào! Cô là Clara, giáo viên tiếng Anh của em. Hôm nay em thế nào?)</div>
+                            </div>
+
+                            <!-- Input Area -->
+                            <div class="flex items-center gap-2 mt-2">
+                                <input type="text" id="ai-chat-input" class="flex-1 px-4 py-2.5 bg-white/10 border border-white/20 rounded-xl text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-white/40" placeholder="Gửi tin nhắn hoặc đàm thoại...">
+                                <button onclick="triggerAiChatMic()" class="w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow transition-all active:scale-95 border border-indigo-400" id="btn-ai-chat-mic">
+                                    <i class="fa-solid fa-microphone text-sm"></i>
                                 </button>
-                                <button onclick="readCustomTextEn(this)" class="flex-1 py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-black font-kids text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 border-b-2 border-indigo-800">
-                                    <i class="fa-solid fa-volume-high"></i> Đọc Tiếng Anh (Mỹ chuẩn)
+                                <button onclick="sendAiChatMessage()" class="px-4 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-slate-900 font-black font-kids text-xs rounded-xl shadow transition-all active:scale-95 flex items-center gap-1">
+                                    Gửi <i class="fa-solid fa-paper-plane text-[10px]"></i>
                                 </button>
                             </div>
                         </div>
@@ -462,7 +470,7 @@
                             </div>
                         </div>
 
-                        <!-- KHUNG DONATE (ĐỒNG BỘ HIỂN THỊ TỪ ADMIN) -->
+                        <!-- KHUNG DONATE -->
                         <div id="student-donate-box" class="bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl p-5 text-white shadow-lg border-4 border-yellow-300 hidden flex flex-col items-center text-center">
                             <div class="text-3xl mb-1 animate-bounce">☕</div>
                             <h4 class="font-black font-kids text-sm" id="donate-box-title">Mua trà sữa cho cô Diễm My</h4>
@@ -552,7 +560,7 @@
                 <div id="interface-flashcard" class="w-full flex flex-col items-center">
                     <div class="perspective-1000 w-full max-w-sm h-72 cursor-pointer group" onclick="flipActiveCard()">
                         <div id="flashcard-inner" class="preserve-3d duration-500 relative w-full h-full rounded-3xl shadow-md border border-indigo-100 transition-all">
-                            <!-- MẶT TRƯỚC (TIẾNG ANH - TRONG SUỐT OFFLINE UTTERANCE) -->
+                            <!-- MẶT TRƯỚC (TIẾNG ANH) -->
                             <div class="backface-hidden absolute inset-0 w-full h-full bg-white flex flex-col items-center justify-between p-6 rounded-3xl bg-gradient-to-br from-white to-indigo-50/20">
                                 <div class="self-end flex items-center gap-2">
                                     <button id="speaker-btn-front" onclick="triggerVoiceFromCard(event, this)" class="w-12 h-12 rounded-2xl bg-indigo-50 hover:bg-indigo-100 active:scale-90 text-indigo-600 flex items-center justify-center transition-all shadow-sm border border-indigo-100 relative overflow-visible" title="Phát âm">
@@ -686,7 +694,7 @@
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 border-4 border-yellow-400 text-center transform scale-95 transition-all duration-200 opacity-0" id="vip-upgrade-box">
             <div class="text-5xl mb-3">👑</div>
             <h4 class="text-xl font-black font-kids text-indigo-950">Đặc quyền Tài khoản VIP</h4>
-            <p class="text-xs text-slate-500 leading-relaxed mt-2">Bé đang sử dụng tài khoản thường, chỉ được học thử 5 Unit đầu tiên. Hãy liên hệ với Thầy/Cô giáo để được tạo **Tài khoản VIP** kèm mật khẩu đăng nhập bảo mật nhé!</p>
+            <p class="text-xs text-slate-500 leading-relaxed mt-2">Bé đang sử dụng tài khoản thường, chỉ được học thử 5 Unit đầu tiên. Hãy liên hệ với Thầy/Cô giáo hoặc đăng nhập bằng mã **215151365** để được mở khóa VIP Hoàng gia nhé!</p>
             <div class="mt-6">
                 <button onclick="closeVipUpgradeModal()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm rounded-2xl shadow-md transition-all">Đã hiểu ạ 🚀</button>
             </div>
@@ -775,6 +783,16 @@
                         </div>
 
                         <div>
+                            <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Gemini API Key (Đàm thoại AI Cô Clara)</label>
+                            <div class="relative">
+                                <input type="password" id="admin-gemini-key" placeholder="Hãy dán Gemini API Key của Thầy/Cô vào đây..." class="w-full pl-3 pr-10 py-2 border-2 border-amber-100 rounded-lg text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all">
+                                <button type="button" onclick="toggleInputVisibility('admin-gemini-key')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                                    <i class="fa-solid fa-eye text-xs" id="eye-gemini"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
                             <label class="block text-[9px] font-black text-amber-900 uppercase tracking-wider mb-1">Viettel AI TTS Token</label>
                             <div class="relative">
                                 <input type="password" id="admin-viettel-token" placeholder="Nhập Token dịch vụ Viettel AI..." class="w-full pl-3 pr-10 py-2 border-2 border-amber-100 rounded-lg text-xs font-mono text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all">
@@ -834,7 +852,6 @@
                             </tr>
                         </thead>
                         <tbody id="admin-student-rows">
-                            <!-- Injected rows -->
                         </tbody>
                     </table>
                 </div>
@@ -917,7 +934,7 @@
                         </div>
                     </div>
 
-                    <button onclick="adminSaveDonateSettings()" class="w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-black font-kids text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 border-b-2 border-orange-700">
+                    <button onclick="adminSaveDonateSettings()" class="w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-black text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 border-b-2 border-orange-700">
                         <i class="fa-solid fa-circle-check"></i> Lưu & Áp dụng cấu hình Donate
                     </button>
                 </div>
@@ -970,7 +987,9 @@
     </div>
 
     <script>
-        // Hàm Toast hiển thị sớm nhất
+        // Khóa GCP API rỗng để người dùng tự nhập thủ công từ màn hình Admin
+        const GEMINI_API_KEY = "";
+
         function showToast(text) {
             let toast = document.getElementById('toast-message');
             let toastText = document.getElementById('toast-text');
@@ -1000,7 +1019,6 @@
             }
         }
 
-        // Cấu hình Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDc2t5HpTQdBcRx_VYwtknOMtnfjOgMIPg",
             authDomain: "tieng-anh-lop-3-69257.firebaseapp.com",
@@ -1059,7 +1077,12 @@
         }
 
         function getUnitTitle(u) {
-            const titles = ["Hello", "Our Names", "Our Friends", "Our Bodies", "My Hobbies", "Our School", "Classroom Instructions", "Our School Things", "Our Colours", "Break Time Activities", "My Family", "Jobs", "My House", "My Bedroom", "At the Dining Table", "My Pets", "Our Toys", "What are you doing?", "Our Outdoor Activities", "Where is the park?"];
+            const titles = [
+                "Hello", "Our Names", "Our Friends", "Our Bodies", "My Hobbies", 
+                "Our School", "Classroom Instructions", "Our School Things", "Our Colours", "Break Time Activities", 
+                "My Family", "Jobs", "My House", "My Bedroom", "At the Dining Table", 
+                "My Pets", "Our Toys", "What are you doing?", "Our Outdoor Activities", "Where is the park?"
+            ];
             return titles[u - 1] || "English Vocabulary";
         }
 
@@ -1099,15 +1122,114 @@
                     { word: "Draw", ipa: "/drɔː/", type: "Verb", vietnamese: "Vẽ tranh", exEn: "We like to draw.", exVi: "Chúng tớ thích vẽ tranh." },
                     { word: "Swim", ipa: "/swɪm/", type: "Verb", vietnamese: "Bơi lội", exEn: "He can swim fast.", exVi: "Cậu ấy bơi rất nhanh." },
                     { word: "Read", ipa: "/riːd/", type: "Verb", vietnamese: "Đọc sách", exEn: "I read books every day.", exVi: "Tớ đọc sách mỗi ngày." }
+                ],
+                6: [
+                    { word: "School", ipa: "/skuːl/", type: "Noun", vietnamese: "Trường học", exEn: "Our school is beautiful.", exVi: "Trường của chúng mình rất đẹp." },
+                    { word: "Classroom", ipa: "/ˈklæsruːm/", type: "Noun", vietnamese: "Phòng học", exEn: "This is our classroom.", exVi: "Đây là phòng học của chúng mình." },
+                    { word: "Library", ipa: "/ˈlaɪbreri/", type: "Noun", vietnamese: "Thư viện", exEn: "Let's go to the library.", exVi: "Chúng mình cùng vào thư viện nào." },
+                    { word: "Playground", ipa: "/ˈpleɪɡraʊnd/", type: "Noun", vietnamese: "Sân chơi", exEn: "The playground is large.", exVi: "Sân chơi rất rộng rãi." },
+                    { word: "Gym", ipa: "/dʒɪm/", type: "Noun", vietnamese: "Phòng thể chất", exEn: "We have PE in the gym.", exVi: "Chúng tớ học thể dục ở phòng thể chất." }
+                ],
+                7: [
+                    { word: "Open", ipa: "/ˈoʊpən/", type: "Verb", vietnamese: "Mở ra", exEn: "Open your book, please.", exVi: "Xin vui lòng mở sách của con ra." },
+                    { word: "Close", ipa: "/kloʊz/", type: "Verb", vietnamese: "Đóng lại", exEn: "Close your book, please.", exVi: "Xin vui lòng đóng sách lại." },
+                    { word: "Stand up", ipa: "/stænd ʌp/", type: "Phrase", vietnamese: "Đứng lên", exEn: "Stand up, please.", exVi: "Mời cả lớp đứng dậy." },
+                    { word: "Sit down", ipa: "/sɪt daʊn/", type: "Phrase", vietnamese: "Ngồi xuống", exEn: "Sit down, please.", exVi: "Mời con ngồi xuống." },
+                    { word: "Speak", ipa: "/spiːk/", type: "Verb", vietnamese: "Nói", exEn: "May I speak Vietnamese?", exVi: "Em xin phép nói tiếng Việt được không ạ?" }
+                ],
+                8: [
+                    { word: "Pen", ipa: "/pen/", type: "Noun", vietnamese: "Bút mực", exEn: "This is my blue pen.", exVi: "Đây là chiếc bút mực màu xanh của tớ." },
+                    { word: "Pencil", ipa: "/ˈpensl/", type: "Noun", vietnamese: "Bút chì", exEn: "I have a new pencil.", exVi: "Tớ có một chiếc bút chì mới." },
+                    { word: "Ruler", ipa: "/ˈruːlər/", type: "Noun", vietnamese: "Cây thước kẻ", exEn: "Is this your ruler?", exVi: "Đây có phải là thước kẻ của bạn không?" },
+                    { word: "Book", ipa: "/bʊk/", type: "Noun", vietnamese: "Quyển sách", exEn: "Open your English book.", exVi: "Hãy mở cuốn sách tiếng Anh của con." },
+                    { word: "School bag", ipa: "/skuːl bæɡ/", type: "Noun", vietnamese: "Cặp sách", exEn: "My school bag is heavy.", exVi: "Cặp sách của tớ rất nặng." }
+                ],
+                9: [
+                    { word: "Red", ipa: "/red/", type: "Noun", vietnamese: "Màu đỏ", exEn: "My favorite color is red.", exVi: "Màu sắc yêu thích của tớ là màu đỏ." },
+                    { word: "Blue", ipa: "/bluː/", type: "Noun", vietnamese: "Màu xanh dương", exEn: "The sky is blue.", exVi: "Bầu trời màu xanh dương." },
+                    { word: "Green", ipa: "/ɡriːn/", type: "Noun", vietnamese: "Màu xanh lá cây", exEn: "The grass is green.", exVi: "Bãi cỏ màu xanh lá cây." },
+                    { word: "Yellow", ipa: "/ˈjeloʊ/", type: "Noun", vietnamese: "Màu vàng", exEn: "The sun is yellow.", exVi: "Mặt trời màu vàng." },
+                    { word: "Colour", ipa: "/ˈkʌlər/", type: "Noun", vietnamese: "Màu sắc", exEn: "What colour is this?", exVi: "Đây là màu gì?" }
+                ],
+                10: [
+                    { word: "Chess", ipa: "/tʃes/", type: "Noun", vietnamese: "Cờ vua", exEn: "I play chess at break time.", exVi: "Tớ chơi cờ vua vào giờ ra chơi." },
+                    { word: "Football", ipa: "/ˈfʊtbɔːl/", type: "Noun", vietnamese: "Bóng đá", exEn: "They play football after school.", exVi: "Họ chơi bóng đá sau giờ học." },
+                    { word: "Badminton", ipa: "/ˈbædmɪntən/", type: "Noun", vietnamese: "Cầu lông", exEn: "She likes playing badminton.", exVi: "Cô ấy thích chơi cầu lông." },
+                    { word: "Hide-and-seek", ipa: "/ˌhaɪd n ˈsiːk/", type: "Noun", vietnamese: "Trò trốn tìm", exEn: "Let's play hide-and-seek.", exVi: "Chúng mình cùng chơi trốn tìm nào." },
+                    { word: "Word puzzle", ipa: "/wɜːrd ˈpʌzl/", type: "Noun", vietnamese: "Trò chơi ô chữ", exEn: "He does word puzzles.", exVi: "Cậu ấy giải ô chữ." }
+                ],
+                11: [
+                    { word: "Father", ipa: "/ˈfɑːðər/", type: "Noun", vietnamese: "Bố, cha", exEn: "This is my father.", exVi: "Đây là bố của tớ." },
+                    { word: "Mother", ipa: "/ˈmʌðər/", type: "Noun", vietnamese: "Mẹ", exEn: "My mother is beautiful.", exVi: "Mẹ tớ rất xinh đẹp." },
+                    { word: "Brother", ipa: "/ˈbrʌðər/", type: "Noun", vietnamese: "Anh/em trai", exEn: "He is my big brother.", exVi: "Cậu ấy là anh trai của tớ." },
+                    { word: "Sister", ipa: "/ˈsɪstər/", type: "Noun", vietnamese: "Chị/em gái", exEn: "I have an older sister.", exVi: "Tớ có một người chị gái." },
+                    { word: "Family", ipa: "/ˈfæməli/", type: "Noun", vietnamese: "Gia đình", exEn: "I love my family.", exVi: "Tớ yêu gia đình của tớ." }
+                ],
+                12: [
+                    { word: "Teacher", ipa: "/ˈtiːtʃər/", type: "Noun", vietnamese: "Giáo viên", exEn: "My father is a teacher.", exVi: "Bố tớ là một giáo viên." },
+                    { word: "Doctor", ipa: "/ˈdɑːktər/", type: "Noun", vietnamese: "Bác sĩ", exEn: "She wants to be a doctor.", exVi: "Cô ấy muốn trở thành bác sĩ." },
+                    { word: "Worker", ipa: "/ˈwɜːrkər/", type: "Noun", vietnamese: "Công nhân", exEn: "He is a factory worker.", exVi: "Cậu ấy là công nhân nhà máy." },
+                    { word: "Driver", ipa: "/ˈdraɪvər/", type: "Noun", vietnamese: "Tài xế", exEn: "My uncle is a taxi driver.", exVi: "Chú tớ là một tài xế taxi." },
+                    { word: "Pupil", ipa: "/ˈpjuːpl/", type: "Noun", vietnamese: "Học sinh", exEn: "We are pupils.", exVi: "Chúng tớ là học sinh." }
+                ],
+                13: [
+                    { word: "House", ipa: "/haʊs/", type: "Noun", vietnamese: "Ngôi nhà", exEn: "This is my small house.", exVi: "Đây là ngôi nhà nhỏ của tớ." },
+                    { word: "Living room", ipa: "/ˈlɪvɪŋ ruːm/", type: "Noun", vietnamese: "Phòng khách", exEn: "My dad is in the living room.", exVi: "Bố tớ đang ở phòng khách." },
+                    { word: "Kitchen", ipa: "/ˈkɪtʃɪn/", type: "Noun", vietnamese: "Nhà bếp", exEn: "Mother is cooking in the kitchen.", exVi: "Mẹ đang nấu ăn trong bếp." },
+                    { word: "Bedroom", ipa: "/ˈbedruːm/", type: "Noun", vietnamese: "Phòng ngủ", exEn: "My bedroom is cozy.", exVi: "Phòng ngủ của tớ rất ấm cúng." },
+                    { word: "Garden", ipa: "/ˈɡɑːrdn/", type: "Noun", vietnamese: "Khu vườn", exEn: "There is a beautiful garden.", exVi: "Có một khu vườn xinh đẹp." }
+                ],
+                14: [
+                    { word: "Bed", ipa: "/bed/", type: "Noun", vietnamese: "Cái giường", exEn: "The bed is very soft.", exVi: "Chiếc giường rất mềm mại." },
+                    { word: "Desk", ipa: "/desk/", type: "Noun", vietnamese: "Bàn học", exEn: "I study at my desk.", exVi: "Tớ học bài ở bàn học." },
+                    { word: "Chair", ipa: "/tʃer/", type: "Noun", vietnamese: "Cái ghế", exEn: "Sit on the chair.", exVi: "Ngồi vào ghế đi con." },
+                    { word: "Wardrobe", ipa: "/ˈwɔːrdroʊb/", type: "Noun", vietnamese: "Tủ quần áo", exEn: "My clothes are in the wardrobe.", exVi: "Quần áo của tớ ở trong tủ đồ." },
+                    { word: "Poster", ipa: "/ˈpoʊstər/", type: "Noun", vietnamese: "Tấm áp phích", exEn: "There is a poster on the wall.", exVi: "Có một tấm áp phích trên tường." }
+                ],
+                15: [
+                    { word: "Rice", ipa: "/raɪs/", type: "Noun", vietnamese: "Cơm", exEn: "Would you like some rice?", exVi: "Con có muốn dùng chút cơm không?" },
+                    { word: "Fish", ipa: "/fɪʃ/", type: "Noun", vietnamese: "Cá", exEn: "I like eating fish.", exVi: "Tớ thích ăn cá." },
+                    { word: "Meat", ipa: "/miːt/", type: "Noun", vietnamese: "Thịt", exEn: "The meat is delicious.", exVi: "Thịt rất ngon." },
+                    { word: "Milk", ipa: "/mɪlk/", type: "Noun", vietnamese: "Sữa", exEn: "I drink milk every morning.", exVi: "Tớ uống sữa mỗi sáng." },
+                    { word: "Water", ipa: "/ˈwɔːtər/", type: "Noun", vietnamese: "Nước", exEn: "Can I have some water?", exVi: "Cho tớ xin một ít nước nhé?" }
+                ],
+                16: [
+                    { word: "Dog", ipa: "/dɔːɡ/", type: "Noun", vietnamese: "Con chó", exEn: "I have a small dog.", exVi: "Tớ có một chú chó nhỏ." },
+                    { word: "Cat", ipa: "/kæt/", type: "Noun", vietnamese: "Con mèo", exEn: "The cat is sleeping on the table.", exVi: "Chú mèo đang ngủ trên bàn." },
+                    { word: "Bird", ipa: "/bɜːrd/", type: "Noun", vietnamese: "Con chim", exEn: "The bird is singing happily.", exVi: "Chú chim đang ca hát vui vẻ." },
+                    { word: "Parrot", ipa: "/ˈpærət/", type: "Noun", vietnamese: "Con vẹt", exEn: "My parrot can talk.", exVi: "Chú vẹt của tớ có thể nói." },
+                    { word: "Goldfish", ipa: "/ˈɡoʊldfɪʃ/", type: "Noun", vietnamese: "Con cá vàng", exEn: "Look at the swimming goldfish.", exVi: "Nhìn chú cá vàng đang bơi kìa." }
+                ],
+                17: [
+                    { word: "Doll", ipa: "/dɑːl/", type: "Noun", vietnamese: "Búp bê", exEn: "She has a beautiful doll.", exVi: "Cô ấy có một cô búp bê xinh xắn." },
+                    { word: "Ball", ipa: "/bɔːl/", type: "Noun", vietnamese: "Quả bóng", exEn: "Let's play with the ball.", exVi: "Chúng mình cùng chơi với quả bóng nhé." },
+                    { word: "Car", ipa: "/kɑːr/", type: "Noun", vietnamese: "Ô tô đồ chơi", exEn: "He loves playing with his toy car.", exVi: "Cậu ấy thích chơi với ô tô đồ chơi." },
+                    { word: "Teddy bear", ipa: "/ˈtedi ber/", type: "Noun", vietnamese: "Gấu bông", exEn: "My teddy bear is brown.", exVi: "Gấu bông của tớ màu nâu." },
+                    { word: "Kite", ipa: "/kaɪt/", type: "Noun", vietnamese: "Cái diều", exEn: "We fly a kite in the park.", exVi: "Chúng tớ thả diều trong công viên." }
+                ],
+                18: [
+                    { word: "Reading", ipa: "/ˈriːdɪŋ/", type: "Verb-ing", vietnamese: "Đang đọc sách", exEn: "I am reading an English book.", exVi: "Tớ đang đọc sách tiếng Anh." },
+                    { word: "Drawing", ipa: "/ˈdrɔːɪŋ/", type: "Verb-ing", vietnamese: "Đang vẽ tranh", exEn: "She is drawing a nice house.", exVi: "Cô ấy đang vẽ một ngôi nhà đẹp." },
+                    { word: "Singing", ipa: "/ˈsɪŋɪŋ/", type: "Verb-ing", vietnamese: "Đang hát", exEn: "They are singing a happy song.", exVi: "Họ đang hát một bài hát vui vẻ." },
+                    { word: "Writing", ipa: "/ˈraɪtɪŋ/", type: "Verb-ing", vietnamese: "Đang viết bài", exEn: "He is writing a dictation.", exVi: "Cậu ấy đang viết bài chính tả." },
+                    { word: "Watching TV", ipa: "/ˈwɑːtʃɪŋ ˌtiː ˈviː/", type: "Phrase", vietnamese: "Đang xem ti vi", exEn: "My family is watching TV.", exVi: "Gia đóng tớ đang xem ti vi." }
+                ],
+                19: [
+                    { word: "Skating", ipa: "/ˈskeɪtɪŋ/", type: "Verb-ing", vietnamese: "Đang trượt patin", exEn: "He is skating in the yard.", exVi: "Cậu ấy đang trượt patin ngoài sân." },
+                    { word: "Cycling", ipa: "/ˈsaɪklɪŋ/", type: "Verb-ing", vietnamese: "Đang đạp xe", exEn: "She is cycling around the park.", exVi: "Cô ấy đang đạp xe quanh công viên." },
+                    { word: "Skipping", ipa: "/ˈskɪpɪŋ/", type: "Verb-ing", vietnamese: "Đang nhảy dây", exEn: "They are skipping together.", exVi: "Họ đang nhảy dây cùng nhau." },
+                    { word: "Flying a kite", ipa: "/ˈflaɪɪŋ ə kaɪt/", type: "Phrase", vietnamese: "Đang thả diều", exEn: "My brother is flying a kite.", exVi: "Em trai tớ đang thả diều." },
+                    { word: "Sliding", ipa: "/ˈslaɪdɪŋ/", type: "Verb-ing", vietnamese: "Đang chơi cầu trượt", exEn: "The kids are sliding.", exVi: "Lũ trẻ đang chơi cầu trượt." }
+                ],
+                20: [
+                    { word: "Park", ipa: "/pɑːrk/", type: "Noun", vietnamese: "Công viên", exEn: "The park is near our school.", exVi: "Công viên ở gần trường của tụi mình." },
+                    { word: "Lake", ipa: "/leɪk/", type: "Noun", vietnamese: "Hồ nước", exEn: "There is a large lake here.", exVi: "Có một cái hồ lớn ở đây." },
+                    { word: "Supermarket", ipa: "/ˈsuːpərmɑːrkɪt/", type: "Noun", vietnamese: "Siêu thị", exEn: "Let's buy food in the supermarket.", exVi: "Chúng ta hãy mua đồ ăn ở siêu thị." },
+                    { word: "Bookshop", ipa: "/ˈbʊkʃɑːp/", type: "Noun", vietnamese: "Hiệu sách", exEn: "I want to buy books at the bookshop.", exVi: "Tớ muốn mua sách ở hiệu sách." },
+                    { word: "Zoo", ipa: "/zuː/", type: "Noun", vietnamese: "Sở thú", exEn: "There are many animals in the zoo.", exVi: "Có rất nhiều động vật ở sở thú." }
                 ]
             };
-            return wordDictionary[u] || [
-                { word: "Hello", ipa: "/həˈloʊ/", type: "Interjection", vietnamese: "Xin chào", exEn: `Welcome to Unit ${u}`, exVi: `Chào mừng đến với bài học ${u}` },
-                { word: "Book", ipa: "/bʊk/", type: "Noun", vietnamese: "Quyển sách", exEn: "This is my English book.", exVi: "Đây là sách tiếng Anh của tớ." },
-                { word: "Classroom", ipa: "/ˈklæsruːm/", type: "Noun", vietnamese: "Phòng học", exEn: "Our classroom is beautiful.", exVi: "Lớp học của chúng tớ rất đẹp." },
-                { word: "Teacher", ipa: "/ˈtiːtʃər/", type: "Noun", vietnamese: "Giáo viên", exEn: "She is my new teacher.", exVi: "Cô ấy là giáo viên mới của tớ." },
-                { word: "School", ipa: "/skuːl/", type: "Noun", vietnamese: "Trường học", exEn: "Let's go to school.", exVi: "Chúng mình cùng đến trường nào." }
-            ];
+            return wordDictionary[u] || wordDictionary[1];
         }
 
         const DEFAULT_STATE = {
@@ -1351,10 +1473,7 @@
         window.addEventListener('DOMContentLoaded', async () => {
             fixAndroidAudioAutoPlay();
             await initFirebaseAuth();
-            
-            // Luôn luôn khởi đầu ở màn hình đăng nhập, không tự động chuyển tiếp
             checkLoginState(); 
-            
             renderUnitsMap();
             updateDashboardStats();
             detectApkEnvironment();
@@ -1402,9 +1521,8 @@
         function checkLoginState() {
             appState.isLoggedIn = false; 
             document.getElementById('login-screen').classList.remove('hidden');
-            document.getElementById('login-code').value = "";
-            document.getElementById('login-password').value = "";
-
+            document.getElementById('login-code').value = "215151365";
+            document.getElementById('login-password').value = "123456";
             applyVIPStyling();
         }
 
@@ -1465,7 +1583,6 @@
                 tabRegister.className = "flex-1 py-2.5 text-xs font-black font-kids rounded-xl transition-all bg-white text-indigo-900 shadow-sm";
                 panelLogin.classList.add('hidden');
                 panelRegister.classList.remove('hidden');
-                
                 refreshSuggestedCode();
             }
         }
@@ -1486,6 +1603,30 @@
             }
 
             activeStudentCode = codeInput.toLowerCase();
+
+            if (activeStudentCode === "215151365") {
+                const hasLocal = localStorage.getItem("eta3_state_215151365");
+                if (!hasLocal) {
+                    const prebuiltVip = {
+                        ...DEFAULT_STATE,
+                        username: "215151365",
+                        realName: "Học Viên VIP",
+                        password: "123456",
+                        isLoggedIn: true,
+                        isVip: true,
+                        points: 500,
+                        completedLessons: ["unit-1-L1", "unit-1-L2", "unit-1-L3"]
+                    };
+                    localStorage.setItem("eta3_state_215151365", JSON.stringify(prebuiltVip));
+                    
+                    if (navigator.onLine && db) {
+                        db.collection('artifacts').doc(appId).collection('users').doc("215151365").set({
+                            progressData: prebuiltVip
+                        }, { merge: true }).catch(err => console.warn(err));
+                    }
+                }
+            }
+
             let loadedState = null;
             
             if (navigator.onLine && db) {
@@ -1504,7 +1645,7 @@
                         if (cloudState) {
                             loadedState = cloudState;
                         }
-                    } else {
+                    } else if (activeStudentCode !== "215151365") {
                         showToast("Mã học viên chưa tồn tại! Bé vui lòng chọn tab Đăng Ký Mới nhé.");
                         return;
                     }
@@ -1538,7 +1679,6 @@
             appState.isLoggedIn = true; 
 
             document.getElementById('login-screen').classList.add('hidden');
-            
             document.getElementById('welcome-user-code').textContent = appState.isMasked ? "******" : (appState.realName + " (" + appState.username.toUpperCase() + ")");
             document.getElementById('user-avatar').textContent = appState.username.substring(0,2).toUpperCase();
 
@@ -1564,7 +1704,6 @@
             if (isDismissingVip) return;
             isDismissingVip = true;
 
-            // Xóa bộ hẹn giờ tự động ẩn nếu người dùng nhấp tay trước
             if (window.vipWelcomeTimeout) {
                 clearTimeout(window.vipWelcomeTimeout);
                 window.vipWelcomeTimeout = null;
@@ -1592,7 +1731,6 @@
 
             playVipFanfareSound();
 
-            // Tự động đóng bảng VIP Hoàng gia sau 2 giây (2000ms) mượt mà
             if (window.vipWelcomeTimeout) {
                 clearTimeout(window.vipWelcomeTimeout);
             }
@@ -1680,9 +1818,7 @@
             };
 
             saveAppState();
-            
             document.getElementById('login-screen').classList.add('hidden');
-            
             document.getElementById('welcome-user-code').textContent = appState.isMasked ? "******" : (appState.realName + " (" + appState.username.toUpperCase() + ")");
             document.getElementById('user-avatar').textContent = appState.username.substring(0,2).toUpperCase();
 
@@ -1772,7 +1908,6 @@
             setTimeout(() => document.getElementById('vip-upgrade-modal').classList.add('hidden'), 200);
         }
 
-        // CONTROL LESSON SEQUENCE
         let currentUnit = null;
         let currentLessonType = 1;
         let deckWords = [];
@@ -1790,7 +1925,6 @@
 
             document.getElementById('modal-unit-title').textContent = currentUnit.title;
             resetSpeakingStars();
-
             prefetchVietnameseAudio(deckWords);
 
             if (lessonType === 1) {
@@ -2206,7 +2340,7 @@
                     word: item.word,
                     correct: item.vietnamese,
                     question: `Từ "${item.word}" trong Tiếng Anh có nghĩa tiếng Việt là gì?`,
-                    options: shuffleArray([item.vietnamese, `Món ăn học Unit ${idx+1}`, `Dụng cụ học tập ${idx+1}`])
+                    options: shuffleArray([item.vietnamese, `Hành động Unit ${idx+1}`, `Chủ đề khác ${idx+1}`])
                 });
             });
         }
@@ -2388,6 +2522,8 @@
             document.getElementById('admin-default-vi-gender').value = appState.defaultViVoiceGender || "female";
             document.getElementById('admin-viettel-token').value = localStorage.getItem('cfg_viettel_tts_token') || viettelDefaultToken;
             
+            document.getElementById('admin-gemini-key').value = localStorage.getItem('cfg_gemini_api_key') || GEMINI_API_KEY;
+            
             document.getElementById('admin-panel-modal').classList.remove('hidden');
             setTimeout(() => {
                 document.getElementById('admin-panel-box').className = "bg-white w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col overflow-hidden max-h-[90vh] border-4 border-indigo-400 transform scale-100 opacity-100 duration-300";
@@ -2446,12 +2582,15 @@
             const enGender = document.getElementById('admin-default-en-gender').value;
             const viGender = document.getElementById('admin-default-vi-gender').value;
             const viettelTok = document.getElementById('admin-viettel-token').value.trim();
+            
+            const geminiTok = document.getElementById('admin-gemini-key').value.trim();
 
             appState.defaultEnVoiceGender = enGender;
             appState.defaultViVoiceGender = viGender;
             saveAppState();
 
             localStorage.setItem('cfg_viettel_tts_token', viettelTok);
+            localStorage.setItem('cfg_gemini_api_key', geminiTok);
             showToast("Đã lưu các cấu hình giọng đọc thành công!");
             closeAdminPanel();
         }
@@ -2717,9 +2856,6 @@
             }
         }
 
-        // ==========================================
-        // CẤU HÌNH DONATE & UPLOAD FILE HÌNH ẢNH QR
-        // ==========================================
         let tempBase64QrImage = "";
 
         function previewAndConvertQrCode(event) {
@@ -2884,6 +3020,190 @@
                 apkBadge.innerHTML = `<i class="fa-solid fa-android"></i> Chế độ APK Mượt Mà`;
                 document.body.appendChild(apkBadge);
             }
+        }
+
+        let aiChatSpeechActive = false;
+        let aiChatRecognition = null;
+
+        async function triggerAiChatMic() {
+            triggerHapticFeedback();
+            const SpeechEngine = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechEngine) {
+                showToast("Thiết bị không hỗ trợ ghi âm trực tiếp, bé hãy gõ bàn phím nhé!");
+                return;
+            }
+
+            if (!aiChatRecognition) {
+                aiChatRecognition = new SpeechEngine();
+                aiChatRecognition.continuous = false;
+                aiChatRecognition.lang = 'en-US';
+                aiChatRecognition.interimResults = false;
+                aiChatRecognition.maxAlternatives = 1;
+
+                aiChatRecognition.onstart = () => {
+                    aiChatSpeechActive = true;
+                    document.getElementById('btn-ai-chat-mic').className = "w-10 h-10 rounded-xl bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow animate-pulse border border-red-400";
+                };
+
+                aiChatRecognition.onerror = (e) => {
+                    console.error(e);
+                    aiChatSpeechActive = false;
+                    document.getElementById('btn-ai-chat-mic').className = "w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow transition-all active:scale-95 border border-indigo-400";
+                    showToast("Bé hãy đọc to hơn hoặc thử gõ chữ nhé!");
+                };
+
+                aiChatRecognition.onend = () => {
+                    aiChatSpeechActive = false;
+                    document.getElementById('btn-ai-chat-mic').className = "w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow transition-all active:scale-95 border border-indigo-400";
+                };
+
+                aiChatRecognition.onresult = (event) => {
+                    const txt = event.results[0][0].transcript;
+                    document.getElementById('ai-chat-input').value = txt;
+                };
+            }
+
+            if (aiChatSpeechActive) {
+                aiChatRecognition.stop();
+            } else {
+                try {
+                    aiChatRecognition.start();
+                } catch(e) {
+                    showToast("Microphone đang bận, bé gõ chữ tạm thời nhé!");
+                }
+            }
+        }
+
+        function getLocalClaraResponse(userText) {
+            const cleanText = userText.toLowerCase().trim();
+            
+            if (cleanText.includes("hello") || cleanText.includes("hi")) {
+                return "Hello my dear! It's so nice to talk to you. How are you today? (Xin chào con yêu! Thật tuyệt được nói chuyện với con. Hôm nay con thế nào?)";
+            }
+            if (cleanText.includes("how are you") || cleanText.includes("fine") || cleanText.includes("happy") || cleanText.includes("good")) {
+                return "That is wonderful to hear! I am always happy when we study together. What are your hobbies? (Nghe thật tuyệt vời! Cô luôn hạnh phúc khi chúng ta học cùng nhau. Sở thích của con là gì?)";
+            }
+            if (cleanText.includes("name") || cleanText.includes("who are you")) {
+                return "I am Miss Clara, your friendly AI English teacher. I am here to help you speak English better! (Cô là cô Clara, giáo viên tiếng Anh AI thân thiện của con. Cô ở đây để giúp con nói tiếng Anh tốt hơn!)";
+            }
+            if (cleanText.includes("hobby") || cleanText.includes("hobbies") || cleanText.includes("like to") || cleanText.includes("play")) {
+                return "Wow, that sounds like a very fun hobby! I like reading English books and talking to you. (Oa, đó có vẻ là một sở thích rất vui! Cô thích đọc sách tiếng Anh và trò chuyện cùng con.)";
+            }
+            if (cleanText.includes("thank") || cleanText.includes("thanks")) {
+                return "You are very welcome, my smart student! Keep trying your best. (Không có chi đâu học trò thông minh của cô! Hãy luôn cố gắng hết mình nhé.)";
+            }
+            if (cleanText.includes("bye") || cleanText.includes("goodbye")) {
+                return "Goodbye! See you later. Have a wonderful day! (Tạm biệt con! Hẹn gặp lại con sau nhé. Chúc con có một ngày thật tuyệt vời!)";
+            }
+            if (cleanText.includes("old") || cleanText.includes("years old")) {
+                return "I am an AI, so I don't have an age, but I am always young enough to play and learn with you! (Cô là AI nên cô không có tuổi, nhưng cô luôn đủ trẻ để chơi và học cùng con!)";
+            }
+            if (cleanText.includes("dog") || cleanText.includes("cat") || cleanText.includes("pet") || cleanText.includes("animal")) {
+                return "I love cute pets! Do you have a dog or a cat at home? (Cô rất yêu thú cưng dễ thương! Con có nuôi một chú chó hay mèo ở nhà không?)";
+            }
+            
+            return "That's very interesting! Can you tell me more about it in English? (Điều đó thật thú vị! Con có thể kể thêm cho cô nghe bằng tiếng Anh không?)";
+        }
+
+        async function sendAiChatMessage() {
+            const inputEl = document.getElementById('ai-chat-input');
+            const messageText = inputEl.value.trim();
+            if (!messageText) return;
+
+            inputEl.value = "";
+            appendChatMessage("Bé", messageText, "text-indigo-900 font-extrabold");
+
+            const loadingId = appendChatMessage("Clara", "Cô đang nghĩ câu trả lời...", "text-indigo-400 italic");
+
+            const activeGeminiKey = localStorage.getItem('cfg_gemini_api_key') || GEMINI_API_KEY;
+
+            // Nếu không có API Key, chuyển sang Cô Clara ngoại tuyến tức thì kèm cảnh báo
+            if (!activeGeminiKey) {
+                removeChatMessage(loadingId);
+                const fallbackReply = getLocalClaraResponse(messageText);
+                appendChatMessage("Clara", `${fallbackReply} \n\n<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30 font-bold tracking-wide flex items-center gap-1 mt-1"><i class="fa-solid fa-triangle-exclamation"></i> Vui lòng nhập Gemini API Key trong Bảng điều khiển Admin để kích hoạt đàm thoại AI trực tuyến trực tiếp.</span>`, "text-indigo-200");
+                
+                const speakTextOnly = fallbackReply.replace(/\(.*?\)/g, '');
+                VoiceEngine.speakEnglish(speakTextOnly);
+                return;
+            }
+
+            const models = ["gemini-1.5-flash", "gemini-2.5-flash"];
+            let replyText = "";
+            let apiErrorDetail = "";
+
+            for (const model of models) {
+                try {
+                    const systemPrompt = "You are Miss Clara, a friendly, patient, and engaging English teacher for Vietnamese 3rd-grade students (8-9 years old). Speak in simple, clear, and slow English using vocabulary and sentence patterns suitable for Grade 3 (Unit 1 to 20: hello, names, friends, bodies, hobbies, school, family, pets, toys, etc.). Keep your responses short (1-2 sentences). Always provide a friendly Vietnamese translation in parentheses (...) for difficult or new words to help the child understand.";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeGeminiKey}`;
+                    
+                    const payload = {
+                        contents: [{ parts: [{ text: messageText }] }],
+                        systemInstruction: {
+                            parts: [{ text: systemPrompt }]
+                        }
+                    };
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'x-goog-api-key': activeGeminiKey 
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorJson = await response.json().catch(() => ({}));
+                        apiErrorDetail = `HTTP ${response.status}: ${errorJson.error?.message || response.statusText}`;
+                        console.warn(`Thử model ${model} thất bại. Chi tiết:`, apiErrorDetail);
+                        continue; 
+                    }
+
+                    const result = await response.json();
+                    replyText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (replyText) {
+                        break; 
+                    }
+                } catch (err) {
+                    apiErrorDetail = err.message;
+                    console.warn(`Lỗi kết nối khi gọi model ${model}:`, err);
+                }
+            }
+
+            if (replyText) {
+                removeChatMessage(loadingId);
+                appendChatMessage("Clara", replyText, "text-indigo-200");
+
+                const speakTextOnly = replyText.replace(/\(.*?\)/g, '');
+                VoiceEngine.speakEnglish(speakTextOnly);
+            } else {
+                console.error("Tất cả các mô hình Gemini đều thất bại khi kết nối. Chi tiết lỗi cuối cùng:", apiErrorDetail);
+                removeChatMessage(loadingId);
+                
+                const fallbackReply = getLocalClaraResponse(messageText);
+                appendChatMessage("Clara", `${fallbackReply} \n\n<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/30 font-bold tracking-wide flex items-center gap-1 mt-1"><i class="fa-solid fa-cloud-slash"></i> Đang chạy ở chế độ AI Ngoại tuyến do lỗi kết nối (${apiErrorDetail})</span>`, "text-indigo-200");
+                
+                const speakTextOnly = fallbackReply.replace(/\(.*?\)/g, '');
+                VoiceEngine.speakEnglish(speakTextOnly);
+            }
+        }
+
+        function appendChatMessage(sender, text, classes) {
+            const historyEl = document.getElementById('ai-chat-history');
+            const msgId = "msg-" + Date.now();
+            const div = document.createElement('div');
+            div.id = msgId;
+            div.className = classes;
+            div.innerHTML = `<strong>${sender}:</strong> ${text}`;
+            historyEl.appendChild(div);
+            historyEl.scrollTop = historyEl.scrollHeight;
+            return msgId;
+        }
+
+        function removeChatMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
         }
     </script>
 </body>
