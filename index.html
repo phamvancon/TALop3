@@ -2015,6 +2015,7 @@
         let cardFlipped = false;
         let localQuizQuestions = [];
         let quizScore = 0;
+        let quizAnswered = [];
 
         function startLesson(unitId, lessonType) {
             currentUnit = EnglishSyllabus.find(u => u.id === unitId);
@@ -2449,23 +2450,137 @@
             return arr.sort(() => Math.random() - 0.5);
         }
 
+        function getDistractors(correctVal, isVietnamese = true, count = 3) {
+            let pool = [];
+            EnglishSyllabus.forEach(u => {
+                u.words.forEach(w => {
+                    let val = isVietnamese ? w.vietnamese : w.word;
+                    if (val !== correctVal && !pool.includes(val)) {
+                        pool.push(val);
+                    }
+                });
+            });
+            pool = shuffleArray(pool);
+            return pool.slice(0, count);
+        }
+
+        function buildQuizQuestions() {
+            localQuizQuestions = [];
+            quizScore = 0;
+            quizAnswered = [];
+
+            if (!deckWords || deckWords.length === 0) return;
+
+            deckWords.forEach((item, idx) => {
+                const qType = idx % 3;
+                let questionObj = {};
+
+                if (qType === 0) {
+                    const correct = item.vietnamese;
+                    const distractors = getDistractors(correct, true, 3);
+                    questionObj = {
+                        type: 'en_to_vi',
+                        word: item.word,
+                        question: `Từ tiếng Anh "${item.word}" có nghĩa tiếng Việt là gì?`,
+                        correct: correct,
+                        options: shuffleArray([correct, ...distractors]),
+                        example: `Ví dụ: ${item.exEn} (${item.exVi})`
+                    };
+                } else if (qType === 1) {
+                    const correct = item.word;
+                    const distractors = getDistractors(correct, false, 3);
+                    questionObj = {
+                        type: 'vi_to_en',
+                        word: item.word,
+                        question: `Nghĩa "${item.vietnamese}" tương ứng với từ tiếng Anh nào sau đây?`,
+                        correct: correct,
+                        options: shuffleArray([correct, ...distractors]),
+                        example: `Ví dụ: ${item.exEn} (${item.exVi})`
+                    };
+                } else {
+                    const correct = item.word;
+                    const distractors = getDistractors(correct, false, 3);
+                    const blankEx = item.exEn.replace(new RegExp(item.word, 'gi'), '_____');
+                    questionObj = {
+                        type: 'fill_blank',
+                        word: item.word,
+                        question: `Chọn từ thích hợp điền vào chỗ trống:\n"${blankEx}"`,
+                        correct: correct,
+                        options: shuffleArray([correct, ...distractors]),
+                        example: `Dịch nghĩa: "${item.exVi}"`
+                    };
+                }
+
+                localQuizQuestions.push(questionObj);
+                quizAnswered.push(null);
+            });
+        }
+
         function renderQuizQuestion() {
             const q = localQuizQuestions[deckPointer];
             if (!q) return;
 
+            const currentAnsState = quizAnswered[deckPointer];
+
             document.getElementById('progress-subtext').textContent = `Câu hỏi: ${deckPointer + 1}/${localQuizQuestions.length}`;
             document.getElementById('quiz-question-text').textContent = q.question;
-            document.getElementById('quiz-feedback-box').classList.add('hidden');
+
+            const percent = Math.round(((deckPointer) / localQuizQuestions.length) * 100);
+            document.getElementById('modal-progress-bar').style.width = `${percent}%`;
 
             const container = document.getElementById('quiz-options-container');
             container.innerHTML = "";
 
+            const box = document.getElementById('quiz-feedback-box');
+            const title = document.getElementById('quiz-feedback-title');
+            const desc = document.getElementById('quiz-feedback-desc');
+
+            if (currentAnsState) {
+                box.classList.remove('hidden');
+                if (currentAnsState.isCorrect) {
+                    box.className = "w-full mt-3 p-3 rounded-2xl text-center bg-emerald-50 border border-emerald-200";
+                    title.className = "font-black text-xs text-emerald-700";
+                    title.textContent = "Chính xác! 🌟";
+                    desc.textContent = q.example || "Con trả lời xuất sắc lắm.";
+                } else {
+                    box.className = "w-full mt-3 p-3 rounded-2xl text-center bg-rose-50 border border-rose-200";
+                    title.className = "font-black text-xs text-rose-700";
+                    title.textContent = "Chưa chính xác! 🥺";
+                    desc.textContent = `Đáp án đúng là: "${q.correct}". (${q.example})`;
+                }
+            } else {
+                box.classList.add('hidden');
+            }
+
+            const labels = ["A", "B", "C", "D"];
             q.options.forEach((opt, index) => {
-                const label = index === 0 ? "A" : (index === 1 ? "B" : "C");
+                const label = labels[index] || "•";
+                let btnClass = "w-full text-left p-3 rounded-2xl border-2 font-extrabold text-xs transition-all flex items-center gap-3 cursor-pointer ";
+                let badgeClass = "w-7 h-7 rounded-full border text-xs flex items-center justify-center font-black ";
+
+                if (!currentAnsState) {
+                    btnClass += "border-slate-100 hover:bg-indigo-50 bg-white text-slate-800 shadow-sm";
+                    badgeClass += "bg-slate-100 text-indigo-900 border-slate-200";
+                } else {
+                    if (opt === q.correct) {
+                        btnClass += "border-emerald-300 bg-emerald-50 text-emerald-900 shadow-md";
+                        badgeClass += "bg-emerald-500 text-white border-emerald-600";
+                    } else if (opt === currentAnsState.userAns) {
+                        btnClass += "border-rose-300 bg-rose-50 text-rose-900";
+                        badgeClass += "bg-rose-500 text-white border-rose-600";
+                    } else {
+                        btnClass += "border-slate-100 bg-slate-50 text-slate-400 opacity-60";
+                        badgeClass += "bg-slate-200 text-slate-500 border-slate-200";
+                    }
+                }
+
+                const safeOpt = opt.replace(/'/g, "\\'");
                 container.insertAdjacentHTML('beforeend', `
-                    <button onclick="checkQuizAnswer('${opt}')" class="w-full text-left p-3 rounded-2xl border-2 border-slate-100 hover:bg-indigo-50 bg-white font-extrabold text-xs transition-all flex items-center gap-3">
-                        <span class="w-7 h-7 rounded-full bg-slate-100 border text-xs text-indigo-900 flex items-center justify-center font-black">${label}</span>
-                        <span>${opt}</span>
+                    <button ${currentAnsState ? 'disabled' : ''} onclick="checkQuizAnswer('${safeOpt}')" class="${btnClass}">
+                        <span class="${badgeClass}">${label}</span>
+                        <span class="flex-1">${opt}</span>
+                        ${currentAnsState && opt === q.correct ? '<i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>' : ''}
+                        ${currentAnsState && opt === currentAnsState.userAns && opt !== q.correct ? '<i class="fa-solid fa-circle-xmark text-rose-500 text-base"></i>' : ''}
                     </button>
                 `);
             });
@@ -2477,6 +2592,69 @@
         function playQuizAudio(btn) {
             if (localQuizQuestions[deckPointer]) {
                 VoiceEngine.speakEnglish(localQuizQuestions[deckPointer].word, btn);
+            }
+        }
+
+        function playWrongSound() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.exponentialRampToValueAtTime(110, now + 0.25);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            } catch(e) {}
+        }
+
+        function checkQuizAnswer(ans) {
+            if (quizAnswered[deckPointer] !== null) return;
+
+            const q = localQuizQuestions[deckPointer];
+            const isCorrect = (ans === q.correct);
+
+            quizAnswered[deckPointer] = {
+                userAns: ans,
+                isCorrect: isCorrect
+            };
+
+            let rewardPoints = appState.isVip ? 20 : 10;
+
+            if (isCorrect) {
+                quizScore++;
+                appState.points += rewardPoints;
+                playSuccessChimeSound();
+                triggerFloatScoreRewardText(rewardPoints);
+                burstLocalMiniConfetti();
+            } else {
+                playWrongSound();
+            }
+
+            saveAppState();
+            renderQuizQuestion();
+        }
+
+        function navigateQuiz(dir) {
+            const next = deckPointer + dir;
+            if (next >= 0 && next < localQuizQuestions.length) {
+                deckPointer = next;
+                renderQuizQuestion();
+            } else if (next >= localQuizQuestions.length) {
+                const lessonKey = `${currentUnit.id}-L3`;
+                if (!appState.completedLessons.includes(lessonKey)) {
+                    appState.completedLessons.push(lessonKey);
+                }
+                saveAppState();
+                closeLesson();
+                triggerCelebrationLayout(quizScore, localQuizQuestions.length, `Bé đã hoàn tất bài trắc nghiệm với điểm số vàng: ${quizScore}/${localQuizQuestions.length} câu đúng!`);
             }
         }
 
@@ -2608,7 +2786,7 @@
         }
 
         function submitAdminPassword() {
-            const pass = document.getElementById('admin-password-input').value.trim().toLowerCase();
+            const pass = document.getElementById('admin-password-input').value.trim();
             if (pass === "215151365") {
                 closeAdminPasswordModal();
                 setTimeout(() => openAdminPanel(), 300);
